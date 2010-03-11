@@ -8,39 +8,17 @@ rescue LoadError
   Bundler.setup
 end
 
+$LOAD_PATH.unshift File.expand_path("../lib", __FILE__)
 require "hoe"
-require File.expand_path("../lib/mkm4v/version", __FILE__)
+require "mkm4v/version"
 
 Hoe.plugin :gemcutter
 Hoe.plugin :clean
 Hoe.plugin :git
-
-class GemDeps
-  def self.method_missing(*args); end
-
-  def self.gem(name, version, *rest)
-    (@@deps[@@group] ||= []) << [name, version]
-  end
-
-  def self.group(name, &block)
-    @@group = name
-    instance_eval &block
-    @@group = :default
-  end
-
-  def self.[](key)
-    @@deps[key]
-  end
-
-  @@deps = {}
-  @@group = :default
-  instance_eval File.read("Gemfile")
-end
+Hoe.plugin :bundler
 
 Hoe.spec 'mkm4v' do
   developer('Chris Hoffman', 'cehoffman@gmail.com')
-  GemDeps[:default].each { |dep| extra_deps << dep }
-  GemDeps[:dev].each { |dep| extra_dev_deps << dep }
 
   self.version = Mkm4v::Version
   self.readme_file = 'README.rdoc'
