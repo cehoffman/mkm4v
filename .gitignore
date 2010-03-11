@@ -4,3 +4,7 @@ vendor/
 tmp/
 lib/mediainfo/
 .bundle/
+.deps/
+.libs/
+*.[oa]
+*.l[oa]
