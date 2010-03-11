@@ -8,4 +8,5 @@ group :dev do
   gem "rspec", "~> 1.3.0"
   gem "hoe", "~> 2.5.0"
   gem "hoe-git", "~> 1.3.0"
+  gem "rake-compiler", "~> 0.7.0"
 end

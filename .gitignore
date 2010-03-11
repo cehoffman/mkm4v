@@ -1,4 +1,6 @@
 pkg/
 doc/
 vendor/
+tmp/
+lib/mediainfo/
 .bundle/

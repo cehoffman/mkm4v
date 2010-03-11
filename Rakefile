@@ -17,14 +17,22 @@ Hoe.plugin :clean
 Hoe.plugin :git
 Hoe.plugin :bundler
 
-Hoe.spec 'mkm4v' do
+gem = Hoe.spec 'mkm4v' do
   developer('Chris Hoffman', 'cehoffman@gmail.com')
 
   self.version = Mkm4v::Version
   self.readme_file = 'README.rdoc'
   self.history_file = 'Changelog.rdoc'
   self.test_globs = 'spec/**/*_spec.rb'
+  self.spec_extras = { extensions: ["ext/mediainfo/extconf.rb"] }
 end
+
+require "rake/extensiontask"
+Rake::ExtensionTask.new('mediainfo', gem.spec) do |ext|
+  ext.lib_dir = File.join('lib', 'mediainfo')
+end
+
+Rake::Task[:spec].prerequisites << :compile
 
 Rake::TaskManager.class_eval do
   def remove_task(*task_name)
