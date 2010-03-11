@@ -5,6 +5,8 @@ module Hoe::Bundler
     GemDeps[:default].each { |dep| self.extra_deps << dep }
     GemDeps[:dev].each { |dep| self.extra_dev_deps << dep }
   end
+  
+  def define_bundler_tasks; end
 
   class GemDeps
     def self.method_missing(*args); end
