@@ -2,9 +2,10 @@ require "trollop"
 
 Mkm4v::Opts = Trollop.options do
   version "#{$0} #{Mkm4v::Version} (c) 2010 Chris Hoffman"
-  banner <<-EOS
-    Usage: #{$0} [options] <filenames>+
+  banner <<-EOS.undent
+    Usage: #{$0} [options] <filename> [filename ...]
+ \n
   EOS
 
-  # opt :input, "List of input files", type: :strings
+  opt :input, "List of files to convert", type: :strings
 end

@@ -1,4 +1,4 @@
 class Mkm4v::Cli
-  def run
+  def self.run
   end
 end
