@@ -15,8 +15,32 @@ Hoe.plugin :gemcutter
 Hoe.plugin :clean
 Hoe.plugin :git
 
+class GemDeps
+  def self.method_missing(*args); end
+
+  def self.gem(name, version, *rest)
+    (@@deps[@@group] ||= []) << [name, version]
+  end
+
+  def self.group(name, &block)
+    @@group = name
+    instance_eval &block
+    @@group = :default
+  end
+
+  def self.[](key)
+    @@deps[key]
+  end
+
+  @@deps = {}
+  @@group = :default
+  instance_eval File.read("Gemfile")
+end
+
 Hoe.spec 'mkm4v' do
   developer('Chris Hoffman', 'cehoffman@gmail.com')
+  GemDeps[:default].each { |dep| extra_deps << dep }
+  GemDeps[:dev].each { |dep| extra_dev_deps << dep }
 
   self.version = Mkm4v::Version
   self.readme_file = 'README.rdoc'
@@ -28,7 +52,7 @@ Rake::TaskManager.class_eval do
   def remove_task(*task_name)
     [*task_name].each { |task| @tasks.delete(task.to_s) }
   end
-  
+
   def rename_task(old_name, new_name)
     old = @tasks.delete old_name.to_s
     old.instance_variable_set :@name, new_name.to_s
