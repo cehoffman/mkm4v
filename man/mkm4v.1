@@ -7,13 +7,20 @@
 \fBmkm4v\fR \-\- make m4v files for Apple TV
 .
 .SH "SYNOPSIS"
-\fBmkm4v\fR [options] \fIfilename\fR [...]
+\fBmkm4v\fR [options] \-i \fIfilename\fR [filename ...]
 .
 .SH "DESCRIPTION"
 \fBmkm4v\fR automates the process of converting movies and tv shows for
 viewing on the Apple TV.  This process involves the conversion of
 DTS tracks to AC3, scanning of forced subtitle tracks, and automatic
 inclusion of subtitles when audio is not native language.
+.
+.SH "OPTIONS"
+.
+.TP
+\fB\-i\fR, \fB\-\-input\fR
+List of files to be batch converted from source format to m4v
+container.
 .
 .SH "COPYRIGHT"
 mkm4v is Copyright (C) 2010 Chris Hoffman <byhoffman.com>
