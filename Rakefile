@@ -53,3 +53,7 @@ namespace :spec do
     t.rcov_opts << "--comments --exclude pkg,#{ENV['GEM_HOME']}"
   end
 end
+
+task :man do
+  sh "bundle exec vendor/bin/ronn -br5 --organization=ByHoffman --manual='mkm4v Manual' man/*.ronn"
+end

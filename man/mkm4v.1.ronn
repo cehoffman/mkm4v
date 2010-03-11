@@ -1,0 +1,21 @@
+mkm4v(1) -- make m4v files for Apple TV
+=======================================
+
+## SYNOPSIS
+
+`mkm4v` [options] <filename> [...]
+
+## DESCRIPTION
+
+`mkm4v` automates the process of converting movies and tv shows for
+viewing on the Apple TV.  This process involves the conversion of
+DTS tracks to AC3, scanning of forced subtitle tracks, and automatic
+inclusion of subtitles when audio is not native language.
+
+## COPYRIGHT
+
+mkm4v is Copyright (C) 2010 Chris Hoffman <byhoffman.com>
+
+## SEE ALSO
+
+mkvmerge(1)
