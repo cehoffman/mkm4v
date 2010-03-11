@@ -8,7 +8,7 @@ class Mkm4v::Cli
  \n
     EOS
 
-    opt :input, "List of files to convert", type: :strings
+    opt :input, "List of files to convert", type: :strings, required: true
   end
 
   def self.run(*args)
