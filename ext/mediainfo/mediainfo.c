@@ -98,7 +98,7 @@ static VALUE mediainfo_track_info(VALUE self, VALUE sym, VALUE num, VALUE type) 
   void *mi;
   Data_Get_Struct(self, void, mi);
 
-  return rb_str_new2(MediaInfo_Get(mi, get_stream_id(sym), FIX2INT(num), RSTRING_PTR(type), MediaInfo_Info_Text, (MediaInfo_info_C)0));
+  return rb_str_new2(MediaInfo_Get(mi, get_stream_id(sym), FIX2INT(num), RSTRING_PTR(type), MediaInfo_Info_Text, MediaInfo_Info_Name));
 }
 
 void Init_mediainfo() {
