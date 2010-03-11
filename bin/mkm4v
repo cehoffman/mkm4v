@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require "mkm4v"
+
+Mkm4v::Cli.run

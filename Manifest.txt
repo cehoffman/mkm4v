@@ -1,0 +1,9 @@
+.autotest
+History.txt
+Manifest.txt
+README.txt
+Rakefile
+bin/mkm4v
+lib/mkm4v.rb
+spec/spec.opts
+spec/spec_helper.rb
