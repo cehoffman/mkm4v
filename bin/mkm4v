@@ -16,4 +16,4 @@ rescue LoadError
   require File.expand_path("../../lib/mkm4v", __FILE__)
 end
 
-Mkm4v::Cli.run
+Mkm4v::Cli.run *ARGV
