@@ -16,6 +16,8 @@ inclusion of subtitles when audio is not native language.
 
 == REQUIREMENTS:
 
+Ruby 1.9
+
 Ruby Gems
 
 * fraction - 0.1
