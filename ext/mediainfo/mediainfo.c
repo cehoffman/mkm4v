@@ -29,6 +29,9 @@ static VALUE mediainfo_alloc(VALUE klass) {
   void *mi = MediaInfo_New();
   MediaInfo_Option(mi, "CharSet", "UTF-8");
 
+  // MediaInfo likes to connect to the internet, don't let it
+  MediaInfo_Option(mi, "Internet", "No");
+
   return Data_Wrap_Struct(klass, mediainfo_mark, mediainfo_free, mi);
 }
 
