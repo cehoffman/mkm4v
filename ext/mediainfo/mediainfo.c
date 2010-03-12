@@ -115,11 +115,25 @@ static MediaInfo_stream_C get_stream_id(VALUE sym) {
   return stream;
 }
 
-static VALUE mediainfo_tracks(VALUE self, VALUE sym) {
+static VALUE mediainfo_num_tracks(int argc, VALUE *argv, VALUE self) {
+  MediaInfo_stream_C stream;
+  int total = 0;
   void *mi;
   Data_Get_Struct(self, void, mi);
 
-  return INT2FIX(MediaInfo_Count_Get(mi, get_stream_id(sym), -1));
+  if (argc < 1 || NIL_P(argv[0]) || (stream = get_stream_id(argv[0])) == MediaInfo_Stream_Max) {
+    total += MediaInfo_Count_Get(mi, MediaInfo_Stream_General, -1);
+    total += MediaInfo_Count_Get(mi, MediaInfo_Stream_Video, -1);
+    total += MediaInfo_Count_Get(mi, MediaInfo_Stream_Audio, -1);
+    total += MediaInfo_Count_Get(mi, MediaInfo_Stream_Text, -1);
+    total += MediaInfo_Count_Get(mi, MediaInfo_Stream_Chapters, -1);
+    total += MediaInfo_Count_Get(mi, MediaInfo_Stream_Image, -1);
+    total += MediaInfo_Count_Get(mi, MediaInfo_Stream_Menu, -1);
+  } else {
+    total = MediaInfo_Count_Get(mi, stream, -1);
+  }
+
+  return INT2FIX(total);
 }
 
 // Type of Track, number of that track type, name of information to get
@@ -145,7 +159,7 @@ void Init_mediainfo() {
   rb_define_method(rb_cMediaInfo, "initialize", (VALUE (*)(...))mediainfo_init, 1);
   rb_define_method(rb_cMediaInfo, "to_s", (VALUE (*)(...))mediainfo_to_s, 0);
   rb_define_method(rb_cMediaInfo, "inform", (VALUE (*)(...))mediainfo_inform, 1);
-  rb_define_method(rb_cMediaInfo, "tracks", (VALUE (*)(...))mediainfo_tracks, 1);
+  rb_define_method(rb_cMediaInfo, "num_tracks", (VALUE (*)(...))mediainfo_num_tracks, -1);
   rb_define_method(rb_cMediaInfo, "track_info", (VALUE (*)(...))mediainfo_track_info, 3);
 
   // Stream types
