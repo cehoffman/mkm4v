@@ -65,7 +65,8 @@ static VALUE mediainfo_init(VALUE self, VALUE filename) {
 
   MediaInfo_Open(mi, RSTRING_PTR(name));
 
-  VALUE tracks = rb_hash_new();
+  VALUE tracks = rb_ary_new();
+  rb_ivar_set(self, rb_intern("@tracks"), tracks);
 
   // Go over all the track types that are supported
   // For each one see if there is a class defined of the form
@@ -75,6 +76,8 @@ static VALUE mediainfo_init(VALUE self, VALUE filename) {
   for (int i = RARRAY_LEN(track_types) - 1; i >= 0; i--) {
     VALUE track_type = rb_ary_entry(track_types, i);
     VALUE klass = rb_str_cat(rb_funcall(rb_funcall(track_type, rb_intern("to_s"), 0), rb_intern("capitalize"), 0), "Track", 5);
+    VALUE kind = rb_ary_new2(tracks);
+    rb_ivar_set(self, rb_to_id(rb_str_concat(rb_str_new2("@"), rb_funcall(track_type, rb_intern("to_s"), 0))), kind);
 
     if (rb_funcall(rb_cMediaInfo, rb_intern("const_defined?"), 1, klass) == Qtrue) {
       klass = rb_const_get(rb_cMediaInfo, rb_intern(RSTRING_PTR(klass)));
@@ -82,16 +85,14 @@ static VALUE mediainfo_init(VALUE self, VALUE filename) {
       continue;
     }
 
-    VALUE kind = rb_ary_new2(tracks);
+    VALUE track;
     int num = FIX2INT(rb_funcall(self, rb_intern("num_tracks"), 1, track_type));
     for (int k = 0; k < num; k++) {
-      rb_ary_push(kind, rb_funcall(klass, rb_intern("new"), 2, self, INT2FIX(k)));
+      track = rb_funcall(klass, rb_intern("new"), 2, self, INT2FIX(k));
+      rb_ary_push(tracks, track);
+      rb_ary_push(kind, track);
     }
-
-    rb_hash_aset(tracks, track_type, kind);
   }
-
-  rb_ivar_set(self, rb_intern("@tracks"), tracks);
 
   return self;
 }
