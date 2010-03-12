@@ -25,6 +25,8 @@ static ID menu;
 static ID html;
 static ID xml;
 
+static MediaInfo_stream_C get_stream(VALUE sym);
+
 static VALUE rb_utf8_str(const char *str) {
   return rb_enc_str_new(str, strlen(str), rb_utf8_encoding());
 }
@@ -86,7 +88,7 @@ static VALUE mediainfo_init(VALUE self, VALUE filename) {
     }
 
     VALUE track;
-    int num = FIX2INT(rb_funcall(self, rb_intern("num_tracks"), 1, track_type));
+    int num = MediaInfo_Count_Get(mi, get_stream(track_type), -1);
     for (int k = 0; k < num; k++) {
       track = rb_funcall(klass, rb_intern("new"), 2, self, INT2FIX(k));
       rb_ary_push(tracks, track);
@@ -129,7 +131,7 @@ static VALUE mediainfo_to_s(VALUE self) {
   return mediainfo_inform(self, Qnil);
 }
 
-static MediaInfo_stream_C get_stream_id(VALUE sym) {
+static MediaInfo_stream_C get_stream(VALUE sym) {
   MediaInfo_stream_C stream = MediaInfo_Stream_Max;
   ID kind = -1;
 
@@ -156,27 +158,6 @@ static MediaInfo_stream_C get_stream_id(VALUE sym) {
   return stream;
 }
 
-static VALUE mediainfo_num_tracks(int argc, VALUE *argv, VALUE self) {
-  MediaInfo_stream_C stream;
-  int total = 0;
-  void *mi;
-  Data_Get_Struct(self, void, mi);
-
-  if (argc < 1 || NIL_P(argv[0]) || (stream = get_stream_id(argv[0])) == MediaInfo_Stream_Max) {
-    total += MediaInfo_Count_Get(mi, MediaInfo_Stream_General, -1);
-    total += MediaInfo_Count_Get(mi, MediaInfo_Stream_Video, -1);
-    total += MediaInfo_Count_Get(mi, MediaInfo_Stream_Audio, -1);
-    total += MediaInfo_Count_Get(mi, MediaInfo_Stream_Text, -1);
-    total += MediaInfo_Count_Get(mi, MediaInfo_Stream_Chapters, -1);
-    total += MediaInfo_Count_Get(mi, MediaInfo_Stream_Image, -1);
-    total += MediaInfo_Count_Get(mi, MediaInfo_Stream_Menu, -1);
-  } else {
-    total = MediaInfo_Count_Get(mi, stream, -1);
-  }
-
-  return INT2FIX(total);
-}
-
 // Type of Track, number of that track type, name of information to get
 static VALUE mediainfo_track_info(VALUE self, VALUE sym, VALUE num, VALUE type) {
   Check_Type(type, T_STRING);
@@ -184,7 +165,7 @@ static VALUE mediainfo_track_info(VALUE self, VALUE sym, VALUE num, VALUE type) 
   void *mi;
   Data_Get_Struct(self, void, mi);
 
-  return rb_utf8_str(MediaInfo_Get(mi, get_stream_id(sym), FIX2INT(num), RSTRING_PTR(type), MediaInfo_Info_Text, MediaInfo_Info_Name));
+  return rb_utf8_str(MediaInfo_Get(mi, get_stream(sym), FIX2INT(num), RSTRING_PTR(type), MediaInfo_Info_Text, MediaInfo_Info_Name));
 }
 
 void Init_mediainfo() {
@@ -201,7 +182,6 @@ void Init_mediainfo() {
   rb_define_method(rb_cMediaInfo, "initialize", (VALUE (*)(...))mediainfo_init, 1);
   rb_define_method(rb_cMediaInfo, "to_s", (VALUE (*)(...))mediainfo_to_s, 0);
   rb_define_method(rb_cMediaInfo, "inform", (VALUE (*)(...))mediainfo_inform, 1);
-  rb_define_method(rb_cMediaInfo, "num_tracks", (VALUE (*)(...))mediainfo_num_tracks, -1);
   rb_define_method(rb_cMediaInfo, "track_info", (VALUE (*)(...))mediainfo_track_info, 3);
 
   // Stream types
@@ -220,7 +200,6 @@ void Init_mediainfo() {
   html = rb_intern("html");
   xml = rb_intern("xml");
   rb_define_const(rb_cMediaInfo, "InformTypes", rb_ary_new3(3, ID2SYM(html), ID2SYM(xml), ID2SYM(rb_intern("standard"))));
-
 }
 
 #ifdef __cplusplus
