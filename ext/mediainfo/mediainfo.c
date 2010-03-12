@@ -3,8 +3,9 @@
 
 // Since MediaInfo is a C++ it seems I must protect my ruby
 // functions from C++ name mangling
-extern "C"
-{
+#ifdef __cplusplus
+ extern "C" {
+#endif
 
 static VALUE rb_cMediaInfo;
 static ID general;
@@ -27,10 +28,6 @@ static void mediainfo_free(void *mi) {
 
 static VALUE mediainfo_alloc(VALUE klass) {
   void *mi = MediaInfo_New();
-  MediaInfo_Option(mi, "CharSet", "UTF-8");
-
-  // MediaInfo likes to connect to the internet, don't let it
-  MediaInfo_Option(mi, "Internet", "No");
 
   return Data_Wrap_Struct(klass, mediainfo_mark, mediainfo_free, mi);
 }
@@ -105,6 +102,11 @@ static VALUE mediainfo_track_info(VALUE self, VALUE sym, VALUE num, VALUE type) 
 }
 
 void Init_mediainfo() {
+  MediaInfo_Option(NULL, "CharSet", "UTF-8");
+
+  // MediaInfo likes to connect to the internet, don't let it
+  MediaInfo_Option(NULL, "Internet", "No");
+
   rb_cMediaInfo = rb_define_class("MediaInfo", rb_cObject);
   rb_define_alloc_func(rb_cMediaInfo, mediainfo_alloc);
 
@@ -124,4 +126,6 @@ void Init_mediainfo() {
   menu = rb_intern("menu");
 }
 
-}
+#ifdef __cplusplus
+  }
+#endif
