@@ -46,7 +46,7 @@ Rake::TaskManager.class_eval do
   end
 end
 
-Rake.application.remove_task :post_blog, :post_news, :publish_docs, :debug_email, :announce
+Rake.application.remove_task :post_blog, :post_news, :publish_docs, :debug_email, :announce, :rcov
 Rake.application.remove_task "deps:email", "deps:fetch", :config_hoe, :newb, :release_to_rubyforge
 Rake.application.rename_task :install_gem, :install
 Rake.application.rename_task :release_to_gemcutter, :release
@@ -58,9 +58,9 @@ namespace :spec do
     t.spec_files = FileList['spec/**/*_spec.rb']
     t.spec_opts = "--options spec/spec.opts"
 
-    t.rcov = true
-    t.rcov_opts << '--sort coverage --text-summary --sort-reverse'
-    t.rcov_opts << "--comments --exclude pkg,#{ENV['GEM_HOME']}"
+    # t.rcov = true
+    # t.rcov_opts << '--sort coverage --text-summary --sort-reverse'
+    # t.rcov_opts << "--comments --exclude pkg,#{ENV['GEM_HOME']}"
   end
 end
 
