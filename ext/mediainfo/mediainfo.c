@@ -89,8 +89,12 @@ static VALUE mediainfo_to_s(VALUE self) {
 }
 
 static MediaInfo_stream_C get_stream_id(VALUE sym) {
-  MediaInfo_stream_C stream;
-  ID kind = rb_to_id(sym);
+  MediaInfo_stream_C stream = MediaInfo_Stream_Max;
+  ID kind = -1;
+
+  if (rb_respond_to(sym, rb_intern("to_sym"))) {
+    kind = rb_to_id(rb_funcall(sym, rb_intern("to_sym"), 0));
+  }
 
   if (kind == general) {
     stream = MediaInfo_Stream_General;
@@ -106,8 +110,6 @@ static MediaInfo_stream_C get_stream_id(VALUE sym) {
     stream = MediaInfo_Stream_Image;
   } else if (kind == menu) {
     stream = MediaInfo_Stream_Menu;
-  } else {
-    stream = MediaInfo_Stream_Max;
   }
 
   return stream;
