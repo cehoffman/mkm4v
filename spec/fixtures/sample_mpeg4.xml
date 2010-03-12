@@ -1,0 +1,57 @@
+<File>
+<track type="General">
+
+<Complete_name>/Users/cehoffman/Repos/cli/mkm4v/spec/fixtures/sample_mpeg4.mp4</Complete_name>
+<Format>MPEG-4</Format>
+<Format_profile>Base Media / Version 2</Format_profile>
+<Codec_ID>mp42</Codec_ID>
+<File_size>240 KiB</File_size>
+<Duration>4s 992ms</Duration>
+<Overall_bit_rate>394 Kbps</Overall_bit_rate>
+<Encoded_date>UTC 2005-10-28 17:46:46</Encoded_date>
+<Tagged_date>UTC 2005-10-28 17:46:46</Tagged_date>
+</track>
+
+<track type="Video">
+
+<ID>2</ID>
+<Format>MPEG-4 Visual</Format>
+<Codec_ID>20</Codec_ID>
+<Duration>4s 966ms</Duration>
+<Bit_rate_mode>Constant</Bit_rate_mode>
+<Bit_rate>342 Kbps</Bit_rate>
+<Nominal_bit_rate>512 Kbps</Nominal_bit_rate>
+<Width>190 pixels</Width>
+<Height>240 pixels</Height>
+<Display_aspect_ratio>0.792</Display_aspect_ratio>
+<Frame_rate_mode>Constant</Frame_rate_mode>
+<Frame_rate>30.000 fps</Frame_rate>
+<Bits__Pixel_Frame_>0.250</Bits__Pixel_Frame_>
+<Stream_size>207 KiB (86%)</Stream_size>
+<Language>English</Language>
+<Encoded_date>UTC 2005-10-28 17:46:46</Encoded_date>
+<Tagged_date>UTC 2005-10-28 17:46:46</Tagged_date>
+</track>
+
+<track type="Audio">
+
+<ID>1</ID>
+<Format>AAC</Format>
+<Format_Info>Advanced Audio Codec</Format_Info>
+<Format_version>Version 4</Format_version>
+<Format_profile>LC</Format_profile>
+<Format_settings__SBR>No</Format_settings__SBR>
+<Codec_ID>40</Codec_ID>
+<Duration>4s 992ms</Duration>
+<Bit_rate_mode>Constant</Bit_rate_mode>
+<Bit_rate>48.0 Kbps</Bit_rate>
+<Channel_s_>2 channels</Channel_s_>
+<Channel_positions>Front: L R</Channel_positions>
+<Sampling_rate>32.0 KHz</Sampling_rate>
+<Stream_size>29.7 KiB (12%)</Stream_size>
+<Language>English</Language>
+<Encoded_date>UTC 2005-10-28 17:46:46</Encoded_date>
+<Tagged_date>UTC 2005-10-28 17:46:46</Tagged_date>
+</track>
+
+</File>
