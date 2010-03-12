@@ -32,7 +32,7 @@ static VALUE rb_utf8_str(const char *str) {
 }
 
 static VALUE rb_encode_utf8(VALUE str) {
-  return rb_funcall(str, rb_intern("encode!"), 1, rb_const_get(rb_cEncoding, rb_intern("UTF_8")));
+  return rb_funcall(str, rb_intern("encode"), 1, rb_const_get(rb_cEncoding, rb_intern("UTF_8")));
 }
 
 static void mediainfo_mark(void *mi) {
@@ -103,36 +103,41 @@ static VALUE mediainfo_init(VALUE self, VALUE filename) {
   return self;
 }
 
-static VALUE mediainfo_inform(VALUE self, VALUE sym) {
+static VALUE mediainfo_inform(VALUE self, ID kind) {
   void *mi;
   Data_Get_Struct(self, void, mi);
-
-  ID kind = -1;
-
-  if (rb_respond_to(sym, rb_intern("to_sym"))) {
-    kind = rb_to_id(rb_funcall(sym, rb_intern("to_sym"), 0));
-  }
 
   // Since this has a side effect of changing options
   // It needs to be locked until state is restored
   // Use the ZenLib CriticalSection since it is cross platform
   // and real real real easy to use.
   CS.Enter();
+
   if (html == kind) {
     MediaInfo_Option(mi, "Inform", "HTML");
   } else if (xml == kind) {
     MediaInfo_Option(mi, "Inform", "XML");
+  } else {
+    MediaInfo_Option(mi, "Inform", "Normal");
   }
 
   const char *inform = MediaInfo_Inform(mi, 0);
-  MediaInfo_Option(mi, "Inform", "Normal");
+
   CS.Leave();
 
-  return rb_funcall(rb_utf8_str(inform), rb_intern("gsub!"), 2, rb_utf8_str("\r"), rb_gv_get("$/"));
+  return rb_funcall(rb_utf8_str(inform), rb_intern("gsub"), 2, rb_utf8_str("\r"), rb_gv_get("$/"));
+}
+
+static VALUE mediainfo_to_html(VALUE self) {
+  return mediainfo_inform(self, html);
+}
+
+static VALUE mediainfo_to_xml(VALUE self) {
+  return mediainfo_inform(self, xml);
 }
 
 static VALUE mediainfo_to_s(VALUE self) {
-  return mediainfo_inform(self, Qnil);
+  return mediainfo_inform(self, NULL);
 }
 
 static MediaInfo_stream_C get_stream(VALUE sym) {
@@ -187,6 +192,7 @@ static VALUE set_options(void *mi, int argc, VALUE *args) {
     arg = rb_ary_entry(normalized, 0);
   }
 
+  // If it is a hash we are setting options
   if (rb_obj_is_instance_of(arg, rb_cHash) == Qtrue) {
     VALUE keys = rb_funcall(arg, rb_intern("keys"), 0);
     VALUE vals = rb_funcall(arg, rb_intern("values"), 0);
@@ -195,16 +201,16 @@ static VALUE set_options(void *mi, int argc, VALUE *args) {
     for (int i = RARRAY_LEN(keys) - 1; i >= 0; i--) {
       opt = rb_funcall(rb_ary_entry(keys, i), rb_intern("to_s"), 0);
       val = rb_funcall(rb_ary_entry(vals, i), rb_intern("to_s"), 0);
-      MediaInfo_Option(mi, RSTRING_PTR(rb_encode_utf8(rb_str_dup(opt))), RSTRING_PTR(rb_encode_utf8(rb_str_dup(val))));
+      MediaInfo_Option(mi, RSTRING_PTR(rb_encode_utf8(opt)), RSTRING_PTR(rb_encode_utf8(val)));
     }
-  } else {
+  } else { // otherwise we are going to read options
     VALUE vals = rb_hash_new();
     VALUE opt, val;
 
     for (int i = RARRAY_LEN(normalized) - 1; i >= 0; i--) {
       opt = rb_encode_utf8(rb_funcall(rb_ary_entry(normalized, i), rb_intern("to_s"), 0));
       val = rb_utf8_str(MediaInfo_Option(mi, RSTRING_PTR(opt), ""));
-      rb_hash_aset(vals, opt, rb_funcall(val, rb_intern("gsub!"), 2, rb_utf8_str("\r"), rb_gv_get("$/")));
+      rb_hash_aset(vals, opt, rb_funcall(val, rb_intern("gsub"), 2, rb_utf8_str("\r"), rb_gv_get("$/")));
     }
 
     return vals;
@@ -230,13 +236,20 @@ void Init_mediainfo() {
   // MediaInfo likes to connect to the internet, don't let it
   MediaInfo_Option(NULL, "Internet", "No");
 
+  // Tell MediaInfo about us, this will let us know of incompatibilities in
+  // future versions when upgrading
+  if (strlen(MediaInfo_Option(NULL, "Info_Version", "0.7.29;RubyBinding;0.1.0")) == 0) {
+    rb_fatal("The compiled versions of MediaInfo is not compatible with the ruby bindings");
+  }
+
   rb_cMediaInfo = rb_define_class("MediaInfo", rb_cObject);
   rb_define_alloc_func(rb_cMediaInfo, mediainfo_alloc);
 
   // The typecast of the functions is necessary because of the C++ compiler
   rb_define_method(rb_cMediaInfo, "initialize", (VALUE (*)(...))mediainfo_init, 1);
   rb_define_method(rb_cMediaInfo, "to_s", (VALUE (*)(...))mediainfo_to_s, 0);
-  rb_define_method(rb_cMediaInfo, "inform", (VALUE (*)(...))mediainfo_inform, 1);
+  rb_define_method(rb_cMediaInfo, "to_html", (VALUE (*)(...))mediainfo_to_html, 0);
+  rb_define_method(rb_cMediaInfo, "to_xml", (VALUE (*)(...))mediainfo_to_xml, 0);
   rb_define_method(rb_cMediaInfo, "track_info", (VALUE (*)(...))mediainfo_track_info, 3);
   rb_define_method(rb_cMediaInfo, "options", (VALUE (*)(...))mediainfo_options, -1);
   rb_define_singleton_method(rb_cMediaInfo, "options", (VALUE (*)(...))mediainfo_static_options, -1);
