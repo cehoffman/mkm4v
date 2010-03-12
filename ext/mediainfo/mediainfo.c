@@ -38,20 +38,20 @@ static VALUE mediainfo_alloc(VALUE klass) {
 
 static VALUE mediainfo_init(VALUE self, VALUE filename) {
   if (NIL_P(filename)) {
-    rb_raise(rb_eTypeError, "a filename must be specified");
+    rb_raise(rb_eArgError, "a filename must be given");
   }
 
   VALUE name = rb_funcall(filename, rb_intern("to_s"), 0);
 
   // Make sure the file exists then open it
   if (rb_funcall(rb_cFile, rb_intern("exists?"), 1, name) == Qfalse) {
-    rb_raise(rb_eTypeError, "file does not exist");
+    rb_raise(rb_eArgError, "file does not exist - %s", RSTRING_PTR(name));
   }
 
   void *mi;
   Data_Get_Struct(self, void, mi);
 
-  MediaInfo_Open(mi, RSTRING_PTR(name));
+  MediaInfo_Open(mi, RSTRING_PTR(rb_funcall(rb_cFile, rb_intern("absolute_path"), 1, name)));
 
   return self;
 }
@@ -156,6 +156,8 @@ void Init_mediainfo() {
   chapters = rb_intern("chapters");
   image = rb_intern("image");
   menu = rb_intern("menu");
+
+  // Formats for inform
   html = rb_intern("html");
   xml = rb_intern("xml");
 }
