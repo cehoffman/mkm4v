@@ -25,14 +25,34 @@ static ID menu;
 static ID html;
 static ID xml;
 
-static MediaInfo_stream_C get_stream(VALUE sym);
-
 static VALUE rb_utf8_str(const char *str) {
   return rb_enc_str_new(str, strlen(str), rb_utf8_encoding());
 }
 
 static VALUE rb_encode_utf8(VALUE str) {
   return rb_funcall(str, rb_intern("encode"), 1, rb_const_get(rb_cEncoding, rb_intern("UTF_8")));
+}
+
+static MediaInfo_stream_C get_stream(ID kind) {
+  MediaInfo_stream_C stream = MediaInfo_Stream_Max;
+
+  if (kind == general) {
+    stream = MediaInfo_Stream_General;
+  } else if (kind == video) {
+    stream = MediaInfo_Stream_Video;
+  } else if (kind == audio) {
+    stream = MediaInfo_Stream_Audio;
+  } else if (kind == text) {
+    stream = MediaInfo_Stream_Text;
+  } else if (kind == chapters) {
+    stream = MediaInfo_Stream_Chapters;
+  } else if (kind == image) {
+    stream = MediaInfo_Stream_Image;
+  } else if (kind == menu) {
+    stream = MediaInfo_Stream_Menu;
+  }
+
+  return stream;
 }
 
 static void mediainfo_mark(void *mi) {
@@ -138,28 +158,6 @@ static VALUE mediainfo_to_xml(VALUE self) {
 
 static VALUE mediainfo_to_s(VALUE self) {
   return mediainfo_inform(self, NULL);
-}
-
-static MediaInfo_stream_C get_stream(ID kind) {
-  MediaInfo_stream_C stream = MediaInfo_Stream_Max;
-
-  if (kind == general) {
-    stream = MediaInfo_Stream_General;
-  } else if (kind == video) {
-    stream = MediaInfo_Stream_Video;
-  } else if (kind == audio) {
-    stream = MediaInfo_Stream_Audio;
-  } else if (kind == text) {
-    stream = MediaInfo_Stream_Text;
-  } else if (kind == chapters) {
-    stream = MediaInfo_Stream_Chapters;
-  } else if (kind == image) {
-    stream = MediaInfo_Stream_Image;
-  } else if (kind == menu) {
-    stream = MediaInfo_Stream_Menu;
-  }
-
-  return stream;
 }
 
 // Type of Track, number of that track type, name of information to get
