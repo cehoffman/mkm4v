@@ -57,8 +57,12 @@ static VALUE mediainfo_init(VALUE self, VALUE filename) {
 
   void *mi;
   Data_Get_Struct(self, void, mi);
+  name = rb_funcall(rb_cFile, rb_intern("absolute_path"), 1, name);
 
-  MediaInfo_Open(mi, RSTRING_PTR(rb_funcall(rb_cFile, rb_intern("absolute_path"), 1, name)));
+  // Convert string to utf8 for mediainfo consumption
+  rb_funcall(name, rb_intern("encode!"), 1, rb_const_get(rb_cEncoding, rb_intern("UTF_8")));
+
+  MediaInfo_Open(mi, RSTRING_PTR(name));
 
   return self;
 }
