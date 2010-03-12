@@ -2,7 +2,7 @@
 #include "MediaInfoDLL_Static.h"
 #include <ZenLib/CriticalSection.h>
 
-// Since MediaInfo is a C++ it seems I must protect my ruby
+// Since MediaInfo is a C++ library it seems I must protect my ruby
 // functions from C++ name mangling
 #ifdef __cplusplus
  extern "C" {
@@ -63,6 +63,27 @@ static VALUE mediainfo_init(VALUE self, VALUE filename) {
   rb_funcall(name, rb_intern("encode!"), 1, rb_const_get(rb_cEncoding, rb_intern("UTF_8")));
 
   MediaInfo_Open(mi, RSTRING_PTR(name));
+
+  VALUE tracks = rb_hash_new();
+
+  VALUE iter = rb_ary_new();
+  rb_ary_push(iter, rb_ary_new3(3, ID2SYM(video), rb_const_get(rb_cMediaInfo, rb_intern("VideoTrack")), ID2SYM(rb_intern("video"))));
+  rb_ary_push(iter, rb_ary_new3(3, ID2SYM(audio), rb_const_get(rb_cMediaInfo, rb_intern("AudioTrack")), ID2SYM(rb_intern("audio"))));
+
+  for (int i = RARRAY_LEN(iter) - 1; i >= 0; i--) {
+    VALUE vals = rb_ary_entry(iter, i);
+    int num = FIX2INT(rb_funcall(self, rb_intern("num_tracks"), 1, rb_ary_entry(vals, 0)));
+    VALUE klass = rb_ary_entry(vals, 1);
+    VALUE kind = rb_ary_new2(tracks);
+
+    for (int k = 0; k < num; k++) {
+      rb_ary_push(kind, rb_funcall(klass, rb_intern("new"), 2, self, INT2FIX(k)));
+    }
+
+    rb_hash_aset(tracks, rb_ary_entry(vals, 2), kind);
+  }
+
+  rb_ivar_set(self, rb_intern("@tracks"), tracks);
 
   return self;
 }

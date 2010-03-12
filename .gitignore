@@ -2,7 +2,7 @@ pkg/
 doc/
 vendor/
 tmp/
-lib/mediainfo/
+lib/mediainfo/mediainfo.bundle
 .bundle/
 .deps/
 .libs/
