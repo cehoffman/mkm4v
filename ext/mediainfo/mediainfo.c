@@ -31,6 +31,10 @@ static VALUE rb_utf8_str(const char *str) {
   return rb_enc_str_new(str, strlen(str), rb_utf8_encoding());
 }
 
+static VALUE rb_encode_utf8(VALUE str) {
+  return rb_funcall(str, rb_intern("encode!"), 1, rb_const_get(rb_cEncoding, rb_intern("UTF_8")));
+}
+
 static void mediainfo_mark(void *mi) {
 
 }
@@ -63,7 +67,7 @@ static VALUE mediainfo_init(VALUE self, VALUE filename) {
   name = rb_funcall(rb_cFile, rb_intern("absolute_path"), 1, name);
 
   // Convert string to utf8 for mediainfo consumption
-  rb_funcall(name, rb_intern("encode!"), 1, rb_const_get(rb_cEncoding, rb_intern("UTF_8")));
+  name = rb_encode_utf8(name);
 
   MediaInfo_Open(mi, RSTRING_PTR(name));
 
@@ -88,7 +92,7 @@ static VALUE mediainfo_init(VALUE self, VALUE filename) {
     }
 
     VALUE track;
-    int num = MediaInfo_Count_Get(mi, get_stream(track_type), -1);
+    int num = MediaInfo_Count_Get(mi, get_stream(track_type), -1); // returns 0 on unknown tracks
     for (int k = 0; k < num; k++) {
       track = rb_funcall(klass, rb_intern("new"), 2, self, INT2FIX(k));
       rb_ary_push(tracks, track);
@@ -168,6 +172,57 @@ static VALUE mediainfo_track_info(VALUE self, VALUE sym, VALUE num, VALUE type) 
   return rb_utf8_str(MediaInfo_Get(mi, get_stream(sym), FIX2INT(num), RSTRING_PTR(type), MediaInfo_Info_Text, MediaInfo_Info_Name));
 }
 
+static VALUE set_options(void *mi, int argc, VALUE *args) {
+  VALUE normalized = rb_ary_new2(argc);
+
+  for (int i = 0; i < argc; i++) {
+    rb_ary_push(normalized, args[i]);
+  }
+
+  normalized = rb_funcall(rb_funcall(normalized, rb_intern("flatten"), 0), rb_intern("compact"), 0);
+
+  VALUE arg = Qnil;
+
+  if (RARRAY_LEN(normalized) > 0) {
+    arg = rb_ary_entry(normalized, 0);
+  }
+
+  if (rb_obj_is_instance_of(arg, rb_cHash) == Qtrue) {
+    VALUE keys = rb_funcall(arg, rb_intern("keys"), 0);
+    VALUE vals = rb_funcall(arg, rb_intern("values"), 0);
+    VALUE opt, val;
+
+    for (int i = RARRAY_LEN(keys) - 1; i >= 0; i--) {
+      opt = rb_funcall(rb_ary_entry(keys, i), rb_intern("to_s"), 0);
+      val = rb_funcall(rb_ary_entry(vals, i), rb_intern("to_s"), 0);
+      MediaInfo_Option(mi, RSTRING_PTR(rb_encode_utf8(rb_str_dup(opt))), RSTRING_PTR(rb_encode_utf8(rb_str_dup(val))));
+    }
+  } else {
+    VALUE vals = rb_hash_new();
+    VALUE opt, val;
+
+    for (int i = RARRAY_LEN(normalized) - 1; i >= 0; i--) {
+      opt = rb_encode_utf8(rb_funcall(rb_ary_entry(normalized, i), rb_intern("to_s"), 0));
+      val = rb_utf8_str(MediaInfo_Option(mi, RSTRING_PTR(opt), ""));
+      rb_hash_aset(vals, opt, rb_funcall(val, rb_intern("gsub!"), 2, rb_utf8_str("\r"), rb_gv_get("$/")));
+    }
+
+    return vals;
+  }
+
+  return arg;
+}
+
+static VALUE mediainfo_options(int argc, VALUE *args, VALUE self) {
+  void *mi;
+  Data_Get_Struct(self, void, mi);
+  return set_options(mi, argc, args);
+}
+
+static VALUE mediainfo_static_options(int argc, VALUE *args, VALUE self) {
+  return set_options(NULL, argc, args);
+}
+
 void Init_mediainfo() {
   // DLL interface option
   MediaInfo_Option(NULL, "CharSet", "UTF-8");
@@ -183,6 +238,8 @@ void Init_mediainfo() {
   rb_define_method(rb_cMediaInfo, "to_s", (VALUE (*)(...))mediainfo_to_s, 0);
   rb_define_method(rb_cMediaInfo, "inform", (VALUE (*)(...))mediainfo_inform, 1);
   rb_define_method(rb_cMediaInfo, "track_info", (VALUE (*)(...))mediainfo_track_info, 3);
+  rb_define_method(rb_cMediaInfo, "options", (VALUE (*)(...))mediainfo_options, -1);
+  rb_define_singleton_method(rb_cMediaInfo, "options", (VALUE (*)(...))mediainfo_static_options, -1);
 
   // Stream types
   general = rb_intern("general");
