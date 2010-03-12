@@ -8,6 +8,9 @@
  extern "C" {
 #endif
 
+// Needs to be withing extern "C" for linking
+#include <ruby/encoding.h>
+
 static ZenLib::CriticalSection CS;
 
 static VALUE rb_cMediaInfo;
@@ -20,6 +23,10 @@ static ID image;
 static ID menu;
 static ID html;
 static ID xml;
+
+static VALUE rb_utf8_str(const char *str) {
+  return rb_enc_str_new(str, strlen(str), rb_utf8_encoding());
+}
 
 static void mediainfo_mark(void *mi) {
 
@@ -81,7 +88,7 @@ static VALUE mediainfo_inform(VALUE self, VALUE sym) {
   MediaInfo_Option(mi, "Inform", "Normal");
   CS.Leave();
 
-  return rb_funcall(rb_str_new2(inform), rb_intern("gsub!"), 2, rb_str_new2("\r"), rb_gv_get("$/"));
+  return rb_funcall(rb_utf8_str(inform), rb_intern("gsub!"), 2, rb_utf8_str("\r"), rb_gv_get("$/"));
 }
 
 static VALUE mediainfo_to_s(VALUE self) {
@@ -143,10 +150,11 @@ static VALUE mediainfo_track_info(VALUE self, VALUE sym, VALUE num, VALUE type) 
   void *mi;
   Data_Get_Struct(self, void, mi);
 
-  return rb_str_new2(MediaInfo_Get(mi, get_stream_id(sym), FIX2INT(num), RSTRING_PTR(type), MediaInfo_Info_Text, MediaInfo_Info_Name));
+  return rb_utf8_str(MediaInfo_Get(mi, get_stream_id(sym), FIX2INT(num), RSTRING_PTR(type), MediaInfo_Info_Text, MediaInfo_Info_Name));
 }
 
 void Init_mediainfo() {
+  // DLL interface option
   MediaInfo_Option(NULL, "CharSet", "UTF-8");
 
   // MediaInfo likes to connect to the internet, don't let it
