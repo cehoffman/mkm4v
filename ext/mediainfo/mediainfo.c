@@ -1,11 +1,14 @@
 #include <ruby.h>
 #include "MediaInfoDLL_Static.h"
+#include <ZenLib/CriticalSection.h>
 
 // Since MediaInfo is a C++ it seems I must protect my ruby
 // functions from C++ name mangling
 #ifdef __cplusplus
  extern "C" {
 #endif
+
+static ZenLib::CriticalSection CS;
 
 static VALUE rb_cMediaInfo;
 static ID general;
@@ -15,7 +18,8 @@ static ID text;
 static ID chapters;
 static ID image;
 static ID menu;
-static ID max;
+static ID html;
+static ID xml;
 
 static void mediainfo_mark(void *mi) {
 
@@ -52,11 +56,36 @@ static VALUE mediainfo_init(VALUE self, VALUE filename) {
   return self;
 }
 
-static VALUE mediainfo_to_s(VALUE self) {
+static VALUE mediainfo_inform(VALUE self, VALUE sym) {
   void *mi;
   Data_Get_Struct(self, void, mi);
 
-  return rb_str_new2(MediaInfo_Inform(mi, 0));
+  ID kind = -1;
+
+  if (rb_respond_to(sym, rb_intern("to_sym"))) {
+    kind = rb_to_id(rb_funcall(sym, rb_intern("to_sym"), 0));
+  }
+
+  // Since this has a side effect of changing options
+  // It needs to be locked until state is restored
+  // Use the ZenLib CriticalSection since it is cross platform
+  // and real real real easy to use.
+  CS.Enter();
+  if (html == kind) {
+    MediaInfo_Option(mi, "Inform", "HTML");
+  } else if (xml == kind) {
+    MediaInfo_Option(mi, "Inform", "XML");
+  }
+
+  const char *inform = MediaInfo_Inform(mi, 0);
+  MediaInfo_Option(mi, "Inform", "Normal");
+  CS.Leave();
+
+  return rb_funcall(rb_str_new2(inform), rb_intern("gsub!"), 2, rb_str_new2("\r"), rb_gv_get("$/"));
+}
+
+static VALUE mediainfo_to_s(VALUE self) {
+  return mediainfo_inform(self, Qnil);
 }
 
 static MediaInfo_stream_C get_stream_id(VALUE sym) {
@@ -113,6 +142,7 @@ void Init_mediainfo() {
   // The typecast of the functions is necessary because of the C++ compiler
   rb_define_method(rb_cMediaInfo, "initialize", (VALUE (*)(...))mediainfo_init, 1);
   rb_define_method(rb_cMediaInfo, "to_s", (VALUE (*)(...))mediainfo_to_s, 0);
+  rb_define_method(rb_cMediaInfo, "inform", (VALUE (*)(...))mediainfo_inform, 1);
   rb_define_method(rb_cMediaInfo, "tracks", (VALUE (*)(...))mediainfo_tracks, 1);
   rb_define_method(rb_cMediaInfo, "track_info", (VALUE (*)(...))mediainfo_track_info, 3);
 
@@ -124,6 +154,8 @@ void Init_mediainfo() {
   chapters = rb_intern("chapters");
   image = rb_intern("image");
   menu = rb_intern("menu");
+  html = rb_intern("html");
+  xml = rb_intern("xml");
 }
 
 #ifdef __cplusplus
