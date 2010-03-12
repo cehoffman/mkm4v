@@ -2,7 +2,7 @@ class MediaInfo::VideoTrack
   attr_reader :duration, :width, :height, :dar, :par, :fps, :region, :size, :lang, :codec
 
   def initialize(source, track)
-    @duration = source.track_info(:video, track, "Duration").to_i # in seconds
+    @duration = source.track_info(:video, track, "Duration").to_i # in milliseconds
     @width = source.track_info(:video, track, 'Width').to_i # in pixels
     @height = source.track_info(:video, track, 'Height').to_i # in pixels
     @dar = source.track_info(:video, track, 'DisplayAspectRatio').to_f

@@ -6,16 +6,12 @@ class MediaInfo
   attr_reader :tracks
   attr_reader *TrackTypes
 
-  def [](key)
-    @tracks[key.to_sym]
-  end
-
   def size
     track_info(:general, 0, 'FileSize').to_i # in bytes
   end
 
   def duration
-    track_info(:general, 0, 'Duration').to_i # in seconds
+    track_info(:general, 0, 'Duration').to_i # in milliseconds
   end
 
   def height
@@ -39,10 +35,6 @@ class MediaInfo
   end
 
   def samplerate
-    audio.firat.samplerate
-  end
-
-  def bitrate
     audio.first.samplerate
   end
 

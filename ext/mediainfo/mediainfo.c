@@ -103,7 +103,7 @@ static VALUE mediainfo_init(VALUE self, VALUE filename) {
     VALUE track_type = rb_ary_entry(track_types, i);
     VALUE klass = rb_str_cat(rb_funcall(rb_funcall(track_type, rb_intern("to_s"), 0), rb_intern("capitalize"), 0), "Track", 5);
     VALUE kind = rb_ary_new2(tracks);
-    rb_ivar_set(self, rb_to_id(rb_str_concat(rb_str_new2("@"), rb_funcall(track_type, rb_intern("to_s"), 0))), kind);
+    rb_ivar_set(self, rb_to_id(rb_str_concat(rb_utf8_str("@"), rb_funcall(track_type, rb_intern("to_s"), 0))), kind);
 
     if (rb_funcall(rb_cMediaInfo, rb_intern("const_defined?"), 1, klass) == Qtrue) {
       klass = rb_const_get(rb_cMediaInfo, rb_intern(RSTRING_PTR(klass)));
@@ -112,7 +112,7 @@ static VALUE mediainfo_init(VALUE self, VALUE filename) {
     }
 
     VALUE track;
-    int num = MediaInfo_Count_Get(mi, get_stream(track_type), -1); // returns 0 on unknown tracks
+    int num = MediaInfo_Count_Get(mi, get_stream(SYM2ID(track_type)), -1); // returns 0 on unknown tracks
     for (int k = 0; k < num; k++) {
       track = rb_funcall(klass, rb_intern("new"), 2, self, INT2FIX(k));
       rb_ary_push(tracks, track);
@@ -167,7 +167,7 @@ static VALUE mediainfo_track_info(VALUE self, VALUE stream, VALUE num, VALUE typ
   void *mi;
   Data_Get_Struct(self, void, mi);
 
-  if (rb_respond_to(stream, rb_intern("to_sym"))) {
+  if (TYPE(stream) != T_SYMBOL && rb_respond_to(stream, rb_intern("to_sym"))) {
     stream = rb_funcall(stream, rb_intern("to_sym"), 0);
   }
 
@@ -175,7 +175,7 @@ static VALUE mediainfo_track_info(VALUE self, VALUE stream, VALUE num, VALUE typ
     rb_raise(rb_eArgError, "'%s' is not a valid stream", RSTRING_PTR(rb_funcall(stream, rb_intern("to_s"), 0)));
   }
 
-  return rb_utf8_str(MediaInfo_Get(mi, get_stream(rb_to_id(stream)), FIX2INT(num), RSTRING_PTR(type), MediaInfo_Info_Text, MediaInfo_Info_Name));
+  return rb_utf8_str(MediaInfo_Get(mi, get_stream(SYM2ID(stream)), FIX2INT(num), RSTRING_PTR(type), MediaInfo_Info_Text, MediaInfo_Info_Name));
 }
 
 static VALUE set_options(void *mi, int argc, VALUE *args) {
@@ -270,7 +270,6 @@ void Init_mediainfo() {
   // Formats for inform
   html = rb_intern("html");
   xml = rb_intern("xml");
-  rb_define_const(rb_cMediaInfo, "InformTypes", rb_ary_new3(3, ID2SYM(html), ID2SYM(xml), ID2SYM(rb_intern("standard"))));
 }
 
 #ifdef __cplusplus
