@@ -14,6 +14,7 @@
 static ZenLib::CriticalSection CS;
 
 static VALUE rb_cMediaInfo;
+static VALUE track_types;
 static ID general;
 static ID video;
 static ID audio;
@@ -66,21 +67,28 @@ static VALUE mediainfo_init(VALUE self, VALUE filename) {
 
   VALUE tracks = rb_hash_new();
 
-  VALUE iter = rb_ary_new();
-  rb_ary_push(iter, rb_ary_new3(3, ID2SYM(video), rb_const_get(rb_cMediaInfo, rb_intern("VideoTrack")), ID2SYM(rb_intern("video"))));
-  rb_ary_push(iter, rb_ary_new3(3, ID2SYM(audio), rb_const_get(rb_cMediaInfo, rb_intern("AudioTrack")), ID2SYM(rb_intern("audio"))));
+  // Go over all the track types that are supported
+  // For each one see if there is a class defined of the form
+  // track name + Track, e.g. AudioTrack.  If there is for each
+  // track of that type create a new instance of that class passing
+  // in self and number of track being processed.
+  for (int i = RARRAY_LEN(track_types) - 1; i >= 0; i--) {
+    VALUE track_type = rb_ary_entry(track_types, i);
+    VALUE klass = rb_str_cat(rb_funcall(rb_funcall(track_type, rb_intern("to_s"), 0), rb_intern("capitalize"), 0), "Track", 5);
 
-  for (int i = RARRAY_LEN(iter) - 1; i >= 0; i--) {
-    VALUE vals = rb_ary_entry(iter, i);
-    int num = FIX2INT(rb_funcall(self, rb_intern("num_tracks"), 1, rb_ary_entry(vals, 0)));
-    VALUE klass = rb_ary_entry(vals, 1);
+    if (rb_funcall(rb_cMediaInfo, rb_intern("const_defined?"), 1, klass) == Qtrue) {
+      klass = rb_const_get(rb_cMediaInfo, rb_intern(RSTRING_PTR(klass)));
+    } else {
+      continue;
+    }
+
     VALUE kind = rb_ary_new2(tracks);
-
+    int num = FIX2INT(rb_funcall(self, rb_intern("num_tracks"), 1, track_type));
     for (int k = 0; k < num; k++) {
       rb_ary_push(kind, rb_funcall(klass, rb_intern("new"), 2, self, INT2FIX(k)));
     }
 
-    rb_hash_aset(tracks, rb_ary_entry(vals, 2), kind);
+    rb_hash_aset(tracks, track_type, kind);
   }
 
   rb_ivar_set(self, rb_intern("@tracks"), tracks);
@@ -204,9 +212,14 @@ void Init_mediainfo() {
   image = rb_intern("image");
   menu = rb_intern("menu");
 
+  track_types = rb_ary_new3(7, ID2SYM(general), ID2SYM(video), ID2SYM(audio), ID2SYM(text), ID2SYM(chapters), ID2SYM(image), ID2SYM(menu));
+  rb_define_const(rb_cMediaInfo, "TrackTypes", track_types);
+
   // Formats for inform
   html = rb_intern("html");
   xml = rb_intern("xml");
+  rb_define_const(rb_cMediaInfo, "InformTypes", rb_ary_new3(3, ID2SYM(html), ID2SYM(xml), ID2SYM(rb_intern("standard"))));
+
 }
 
 #ifdef __cplusplus
