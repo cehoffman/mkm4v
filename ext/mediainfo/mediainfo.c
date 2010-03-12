@@ -140,13 +140,8 @@ static VALUE mediainfo_to_s(VALUE self) {
   return mediainfo_inform(self, NULL);
 }
 
-static MediaInfo_stream_C get_stream(VALUE sym) {
+static MediaInfo_stream_C get_stream(ID kind) {
   MediaInfo_stream_C stream = MediaInfo_Stream_Max;
-  ID kind = -1;
-
-  if (rb_respond_to(sym, rb_intern("to_sym"))) {
-    kind = rb_to_id(rb_funcall(sym, rb_intern("to_sym"), 0));
-  }
 
   if (kind == general) {
     stream = MediaInfo_Stream_General;
@@ -168,13 +163,21 @@ static MediaInfo_stream_C get_stream(VALUE sym) {
 }
 
 // Type of Track, number of that track type, name of information to get
-static VALUE mediainfo_track_info(VALUE self, VALUE sym, VALUE num, VALUE type) {
+static VALUE mediainfo_track_info(VALUE self, VALUE stream, VALUE num, VALUE type) {
   Check_Type(type, T_STRING);
 
   void *mi;
   Data_Get_Struct(self, void, mi);
 
-  return rb_utf8_str(MediaInfo_Get(mi, get_stream(sym), FIX2INT(num), RSTRING_PTR(type), MediaInfo_Info_Text, MediaInfo_Info_Name));
+  if (rb_respond_to(stream, rb_intern("to_sym"))) {
+    stream = rb_funcall(stream, rb_intern("to_sym"), 0);
+  }
+
+  if (rb_funcall(track_types, rb_intern("include?"), 1, stream) == Qfalse) {
+    rb_raise(rb_eArgError, "'%s' is not a valid stream", RSTRING_PTR(rb_funcall(stream, rb_intern("to_s"), 0)));
+  }
+
+  return rb_utf8_str(MediaInfo_Get(mi, get_stream(rb_to_id(stream)), FIX2INT(num), RSTRING_PTR(type), MediaInfo_Info_Text, MediaInfo_Info_Name));
 }
 
 static VALUE set_options(void *mi, int argc, VALUE *args) {
