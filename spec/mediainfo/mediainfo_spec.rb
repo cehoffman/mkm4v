@@ -1,8 +1,8 @@
-require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
+require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe MediaInfo do
   before(:all) do
-    @mediainfo = MediaInfo.new(File.expand_path("../fixtures/sample_mpeg4.mp4", __FILE__))
+    @mediainfo = MediaInfo.new(File.expand_path("../../fixtures/sample_mpeg4.mp4", __FILE__))
     @system_newline = $/.dup
   end
 
@@ -12,7 +12,7 @@ describe MediaInfo do
   end
 
   it "should save the path to the opened file in utf-8" do
-    @mediainfo.file.should == File.expand_path("../fixtures/sample_mpeg4.mp4", __FILE__)
+    @mediainfo.file.should == File.expand_path("../../fixtures/sample_mpeg4.mp4", __FILE__)
     @mediainfo.file.encoding.should == Encoding::UTF_8
   end
 
@@ -35,7 +35,7 @@ describe MediaInfo do
 
     class ::MediaInfo::BogusTrack; end
     MediaInfo::TrackTypes << :bogus
-    mediainfo = MediaInfo.new(File.expand_path("../fixtures/sample_mpeg4.mp4", __FILE__))
+    mediainfo = MediaInfo.new(File.expand_path("../../fixtures/sample_mpeg4.mp4", __FILE__))
 
     mediainfo.instance_variable_get(:@bogus).should be_an_instance_of(Array)
 
@@ -45,9 +45,9 @@ describe MediaInfo do
 
   describe "#track_info" do
     it "should complain if the stream type is not valid" do
-      lambda { @mediainfo.track_info nil, 0, 'Duration'}.should raise_error(ArgumentError)
-      lambda { @mediainfo.track_info :bogus, 0, 'Duration'}.should raise_error(ArgumentError)
-      lambda { @mediainfo.track_info [], 0, 'Duration'}.should raise_error(ArgumentError)
+      -> { @mediainfo.track_info nil, 0, 'Duration'}.should raise_error(ArgumentError)
+      -> { @mediainfo.track_info :bogus, 0, 'Duration'}.should raise_error(ArgumentError)
+      -> { @mediainfo.track_info [], 0, 'Duration'}.should raise_error(ArgumentError)
     end
 
     it "should return info for a track" do
@@ -56,6 +56,10 @@ describe MediaInfo do
 
     it "should return strings in utf-8" do
       @mediainfo.track_info(:video, 0, 'Height').encoding.should == Encoding::UTF_8
+    end
+
+    it "should accept a number as a parameter" do
+      @mediainfo.track_info(:video, 0, 1).should == "1"
     end
   end
 
@@ -82,30 +86,30 @@ describe MediaInfo do
   end
 
   it "should output information in xml" do
-    @mediainfo.to_xml.gsub($/, "\n").should == File.read(File.expand_path("../fixtures/sample_mpeg4.xml", __FILE__))
+    @mediainfo.to_xml.gsub($/, "\n").should == File.read(File.expand_path("../../fixtures/sample_mpeg4.xml", __FILE__))
   end
 
   it "should output information in xml using system newlines" do
     $/ = "\r\n"
-    @mediainfo.to_xml.should == File.read(File.expand_path("../fixtures/sample_mpeg4.xml", __FILE__)).gsub("\n", "\r\n")
+    @mediainfo.to_xml.should == File.read(File.expand_path("../../fixtures/sample_mpeg4.xml", __FILE__)).gsub("\n", "\r\n")
   end
 
   it "should output information in html" do
-    @mediainfo.to_html.gsub($/, "\n").should == File.read(File.expand_path("../fixtures/sample_mpeg4.html", __FILE__))
+    @mediainfo.to_html.gsub($/, "\n").should == File.read(File.expand_path("../../fixtures/sample_mpeg4.html", __FILE__))
   end
 
   it "should output information in html using system newlines" do
     $/ = "\r\n"
-    @mediainfo.to_html.should == File.read(File.expand_path("../fixtures/sample_mpeg4.html", __FILE__)).gsub("\n", "\r\n")
+    @mediainfo.to_html.should == File.read(File.expand_path("../../fixtures/sample_mpeg4.html", __FILE__)).gsub("\n", "\r\n")
   end
 
   it "should output information in a human readable format" do
-    @mediainfo.to_s.gsub($/, "\n").should == File.read(File.expand_path("../fixtures/sample_mpeg4.txt", __FILE__))
+    @mediainfo.to_s.gsub($/, "\n").should == File.read(File.expand_path("../../fixtures/sample_mpeg4.txt", __FILE__))
   end
 
   it "should output information in a human readable format using system newlines" do
     $/ = "\r\n"
-    @mediainfo.to_s.should == File.read(File.expand_path("../fixtures/sample_mpeg4.txt", __FILE__)).gsub("\n", "\r\n")
+    @mediainfo.to_s.should == File.read(File.expand_path("../../fixtures/sample_mpeg4.txt", __FILE__)).gsub("\n", "\r\n")
   end
 
   it "should return information forms in utf-8" do
@@ -114,7 +118,7 @@ describe MediaInfo do
   end
 
   it "should not use rb_str_new or rb_str_new2 because of encoding" do
-    File.read(File.expand_path("../../ext/mediainfo/mediainfo.c", __FILE__)).should_not include("rb_str_new")
+    File.read(File.expand_path("../../../ext/mediainfo/mediainfo.c", __FILE__)).should_not include("rb_str_new")
   end
 
   it "should provide a shortcut to video properties" do
@@ -143,79 +147,7 @@ describe MediaInfo do
     @mediainfo.tracks.count.should == 2
   end
 
-  describe MediaInfo::VideoTrack do
-    before(:all) do
-      @video = @mediainfo.video.first
-    end
-
-    it "should know the height" do
-      @video.height.should == 240
-    end
-
-    it "should know the width" do
-      @video.width.should == 190
-    end
-
-    it "should know the duration" do
-      @video.duration.should == 4966
-    end
-
-    it "should know the display aspect ratio" do
-      @video.dar.should == 0.792
-    end
-
-    it "should know the pixel aspect ratio" do
-      @video.par.should == 1.0
-    end
-
-    it "should know the frames per second" do
-      @video.fps.should == 30.0
-    end
-
-    it "should know the region" do
-      pending { @video.region.should == "NTSC" }
-    end
-
-    it "should know the size of the stream" do
-      @video.size.should == 212293
-    end
-
-    it "should know the language" do
-      @video.lang.should == 'en'
-    end
-
-    it "should know the codec" do
-      @video.codec.should == 'MPEG-4 Visual'
-    end
-  end
-
-  describe MediaInfo::AudioTrack do
-    before(:all) do
-      @audio = @mediainfo.audio.first
-    end
-
-    it "should know the codec" do
-      @audio.codec.should == "AAC"
-    end
-
-    it "should know the duration" do
-      @audio.duration.should == 4992
-    end
-
-    it "should know the bitrate" do
-      @audio.bitrate.should == 48000
-    end
-
-    it "should know the number of channels" do
-      @audio.channels.should == 2
-    end
-
-    it "should know the samplerate" do
-      @audio.samplerate.should == 32000
-    end
-
-    it "should know the stream size" do
-      @audio.size.should == 30376
-    end
+  it "should know the container format" do
+    @mediainfo.container.should == "MPEG-4"
   end
 end

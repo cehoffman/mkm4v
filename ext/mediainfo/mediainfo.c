@@ -165,7 +165,9 @@ static VALUE mediainfo_to_s(VALUE self) {
 
 // Type of Track, number of that track type, name of information to get
 static VALUE mediainfo_track_info(VALUE self, VALUE stream, VALUE num, VALUE type) {
-  Check_Type(type, T_STRING);
+  if (TYPE(type) != T_STRING && TYPE(type) != T_FIXNUM) {
+    rb_raise(rb_eTypeError, "'%s' should be a string or fixnum", RSTRING_PTR(rb_funcall(type, rb_intern("to_s"), 0)));
+  }
 
   void *mi;
   Data_Get_Struct(self, void, mi);
@@ -178,7 +180,11 @@ static VALUE mediainfo_track_info(VALUE self, VALUE stream, VALUE num, VALUE typ
     rb_raise(rb_eArgError, "'%s' is not a valid stream", RSTRING_PTR(rb_funcall(stream, rb_intern("to_s"), 0)));
   }
 
-  return rb_utf8_str(MediaInfo_Get(mi, get_stream(SYM2ID(stream)), FIX2INT(num), RSTRING_PTR(type), MediaInfo_Info_Text, MediaInfo_Info_Name));
+  if (TYPE(type) == T_FIXNUM) {
+    return rb_utf8_str(MediaInfo_GetI(mi, get_stream(SYM2ID(stream)), FIX2INT(num), FIX2INT(type), MediaInfo_Info_Text));
+  } else {
+    return rb_utf8_str(MediaInfo_Get(mi, get_stream(SYM2ID(stream)), FIX2INT(num), RSTRING_PTR(type), MediaInfo_Info_Text, MediaInfo_Info_Name));
+  }
 }
 
 static VALUE set_options(void *mi, int argc, VALUE *args) {
