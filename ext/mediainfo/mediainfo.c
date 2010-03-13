@@ -89,6 +89,9 @@ static VALUE mediainfo_init(VALUE self, VALUE filename) {
   // Convert string to utf8 for mediainfo consumption
   name = rb_encode_utf8(name);
 
+  // Save this for access later
+  rb_ivar_set(self, rb_intern("@file"), name);
+
   MediaInfo_Open(mi, RSTRING_PTR(name));
 
   VALUE tracks = rb_ary_new();
@@ -254,6 +257,9 @@ void Init_mediainfo() {
   rb_define_method(rb_cMediaInfo, "track_info", (VALUE (*)(...))mediainfo_track_info, 3);
   rb_define_method(rb_cMediaInfo, "options", (VALUE (*)(...))mediainfo_options, -1);
   rb_define_singleton_method(rb_cMediaInfo, "options", (VALUE (*)(...))mediainfo_static_options, -1);
+
+  // Define an accessor for the @file var
+  rb_funcall(rb_cMediaInfo, rb_intern("attr_reader"), 1, ID2SYM(rb_intern("file")));
 
   // Stream types
   general = rb_intern("general");
