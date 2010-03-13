@@ -1,5 +1,5 @@
 --- 
-hash: 8e838a47724ef47cd0b42eb89ccc52347d5278f5
+hash: 6346f403a72df394d36cc58bb17e08c63f2af993
 sources: 
 - Rubygems: 
     uri: http://gemcutter.org
@@ -18,16 +18,30 @@ specs:
     version: 2.5.0
 - hoe-git: 
     version: 1.3.0
-- rubyforge: 
-    version: 2.0.4
 - rdiscount: 
     version: 1.5.8.1
+- ruby-debug19: 
+    version: 0.11.6
 - hpricot: 
     version: 0.8.2
+- fakefs: 
+    version: 0.2.1
+- rubyforge: 
+    version: 2.0.4
 - gemcutter: 
     version: 0.5.0
 - rake-compiler: 
     version: 0.7.0
+- columnize: 
+    version: 0.3.1
+- linecache19: 
+    version: 0.5.11
+- ruby-debug-base19: 
+    version: 0.11.23
+- ruby_core_source: 
+    version: 0.1.4
+- archive-tar-minitar: 
+    version: 0.5.2
 - json_pure: 
     version: 1.2.3
 dependencies: 
@@ -57,5 +71,13 @@ dependencies:
     - :dev
   rake-compiler: 
     version: ~> 0.7.0
+    group: 
+    - :dev
+  fakefs: 
+    version: ">= 0.2.1"
+    group: 
+    - :dev
+  ruby-debug19: 
+    version: ~> 0.11.6
     group: 
     - :dev
