@@ -1,14 +1,11 @@
-class MediaInfo::AudioTrack < MediaInfo::AbstractTrack
-  attr_reader :codec, :duration, :bitrate, :channels, :samplerate, :size, :lang
+class MediaInfo::AudioTrack
+  include MediaInfo::Track
 
-  def initialize(source, track)
-    super
-    @codec = info 'Format'
-    @duration = info('Duration').to_i # in milliseconds
-    @bitrate = info('BitRate').to_i # in bits
-    @channels = info('Channel(s)').to_i
-    @samplerate = info('SamplingRate').to_i # in hertz
-    @size = info('StreamSize').to_i # in bytes
-    @lang = info('Language')
-  end
+  property :codec, 'Format'
+  property :duration, 'Duration', Integer
+  property :bitrate, 'BitRate', Integer
+  property :channels, 'Channel(s)', Integer
+  property :samplerate, 'SamplingRate', Integer
+  property :size, 'StreamSize', Integer
+  property :lang, 'Language'
 end

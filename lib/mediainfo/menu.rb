@@ -1,8 +1,9 @@
-class MediaInfo::MenuTrack < MediaInfo::AbstractTrack
+class MediaInfo::MenuTrack
+  include MediaInfo::Track
+
   attr_reader :chapters
 
-  def initialize(source, track)
-    super
+  initialized do
     @chapters = []
     start, stop = info('Chapters_Pos_Begin').to_i, info('Chapters_Pos_End').to_i
     (start...stop).each { |i| @chapters.push Timestamp.new(info(i).split(':', 2).last) }

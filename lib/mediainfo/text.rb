@@ -1,9 +1,6 @@
-class MediaInfo::TextTrack < MediaInfo::AbstractTrack
-  attr_reader :encoding, :lang
+class MediaInfo::TextTrack
+  include MediaInfo::Track
 
-  def initialize(source, track)
-    super
-    @lang = info('Language')
-    @encoding = Encoding.find(info('Format'))
-  end
+  property :encoding, 'Format', ->(raw) { Encoding.find(raw) }
+  property :lang, 'Language'
 end
