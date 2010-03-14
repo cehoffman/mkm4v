@@ -13,7 +13,8 @@ class MediaInfo
     end
   end
 
-  forward :general, :file, :duration, :size, :container
-  forward :video, :height, :width, :dar, :par, :video_codec => :codec
+  forward :general, :file, :duration, :size, :container, :mime_type,
+                    :size, :duration, :bitrate, :interleaved?
+  forward :video, :dar, :par, :frames, :ntsc?, :pal?, :video_codec => :codec
   forward :audio, :samplerate, :channels, :audio_codec => :codec
 end
