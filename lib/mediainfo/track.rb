@@ -21,6 +21,22 @@ module MediaInfo::Track
   Integer = ->(raw) { raw.to_i }
   Float = ->(raw) { raw.to_f }
   String = ->(raw) { raw }
+  Pathname = ->(raw) { ::Pathname.new raw }
+  Encoding = ->(raw) { ::Encoding.find raw rescue raw }
+
+  class Boolean
+    def initialize(true_value)
+      @true_value
+    end
+
+    def call(raw)
+      raw == @true_value
+    end
+
+    def self.call(raw)
+      raw == "1"
+    end
+  end
 
   module ClassMethods
     def self.extended(klass)
@@ -29,8 +45,17 @@ module MediaInfo::Track
       klass.class_variable_set(:@@track_type, klass.name[/::(\w+)Track$/, 1].downcase.to_sym)
     end
 
+    def Boolean(true_value)
+      Boolean.new(true_value)
+    end
+
     def property(name, param, converter = String )
-      attr_reader name.to_sym
+      if converter.is_a? Boolean
+        class_eval "def #{name}?; @#{name}; end"
+      else
+        attr_reader name.to_sym
+      end
+
       class_variable_get(:@@properties) << ["@#{name}".to_sym, param, converter]
     end
 
