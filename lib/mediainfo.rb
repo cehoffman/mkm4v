@@ -5,6 +5,7 @@ require File.expand_path("../mediainfo/video", __FILE__)
 require File.expand_path("../mediainfo/audio", __FILE__)
 require File.expand_path("../mediainfo/menu", __FILE__)
 require File.expand_path("../mediainfo/text", __FILE__)
+require File.expand_path("../mediainfo/image", __FILE__)
 
 class MediaInfo
   def self.forward(accessor, *methods)
