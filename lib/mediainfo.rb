@@ -10,7 +10,12 @@ require File.expand_path("../mediainfo/image", __FILE__)
 class MediaInfo
   def self.forward(accessor, *methods)
     def_each *methods do |method|
-      instance_eval "#{accessor}.first.#{method}"
+      case accessor
+      when Symbol, String
+        instance_eval "#{accessor}.first.#{method}"
+      when Proc
+        instance_exec(&accessor).send method
+      end
     end
   end
 
@@ -18,4 +23,7 @@ class MediaInfo
                     :size, :duration, :bitrate, :interleaved?
   forward :video, :dar, :par, :frames, :ntsc?, :pal?, :video_codec => :codec
   forward :audio, :samplerate, :channels, :audio_codec => :codec
+  forward -> { video.first || image.first }, :width, :height
+
+  TrackTypes.each { |type| class_eval "def #{type}?; !#{type}.empty?; end" }
 end
