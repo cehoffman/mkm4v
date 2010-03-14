@@ -17,7 +17,7 @@ describe MediaInfo do
   end
 
   it "should provide access to all the track types" do
-    MediaInfo::TrackTypes.each { |type| @mediainfo.send(type).should be_an_instance_of(Array) }
+    [:video, :audio, :image, :chapters, :menu, :text].each { |type| @mediainfo.send(type).should be_an_instance_of(Array) }
   end
 
   it "should have an array of video tracks" do
@@ -144,7 +144,7 @@ describe MediaInfo do
   end
 
   it "should know how many tracks there are in total" do
-    @mediainfo.tracks.count.should == 2
+    @mediainfo.tracks.count.should == 3 # 1 audio, 1 video, and 1 general
   end
 
   it "should know the container format" do
