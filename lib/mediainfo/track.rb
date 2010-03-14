@@ -50,7 +50,7 @@ module MediaInfo::Track
     end
 
     def property(name, param, converter = String )
-      if converter.is_a? Boolean
+      if converter.is_a? Boolean or converter == Boolean
         class_eval "def #{name}?; @#{name}; end"
       else
         attr_reader name.to_sym
