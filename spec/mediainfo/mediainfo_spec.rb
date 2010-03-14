@@ -11,9 +11,12 @@ describe MediaInfo do
     $/ = @system_newline
   end
 
-  it "should save the path to the opened file in utf-8" do
-    @mediainfo.file.should == File.expand_path("../../fixtures/sample_mpeg4.mp4", __FILE__)
-    @mediainfo.file.encoding.should == Encoding::UTF_8
+  it "should know the path to the opened file" do
+    @mediainfo.file.to_s.should == File.expand_path("../../fixtures/sample_mpeg4.mp4", __FILE__)
+  end
+
+  it "should return the path to the opened file as a Pathname" do
+    @mediainfo.file.should be_an_instance_of(Pathname)
   end
 
   it "should provide access to all the track types" do
