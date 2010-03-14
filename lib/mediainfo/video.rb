@@ -8,19 +8,11 @@ class MediaInfo::VideoTrack
   property :par, 'PixelAspectRatio', Float
   property :fps, 'FrameRate', Float
   property :region, 'Standard'
+  property :interlaced, 'Standard', Boolean("Interlaced")
+  property :ntsc, 'Standard', Boolean("NTSC")
+  property :pal, 'Standard', Boolean("PAL")
   property :size, 'StreamSize', Integer
   property :lang, 'Language'
   property :codec, 'Format'
-
-  def interlaced?
-    region == "Interlaced"
-  end
-
-  def ntsc?
-    @standard == "NTSC"
-  end
-
-  def pal?
-    @standard == "PAL"
-  end
+  property :frames, 'FrameCount', Integer
 end
