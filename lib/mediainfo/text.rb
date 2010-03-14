@@ -1,6 +1,6 @@
 class MediaInfo::TextTrack
   include MediaInfo::Track
 
-  property :encoding, 'Format', ->(raw) { Encoding.find(raw) }
+  property :encoding, 'Format', Encoding
   property :lang, 'Language'
 end
