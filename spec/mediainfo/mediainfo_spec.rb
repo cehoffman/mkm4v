@@ -11,6 +11,10 @@ describe MediaInfo do
     $/ = @system_newline
   end
 
+  it "should raise an error when file doesn't exist" do
+    -> { MediaInfo.new "will/not/exist.mkv" }.should raise_error(ArgumentError, "file does not exist - will/not/exist.mkv")
+  end
+
   it "should provide access to all the track types" do
     [:video, :audio, :image, :chapters, :menu, :text].each { |type| @mediainfo.send(type).should be_an_instance_of(Array) }
   end
