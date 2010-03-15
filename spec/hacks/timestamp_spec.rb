@@ -93,4 +93,10 @@ describe Timestamp do
 
     stamp.minutes.should == 91
   end
+
+  it "should have an accessor for the number of milliseconds" do
+    stamp = Timestamp.new("00:00:31.232")
+
+    stamp.milliseconds.should == 31232
+  end
 end

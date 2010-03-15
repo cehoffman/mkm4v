@@ -54,6 +54,10 @@ class Timestamp
     @seconds/60.0
   end
 
+  def milliseconds
+    @seconds * 1000
+  end
+
   def to_s
     num = @seconds
 
