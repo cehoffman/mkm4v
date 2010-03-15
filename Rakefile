@@ -30,6 +30,7 @@ end
 require "rake/extensiontask"
 Rake::ExtensionTask.new('mediainfo', gem.spec) do |ext|
   ext.lib_dir = File.join('lib', 'mediainfo')
+  ext.source_pattern = "*.{c,cpp}"
 end
 
 Rake::Task[:spec].prerequisites << :compile
