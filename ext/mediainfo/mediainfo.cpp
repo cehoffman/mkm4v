@@ -1,5 +1,5 @@
 #include <ruby.h>
-#include "MediaInfoDLL_Static.h"
+#include <MediaInfoDLL/MediaInfoDLL_Static.h>
 #include <ZenLib/CriticalSection.h>
 
 // Since MediaInfo is a C++ library it seems I must protect my ruby

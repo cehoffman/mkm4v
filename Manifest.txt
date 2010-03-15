@@ -377,7 +377,7 @@ ext/mediainfo/ZenLib/Source/ZenLib/int128s.h
 ext/mediainfo/ZenLib/Source/ZenLib/int128u.cpp
 ext/mediainfo/ZenLib/Source/ZenLib/int128u.h
 ext/mediainfo/extconf.rb
-ext/mediainfo/mediainfo.c
+ext/mediainfo/mediainfo.cpp
 lib/hacks/class.rb
 lib/hacks/kernel.rb
 lib/hacks/pathname.rb

@@ -118,7 +118,7 @@ describe MediaInfo do
   end
 
   it "should not use rb_str_new or rb_str_new2 because of encoding" do
-    File.read(File.expand_path("../../../ext/mediainfo/mediainfo.c", __FILE__)).should_not include("rb_str_new")
+    File.read(File.expand_path("../../../ext/mediainfo/mediainfo.cpp", __FILE__)).should_not include("rb_str_new")
   end
 
   it "should provide a shortcut to general properties" do

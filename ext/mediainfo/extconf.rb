@@ -20,7 +20,6 @@ Dir.chdir root + "MediaInfoLib/Project/GNU/Library" do
 end
 
 # Wow mkmf is such a pain to get this working
-RbConfig::MAKEFILE_CONFIG['CC'] = ENV['CC'] = "g++"
 with_cflags "-I#{root + "ZenLib/Source"} -I#{root + "MediaInfoLib/Source"}" do
   with_ldflags "-L#{root} -lmediainfo -lzen" do
     create_makefile("mediainfo/mediainfo")
