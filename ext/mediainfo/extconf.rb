@@ -3,19 +3,25 @@ require "pathname"
 
 root = Pathname.new(__FILE__).dirname.realpath
 
+processors = case RUBY_PLATFORM
+             when /darwin/ then `hwprefs cpu_count`.strip
+             when /linux/ then File.read("/proc/cpuinfo").strip
+             else 2
+             end
+
 Dir.chdir root + "ZenLib/Project/GNU/Library" do
   system "./configure --libdir=#{root}"
-  system "make install"
+  system "make install -j#{processors}"
 end
 
 Dir.chdir root + "MediaInfoLib/Project/GNU/Library" do
-  system "./configure --libdir=#{root}" # --enable-shared --disable-static
-  system "make install"
+  system "./configure --libdir=#{root}"
+  system "make install -j#{processors}"
 end
 
 # Wow mkmf is such a pain to get this working
 RbConfig::MAKEFILE_CONFIG['CC'] = ENV['CC'] = "g++"
-with_cflags "-I#{root + "ZenLib/Source"} -I#{root + "MediaInfoLib/Source"} -I#{root + "MediaInfoLib/Source/MediaInfoDLL"}" do
+with_cflags "-I#{root + "ZenLib/Source"} -I#{root + "MediaInfoLib/Source"}" do
   with_ldflags "-L#{root} -lmediainfo -lzen" do
     create_makefile("mediainfo/mediainfo")
   end
