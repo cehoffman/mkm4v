@@ -14,8 +14,8 @@ module MediaInfo::Track
     self.class.class_variable_get(:@@initializations).each { |block| instance_eval &block }
   end
 
-  def info(query)
-    @source.track_info self.class.class_variable_get(:@@track_type), @track, query
+  def info(query, type = :text)
+    @source.track_info self.class.class_variable_get(:@@track_type), @track, query, type
   end
 
   Integer = ->(raw) { raw.to_i }

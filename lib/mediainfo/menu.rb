@@ -6,6 +6,6 @@ class MediaInfo::MenuTrack
   initialized do
     @chapters = []
     start, stop = info('Chapters_Pos_Begin').to_i, info('Chapters_Pos_End').to_i
-    (start...stop).each { |i| @chapters.push ::Timestamp.new(info(i).split(':', 2).last) }
+    (start...stop).each { |i| @chapters.push ::Timestamp.new(info(i, :name)) }
   end
 end

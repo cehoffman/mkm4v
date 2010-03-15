@@ -161,7 +161,13 @@ static VALUE mediainfo_to_s(VALUE self) {
 }
 
 // Type of Track, number of that track type, name of information to get
-static VALUE mediainfo_track_info(VALUE self, VALUE stream, VALUE num, VALUE type) {
+static VALUE mediainfo_track_info(int argc, VALUE *args, VALUE self) {
+  if (argc < 3) {
+    rb_raise(rb_eArgError, "wrong number of arguments(%d for 3 or 4)", argc);
+  }
+
+  VALUE stream = args[0], num = args[1], type = args[2];
+
   if (TYPE(type) != T_STRING && TYPE(type) != T_FIXNUM) {
     rb_raise(rb_eTypeError, "'%s' should be a string or fixnum", RSTRING_PTR(rb_funcall(type, rb_intern("to_s"), 0)));
   }
@@ -177,10 +183,27 @@ static VALUE mediainfo_track_info(VALUE self, VALUE stream, VALUE num, VALUE typ
     rb_raise(rb_eArgError, "'%s' is not a valid stream", RSTRING_PTR(rb_funcall(stream, rb_intern("to_s"), 0)));
   }
 
+
+  MediaInfo_info_C info = MediaInfo_Info_Text;
+  if (argc >= 4) {
+    ID get_info = rb_to_id(args[3]);
+    if (rb_intern("name") == get_info) {
+      info = MediaInfo_Info_Name;
+    } else if (rb_intern("option") == get_info) {
+      info = MediaInfo_Info_Options;
+    } else if (rb_intern("measure") == get_info) {
+      info = MediaInfo_Info_Measure;
+    } else if (rb_intern("info") == get_info) {
+      info = MediaInfo_Info_Info;
+    } else if (rb_intern("howto") == get_info) {
+      info = MediaInfo_Info_HowTo;
+    }
+  }
+
   if (TYPE(type) == T_FIXNUM) {
-    return rb_utf8_str(MediaInfo_GetI(mi, get_stream(SYM2ID(stream)), FIX2INT(num), FIX2INT(type), MediaInfo_Info_Text));
+    return rb_utf8_str(MediaInfo_GetI(mi, get_stream(SYM2ID(stream)), FIX2INT(num), FIX2INT(type), info));
   } else {
-    return rb_utf8_str(MediaInfo_Get(mi, get_stream(SYM2ID(stream)), FIX2INT(num), RSTRING_PTR(type), MediaInfo_Info_Text, MediaInfo_Info_Name));
+    return rb_utf8_str(MediaInfo_Get(mi, get_stream(SYM2ID(stream)), FIX2INT(num), RSTRING_PTR(type), info, MediaInfo_Info_Name));
   }
 }
 
@@ -257,7 +280,7 @@ void Init_mediainfo() {
   rb_define_method(rb_cMediaInfo, "to_s", (VALUE (*)(...))mediainfo_to_s, 0);
   rb_define_method(rb_cMediaInfo, "to_html", (VALUE (*)(...))mediainfo_to_html, 0);
   rb_define_method(rb_cMediaInfo, "to_xml", (VALUE (*)(...))mediainfo_to_xml, 0);
-  rb_define_method(rb_cMediaInfo, "track_info", (VALUE (*)(...))mediainfo_track_info, 3);
+  rb_define_method(rb_cMediaInfo, "track_info", (VALUE (*)(...))mediainfo_track_info, -1);
   rb_define_method(rb_cMediaInfo, "options", (VALUE (*)(...))mediainfo_options, -1);
   rb_define_singleton_method(rb_cMediaInfo, "options", (VALUE (*)(...))mediainfo_static_options, -1);
 
