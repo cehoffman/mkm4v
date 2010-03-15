@@ -1,6 +1,73 @@
-=== 1.0.0 / 2010-03-10
+=== 0.0.1 / 2010-03-15
 
-* 1 major enhancement
-
-  * Birthday!
+* Ability to convert movies with dts tracks and have automatic conversion to ac3
+* Updated specs for MediaInfo and track types
+* Updated String#undent that preserves empty lines
+* Just use a static name for the executable
+* Use Timestamp as default type for durations in mediainfo
+* Millisecond method for Timestamp
+* Missing Class#to_proc used in Handbrake to create Title instances
+* Let ruby take care of escaping params properly
+* The updated specs for Timestamp class
+* Add Handbrake title search parsing to get info from DVDs and other sources
+* Break out Timestamp into its own file with added functionality
+* FakeFS wasn't doing its job when FileUtils was included
+* A configuration class with specs for sharing config state throughout application
+* Correct bug with boolean converter using default value
+* Make MediaInfo#width and height conditional of video or image track and helpful checkers for existance of tracks
+* Add image track type
+* Updated forwarded properties
+* Update tests for Pathname converter
+* Add more properties to general track
+* Use encoding converter
+* Use the boolean converter and add frame count to video
+* Add a boolean, pathname, and encoding converter
+* Refactor MediaInfo class to dry it up
+* Reduce initialization overhead and memory usage
+* A small dsl for mediainfo tracks
+* Reorganize mediainfo specs and add MenuTrack, TextTrack, and other accessors for tracks
+* Test for pathname hacks
+* Save the filepath in mediainfo for reference
+* Use ruby-debug and fakefs in tests
+* Rcov isn't production on 1.9 yet so just remove it for now
+* Fixes that resulted from tests
+* Add tests for mediainfo
+* Reorder get_stream in file and remove prototype
+* Streamline get_stream and add helpful error message for #track_info
+* Rename #inform :xml to #to_xml and remove use of bang version of string calls
+* Ability to access the options of mediainfo by setting through hash of param => setting or reading from an array of params
+* Number of tracks should be determined by length of MediaInfo#tracks, MediaInfo#audio, etc.
+* Make tracks accessible through accessors, e.g. .audio # => [AudioTrack, AudioTrack]
+* Automatically create track classes if there is a corresponding class, e.g. AudioTrack
+* Add some ruby niceties for audio and video tracks
+* State that ruby 1.9 is required - this is because of the use of string encodings
+* Filename needs to be encoded in utf8 too
+* Ensure all the strings passed to ruby are utf8 since we get utf8 from mediainfo
+* Rename MediaInfo#tracks to MediaInfo#num_tracks and git it variable number of arguments
+* Better error message and pass absolute path to file for opening
+* More liberal acceptance of input to track types for get_stream_id
+* Provide access to the mediainfo inform output formats of html, xml, and standard
+* Set global options instead of per instance
+* Prevent mediainfo from connecting to the internet
+* Use convention for mediainfo examples for last parameter to Get
+* Simplify the returned information to just what is cared about
+* Have the glue to get properties of tracks into ruby space now
+* Get rid of warning because of missing function
+* Ability to get the inform of a media file printed
+* Get building mediainfo working
+* Ignore more build files
+* Need ZenLib too
+* First try at mediainfo c extension
+* Input files are a required option
+* Make the cli options testable
+* Use hoe plugin system for bundler auto deps
+* Intuit gemspec dependencies from Gemfile
+* Update input file option
+* Fix microsoft? definition
+* Make spec helper run
+* Make it possible to use executable from working repo
+* Add manpage
+* Github webpage link
+* Updated manifest
+* Initial commit
 
