@@ -10,7 +10,7 @@ describe MediaInfo::AudioTrack do
   end
 
   it "should know the duration" do
-    @audio.duration.should == 4992
+    @audio.duration.milliseconds.should == 4992
   end
 
   it "should know the bitrate" do

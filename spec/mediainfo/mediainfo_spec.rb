@@ -139,7 +139,7 @@ describe MediaInfo do
   end
 
   it "should know the file duration" do
-    @mediainfo.duration.should == 4992
+    @mediainfo.duration.milliseconds.should == 4992
   end
 
   it "should know the file size" do

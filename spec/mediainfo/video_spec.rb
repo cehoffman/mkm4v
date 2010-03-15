@@ -14,7 +14,7 @@ describe MediaInfo::VideoTrack do
   end
 
   it "should know the duration" do
-    @video.duration.should == 4966
+    @video.duration.milliseconds.should == 4966
   end
 
   it "should know the display aspect ratio" do

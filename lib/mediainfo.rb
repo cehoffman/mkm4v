@@ -21,9 +21,13 @@ class MediaInfo
 
   forward :general, :file, :duration, :size, :container, :mime_type,
                     :size, :duration, :bitrate, :interleaved?
-  forward :video, :dar, :par, :frames, :ntsc?, :pal?, :video_codec => :codec
+  forward :video, :dar, :par, :frames, :ntsc?, :pal?, :interlaced?, :video_codec => :codec
   forward :audio, :samplerate, :channels, :audio_codec => :codec
   forward -> { video.first || image.first }, :width, :height
 
   TrackTypes.each { |type| class_eval "def #{type}?; !#{type}.empty?; end" }
+
+  def inspect
+    "#<#{self.class.name}:#{file}>"
+  end
 end

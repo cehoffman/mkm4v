@@ -1,7 +1,7 @@
 class MediaInfo::VideoTrack
   include MediaInfo::Track
 
-  property :duration, 'Duration', Integer
+  property :duration, 'Duration', Timestamp
   property :width, 'Width', Integer
   property :height, 'Height', Integer
   property :dar, 'DisplayAspectRatio', Float
