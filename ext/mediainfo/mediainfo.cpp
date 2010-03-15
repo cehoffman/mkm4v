@@ -207,14 +207,8 @@ static VALUE mediainfo_track_info(int argc, VALUE *args, VALUE self) {
   }
 }
 
-static VALUE set_options(void *mi, int argc, VALUE *args) {
-  VALUE normalized = rb_ary_new2(argc);
-
-  for (int i = 0; i < argc; i++) {
-    rb_ary_push(normalized, args[i]);
-  }
-
-  normalized = rb_funcall(rb_funcall(normalized, rb_intern("flatten"), 0), rb_intern("compact"), 0);
+static VALUE set_options(void *mi, VALUE args) {
+  VALUE normalized = rb_funcall(args, rb_intern("compact"), 0);
 
   VALUE arg = Qnil;
 
@@ -249,14 +243,14 @@ static VALUE set_options(void *mi, int argc, VALUE *args) {
   return arg;
 }
 
-static VALUE mediainfo_options(int argc, VALUE *args, VALUE self) {
+static VALUE mediainfo_options(VALUE self, VALUE args) {
   void *mi;
   Data_Get_Struct(self, void, mi);
-  return set_options(mi, argc, args);
+  return set_options(mi, args);
 }
 
-static VALUE mediainfo_static_options(int argc, VALUE *args, VALUE self) {
-  return set_options(NULL, argc, args);
+static VALUE mediainfo_static_options(VALUE self, VALUE args) {
+  return set_options(NULL, args);
 }
 
 void Init_mediainfo() {
@@ -281,8 +275,8 @@ void Init_mediainfo() {
   rb_define_method(rb_cMediaInfo, "to_html", (VALUE (*)(...))mediainfo_to_html, 0);
   rb_define_method(rb_cMediaInfo, "to_xml", (VALUE (*)(...))mediainfo_to_xml, 0);
   rb_define_method(rb_cMediaInfo, "track_info", (VALUE (*)(...))mediainfo_track_info, -1);
-  rb_define_method(rb_cMediaInfo, "options", (VALUE (*)(...))mediainfo_options, -1);
-  rb_define_singleton_method(rb_cMediaInfo, "options", (VALUE (*)(...))mediainfo_static_options, -1);
+  rb_define_method(rb_cMediaInfo, "options", (VALUE (*)(...))mediainfo_options, -2);
+  rb_define_singleton_method(rb_cMediaInfo, "options", (VALUE (*)(...))mediainfo_static_options, -2);
 
   // Define an accessor for the tracks
   rb_funcall(rb_cMediaInfo, rb_intern("attr_reader"), 1, ID2SYM(rb_intern("tracks")));
