@@ -48,4 +48,20 @@ describe MediaInfo::VideoTrack do
   it "should know the track id" do
     @video.id.should == 2
   end
+
+  it "should know the number of frames" do
+    @video.frames.should == 149
+  end
+
+  it "should have a shortcut for ntsc region" do
+    @video.ntsc?.should == false
+  end
+
+  it "should have a shortcut for pal region" do
+    @video.pal?.should == false
+  end
+
+  it "should have a shortcut for interlaced" do
+    @video.interlaced?.should == false
+  end
 end

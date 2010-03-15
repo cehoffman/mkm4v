@@ -6,7 +6,6 @@ class MediaInfo::GeneralTrack
   property :duration, 'Duration', Timestamp
   property :container, 'Format'
   property :mime_type, 'InternetMediaType'
-  property :size, 'FileSize', Integer
   property :bitrate, 'OverallBitRate', Integer
   property :interleaved, 'Interleaved', Boolean
 end

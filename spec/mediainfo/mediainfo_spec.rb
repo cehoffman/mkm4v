@@ -11,14 +11,6 @@ describe MediaInfo do
     $/ = @system_newline
   end
 
-  it "should know the path to the opened file" do
-    @mediainfo.file.to_s.should == File.expand_path("../../fixtures/sample_mpeg4.mp4", __FILE__)
-  end
-
-  it "should return the path to the opened file as a Pathname" do
-    @mediainfo.file.should be_an_instance_of(Pathname)
-  end
-
   it "should provide access to all the track types" do
     [:video, :audio, :image, :chapters, :menu, :text].each { |type| @mediainfo.send(type).should be_an_instance_of(Array) }
   end
@@ -78,6 +70,7 @@ describe MediaInfo do
     end
 
     it "should replace \\r with system newline terminators" do
+      $/ = "\n"
       @mediainfo.options("Info_Codecs")["Info_Codecs"].should =~ /;3COM NBX;2CC;A;;;3Com Corporation\n;FAAD AAC;2CC;A\n/
       $/ = "\r\n"
       @mediainfo.options("Info_Codecs")["Info_Codecs"].should =~ /;3COM NBX;2CC;A;;;3Com Corporation\r\n;FAAD AAC;2CC;A\r\n/
@@ -124,33 +117,71 @@ describe MediaInfo do
     File.read(File.expand_path("../../../ext/mediainfo/mediainfo.c", __FILE__)).should_not include("rb_str_new")
   end
 
+  it "should provide a shortcut to general properties" do
+    @mediainfo.general.first.should_receive(:file)
+    @mediainfo.general.first.should_receive(:duration)
+    @mediainfo.general.first.should_receive(:size)
+    @mediainfo.general.first.should_receive(:container)
+    @mediainfo.general.first.should_receive(:mime_type)
+    @mediainfo.general.first.should_receive(:size)
+    @mediainfo.general.first.should_receive(:duration)
+    @mediainfo.general.first.should_receive(:bitrate)
+    @mediainfo.general.first.should_receive(:interleaved?)
+
+    @mediainfo.file
+    @mediainfo.duration
+    @mediainfo.size
+    @mediainfo.container
+    @mediainfo.mime_type
+    @mediainfo.size
+    @mediainfo.duration
+    @mediainfo.bitrate
+    @mediainfo.interleaved?
+  end
+
   it "should provide a shortcut to video properties" do
-    @mediainfo.height.should == @mediainfo.video.first.height
-    @mediainfo.width.should == @mediainfo.video.first.width
-    @mediainfo.dar.should == @mediainfo.video.first.dar
-    @mediainfo.par.should == @mediainfo.video.first.par
-    @mediainfo.video_codec.should == @mediainfo.video.first.codec
+    @mediainfo.video.first.should_receive(:height)
+    @mediainfo.video.first.should_receive(:width)
+    @mediainfo.video.first.should_receive(:dar)
+    @mediainfo.video.first.should_receive(:par)
+    @mediainfo.video.first.should_receive(:codec)
+    @mediainfo.video.first.should_receive(:frames)
+    @mediainfo.video.first.should_receive(:ntsc?)
+    @mediainfo.video.first.should_receive(:pal?)
+    @mediainfo.video.first.should_receive(:interlaced?)
+
+    @mediainfo.height
+    @mediainfo.width
+    @mediainfo.dar
+    @mediainfo.par
+    @mediainfo.video_codec
+    @mediainfo.frames
+    @mediainfo.ntsc?
+    @mediainfo.pal?
+    @mediainfo.interlaced?
   end
 
   it "should provide a shortcut to audio properties" do
-    @mediainfo.samplerate.should == @mediainfo.audio.first.samplerate
-    @mediainfo.audio_codec.should == @mediainfo.audio.first.codec
-    @mediainfo.channels.should == @mediainfo.audio.first.channels
+    @mediainfo.audio.first.should_receive(:samplerate)
+    @mediainfo.audio.first.should_receive(:codec)
+    @mediainfo.audio.first.should_receive(:channels)
+
+    @mediainfo.samplerate
+    @mediainfo.audio_codec
+    @mediainfo.channels
   end
 
-  it "should know the file duration" do
-    @mediainfo.duration.milliseconds.should == 4992
-  end
-
-  it "should know the file size" do
-    @mediainfo.size.should == 245779
+  it "should have testers for existance of tracks" do
+    @mediainfo.general?.should == !@mediainfo.general.empty?
+    @mediainfo.video?.should == !@mediainfo.video.empty?
+    @mediainfo.audio?.should == !@mediainfo.audio.empty?
+    @mediainfo.image?.should == !@mediainfo.image.empty?
+    @mediainfo.chapters?.should == !@mediainfo.chapters.empty?
+    @mediainfo.text?.should == !@mediainfo.text.empty?
+    @mediainfo.menu?.should == !@mediainfo.menu.empty?
   end
 
   it "should know how many tracks there are in total" do
     @mediainfo.tracks.count.should == 3 # 1 audio, 1 video, and 1 general
-  end
-
-  it "should know the container format" do
-    @mediainfo.container.should == "MPEG-4"
   end
 end
