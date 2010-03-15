@@ -18,6 +18,22 @@ require "fakefs"
 require "fakefs/spec_helpers"
 FakeFS.deactivate!
 
-Spec::Runner.configure do |config|
+module ConsoleHelpers
+  def capture(&block)
+    $stdout, $stderr = StringIO.new("", "r+"), StringIO.new("", "r+")
 
+    yield
+
+    $stdout.seek(0)
+    $stderr.seek(0)
+
+    stdout, stderr = $stdout, $stderr
+    $stdout, $stderr = STDOUT, STDERR
+
+    [stdout.read, stderr.read]
+  end
+end
+
+Spec::Runner.configure do |config|
+  config.include ConsoleHelpers
 end
