@@ -25,7 +25,6 @@ describe Mkm4v::Config do
   describe "#parse" do
     include FakeFS::SpecHelpers
     include Mkm4v::Config
-    include FileUtils
 
     def self.flags(*flags, &block)
       desc = flags.pop
@@ -58,14 +57,12 @@ describe Mkm4v::Config do
     end
 
     flags :input, :i, "get a list of input files" do |flag|
-      touch "file.mkv"
-      touch "file2.mkv"
+      FileUtils.touch "file.mkv"
+      FileUtils.touch "file2.mkv"
 
       self.class.parse flag, "file.mkv", "file2.mkv"
 
       config.input.should include("file.mkv", "file2.mkv")
     end
   end
-
-
 end
