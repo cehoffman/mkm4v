@@ -8,3 +8,15 @@ lib/mediainfo/mediainfo.bundle
 .libs/
 *.[oa]
 *.l[oa]
+ext/mediainfo/MediaInfoLib/Project/GNU/Library/Makefile
+ext/mediainfo/MediaInfoLib/Project/GNU/Library/config.log
+ext/mediainfo/MediaInfoLib/Project/GNU/Library/config.status
+ext/mediainfo/MediaInfoLib/Project/GNU/Library/libmediainfo-config
+ext/mediainfo/MediaInfoLib/Project/GNU/Library/libmediainfo.pc
+ext/mediainfo/MediaInfoLib/Project/GNU/Library/libtool
+ext/mediainfo/ZenLib/Project/GNU/Library/Makefile
+ext/mediainfo/ZenLib/Project/GNU/Library/config.log
+ext/mediainfo/ZenLib/Project/GNU/Library/config.status
+ext/mediainfo/ZenLib/Project/GNU/Library/libtool
+ext/mediainfo/ZenLib/Project/GNU/Library/libzen-config
+ext/mediainfo/ZenLib/Project/GNU/Library/libzen.pc
