@@ -20,7 +20,7 @@ class Mkm4v::Transcoder
   def transcode
     dts_to_ac3!
 
-    cmd = [Handbrake::Exe, "-i", @info.file, "-o", @output.extname("m4v") ]
+    cmd = [Handbrake::Exe, "-i", @info.file, "-o", @output.extname("m4v") ]
     cmd << %w|-v0 -e x264  -q 20.0 -E ca_aac,ac3 -B 160,160|
     cmd << %w|-6 dpl2,auto -R 48,Auto -D 0.0,0.0 -f mp4 -4 -X 1280 --loose-anamorphic -m|
     cmd << %w|--subtitle scan --subtitle-forced --subtitle-default --subtitle-burn --native-language eng --native-dub|
