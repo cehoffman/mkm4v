@@ -6,8 +6,6 @@ Manifest.txt
 README.rdoc
 Rakefile
 bin/mkm4v
-ext/mediainfo/MediaInfoDLL.cpp
-ext/mediainfo/MediaInfoDLL_Static.h
 ext/mediainfo/MediaInfoLib/Project/GNU/Library/Makefile.am
 ext/mediainfo/MediaInfoLib/Project/GNU/Library/Makefile.in
 ext/mediainfo/MediaInfoLib/Project/GNU/Library/aclocal.m4
@@ -292,10 +290,12 @@ ext/mediainfo/MediaInfoLib/Source/MediaInfo/Video/File_Vc1.cpp
 ext/mediainfo/MediaInfoLib/Source/MediaInfo/Video/File_Vc1.h
 ext/mediainfo/MediaInfoLib/Source/MediaInfoDLL/MediaInfoDLL.JNA.java
 ext/mediainfo/MediaInfoLib/Source/MediaInfoDLL/MediaInfoDLL.JNative.java
+ext/mediainfo/MediaInfoLib/Source/MediaInfoDLL/MediaInfoDLL.cpp
 ext/mediainfo/MediaInfoLib/Source/MediaInfoDLL/MediaInfoDLL.cs
 ext/mediainfo/MediaInfoLib/Source/MediaInfoDLL/MediaInfoDLL.h
 ext/mediainfo/MediaInfoLib/Source/MediaInfoDLL/MediaInfoDLL.py
 ext/mediainfo/MediaInfoLib/Source/MediaInfoDLL/MediaInfoDLL3.py
+ext/mediainfo/MediaInfoLib/Source/MediaInfoDLL/MediaInfoDLL_Static.h
 ext/mediainfo/ZenLib/History.txt
 ext/mediainfo/ZenLib/License.txt
 ext/mediainfo/ZenLib/Project/GNU/Library/Makefile.am
