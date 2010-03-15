@@ -74,3 +74,8 @@ desc "Show the man page in man"
 task :man => "man:build" do
   sh "man man/mkm4v.1"
 end
+
+desc "Open and irb session with the project environment"
+task :irb do
+  sh "bundle exec irb -r./lib/mkm4v"
+end
