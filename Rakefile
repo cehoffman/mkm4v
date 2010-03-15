@@ -65,10 +65,12 @@ namespace :spec do
   end
 end
 
+desc "Build the man documentation"
 task "man:build" do
   sh "bundle exec vendor/bin/ronn -br5 --organization=ByHoffman --manual='mkm4v Manual' man/*.ronn"
 end
 
+desc "Show the man page in man"
 task :man => "man:build" do
   sh "man man/mkm4v.1"
 end
