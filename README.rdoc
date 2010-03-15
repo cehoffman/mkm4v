@@ -12,7 +12,7 @@ inclusion of subtitles when audio is not native language.
 
 == SYNOPSIS:
 
-    mkm4v path/to/movie.mkv
+    mkm4v -i path/to/movie.mkv
 
 == REQUIREMENTS:
 
