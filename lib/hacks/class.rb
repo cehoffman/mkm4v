@@ -14,4 +14,8 @@ class Class
     end
    end
  end
+
+ def to_proc
+   proc(&method(:new))
+ end
 end
