@@ -42,7 +42,7 @@ describe Mkm4v::Config do
       stdout, stderr = capture { -> { self.class.parse flag }.should raise_error(SystemExit) }
 
       stdout.should == <<-EOS.undent
-        Usage: #{$0} [options] -i <filename> [filename ...]
+        Usage: mkm4v [options] -i <filename> [filename ...]
         #{" "}
           --input, -i <s+>:   List of files to convert
              --version, -v:   Print version and exit
@@ -53,7 +53,7 @@ describe Mkm4v::Config do
     flags :version, :v, "print the curretn version" do |flag|
       stdout, stderr = capture { -> { self.class.parse flag }.should raise_error(SystemExit) }
 
-      stdout.should == "#{$0} Version #{Mkm4v::Version} Copyright (C) 2010 Chris Hoffman\n"
+      stdout.should == "mkm4v Version #{Mkm4v::Version} Copyright (C) 2010 Chris Hoffman\n"
     end
 
     flags :input, :i, "get a list of input files" do |flag|

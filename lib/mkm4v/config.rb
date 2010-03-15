@@ -11,8 +11,8 @@ module Mkm4v::Config
 
   module ClassMethods
     Opts = Trollop::Parser.new do
-      version "#{$0} Version #{Mkm4v::Version} Copyright (C) 2010 Chris Hoffman"
-      banner "Usage: #{$0} [options] -i <filename> [filename ...]\n \n"
+      version "mkm4v Version #{Mkm4v::Version} Copyright (C) 2010 Chris Hoffman"
+      banner "Usage: mkm4v [options] -i <filename> [filename ...]\n \n"
 
       opt :input, "List of files to convert", type: :strings, required: true
     end
