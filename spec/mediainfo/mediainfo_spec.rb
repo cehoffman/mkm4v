@@ -188,4 +188,12 @@ describe MediaInfo do
   it "should know how many tracks there are in total" do
     @mediainfo.tracks.count.should == 3 # 1 audio, 1 video, and 1 general
   end
+
+  it "should allow the file to be closed and reopened" do
+    @mediainfo.track_info(:video, 0, 'Height').should == "240"
+    @mediainfo.close
+    @mediainfo.track_info(:video, 0, 'Height').should == ""
+    @mediainfo.open
+    @mediainfo.track_info(:video, 0, 'Height').should == "240"
+  end
 end

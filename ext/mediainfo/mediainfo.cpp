@@ -253,6 +253,18 @@ static VALUE mediainfo_static_options(VALUE self, VALUE args) {
   return set_options(NULL, args);
 }
 
+static VALUE mediainfo_open(VALUE self) {
+  void *mi;
+  Data_Get_Struct(self, void, mi);
+  MediaInfo_Open(mi, RSTRING_PTR(rb_funcall(rb_funcall(self, rb_intern("file"), 0), rb_intern("to_s"), 0)));
+}
+
+static VALUE mediainfo_close(VALUE self) {
+  void *mi;
+  Data_Get_Struct(self, void, mi);
+  MediaInfo_Close(mi);
+}
+
 void Init_mediainfo() {
   // DLL interface option
   MediaInfo_Option(NULL, "CharSet", "UTF-8");
@@ -276,6 +288,8 @@ void Init_mediainfo() {
   rb_define_method(rb_cMediaInfo, "to_xml", (VALUE (*)(...))mediainfo_to_xml, 0);
   rb_define_method(rb_cMediaInfo, "track_info", (VALUE (*)(...))mediainfo_track_info, -1);
   rb_define_method(rb_cMediaInfo, "options", (VALUE (*)(...))mediainfo_options, -2);
+  rb_define_method(rb_cMediaInfo, "open", (VALUE (*)(...))mediainfo_open, 0);
+  rb_define_method(rb_cMediaInfo, "close", (VALUE (*)(...))mediainfo_close, 0);
   rb_define_singleton_method(rb_cMediaInfo, "options", (VALUE (*)(...))mediainfo_static_options, -2);
 
   // Define an accessor for the tracks
