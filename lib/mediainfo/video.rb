@@ -15,4 +15,5 @@ class MediaInfo::VideoTrack
   property :lang, 'Language'
   property :codec, 'Format'
   property :frames, 'FrameCount', Integer
+  property :bitrate, 'BitRate', Integer
 end

@@ -53,6 +53,10 @@ describe MediaInfo::VideoTrack do
     @video.frames.should == 149
   end
 
+  it "should know the bitrate" do
+    @video.bitrate.should == 341948
+  end
+
   it "should have a shortcut for ntsc region" do
     @video.ntsc?.should == false
   end
