@@ -3,8 +3,6 @@ class Handbrake::Title
               :chapters, :audio, :subtitles, :crop
 
   def initialize(title)
-    puts title
-
     title = title.strip.split(/\n/)
 
     @id = title.shift[/title (\d+)/, 1].to_i
