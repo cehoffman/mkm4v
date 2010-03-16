@@ -25,6 +25,8 @@ static ID menu;
 static ID html;
 static ID xml;
 
+#define MEDIAINFO(obj) (Check_Type(obj, T_DATA), (void *)DATA_PTR(obj))
+
 static VALUE rb_utf8_str(const char *str) {
   return rb_enc_str_new(str, strlen(str), rb_utf8_encoding());
 }
@@ -82,8 +84,7 @@ static VALUE mediainfo_init(VALUE self, VALUE filename) {
     rb_raise(rb_eArgError, "file does not exist - %s", RSTRING_PTR(name));
   }
 
-  void *mi;
-  Data_Get_Struct(self, void, mi);
+  void *mi = MEDIAINFO(self);
   name = rb_funcall(rb_cFile, rb_intern("absolute_path"), 1, name);
 
   // Convert string to utf8 for mediainfo consumption
@@ -124,8 +125,7 @@ static VALUE mediainfo_init(VALUE self, VALUE filename) {
 }
 
 static VALUE mediainfo_inform(VALUE self, ID kind) {
-  void *mi;
-  Data_Get_Struct(self, void, mi);
+  void *mi = MEDIAINFO(self);
 
   // Since this has a side effect of changing options
   // It needs to be locked until state is restored
@@ -172,9 +172,6 @@ static VALUE mediainfo_track_info(int argc, VALUE *args, VALUE self) {
     rb_raise(rb_eTypeError, "'%s' should be a string or fixnum", RSTRING_PTR(rb_funcall(type, rb_intern("to_s"), 0)));
   }
 
-  void *mi;
-  Data_Get_Struct(self, void, mi);
-
   if (TYPE(stream) != T_SYMBOL && rb_respond_to(stream, rb_intern("to_sym"))) {
     stream = rb_funcall(stream, rb_intern("to_sym"), 0);
   }
@@ -182,7 +179,6 @@ static VALUE mediainfo_track_info(int argc, VALUE *args, VALUE self) {
   if (rb_funcall(track_types, rb_intern("include?"), 1, stream) == Qfalse) {
     rb_raise(rb_eArgError, "'%s' is not a valid stream", RSTRING_PTR(rb_funcall(stream, rb_intern("to_s"), 0)));
   }
-
 
   MediaInfo_info_C info = MediaInfo_Info_Text;
   if (argc >= 4) {
@@ -201,9 +197,9 @@ static VALUE mediainfo_track_info(int argc, VALUE *args, VALUE self) {
   }
 
   if (TYPE(type) == T_FIXNUM) {
-    return rb_utf8_str(MediaInfo_GetI(mi, get_stream(SYM2ID(stream)), FIX2INT(num), FIX2INT(type), info));
+    return rb_utf8_str(MediaInfo_GetI(MEDIAINFO(self), get_stream(SYM2ID(stream)), FIX2INT(num), FIX2INT(type), info));
   } else {
-    return rb_utf8_str(MediaInfo_Get(mi, get_stream(SYM2ID(stream)), FIX2INT(num), RSTRING_PTR(type), info, MediaInfo_Info_Name));
+    return rb_utf8_str(MediaInfo_Get(MEDIAINFO(self), get_stream(SYM2ID(stream)), FIX2INT(num), RSTRING_PTR(type), info, MediaInfo_Info_Name));
   }
 }
 
@@ -244,9 +240,7 @@ static VALUE set_options(void *mi, VALUE args) {
 }
 
 static VALUE mediainfo_options(VALUE self, VALUE args) {
-  void *mi;
-  Data_Get_Struct(self, void, mi);
-  return set_options(mi, args);
+  return set_options(MEDIAINFO(self), args);
 }
 
 static VALUE mediainfo_static_options(VALUE self, VALUE args) {
@@ -254,15 +248,11 @@ static VALUE mediainfo_static_options(VALUE self, VALUE args) {
 }
 
 static VALUE mediainfo_open(VALUE self) {
-  void *mi;
-  Data_Get_Struct(self, void, mi);
-  MediaInfo_Open(mi, RSTRING_PTR(rb_funcall(rb_funcall(self, rb_intern("file"), 0), rb_intern("to_s"), 0)));
+  MediaInfo_Open(MEDIAINFO(self), RSTRING_PTR(rb_funcall(rb_funcall(self, rb_intern("file"), 0), rb_intern("to_s"), 0)));
 }
 
 static VALUE mediainfo_close(VALUE self) {
-  void *mi;
-  Data_Get_Struct(self, void, mi);
-  MediaInfo_Close(mi);
+  MediaInfo_Close(MEDIAINFO(self));
 }
 
 void Init_mediainfo() {
