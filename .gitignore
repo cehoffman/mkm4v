@@ -8,6 +8,7 @@ lib/mediainfo/mediainfo.bundle
 .libs/
 *.[oa]
 *.l[oa]
+*~
 ext/mediainfo/MediaInfoLib/Project/GNU/Library/Makefile
 ext/mediainfo/MediaInfoLib/Project/GNU/Library/config.log
 ext/mediainfo/MediaInfoLib/Project/GNU/Library/config.status
@@ -20,3 +21,20 @@ ext/mediainfo/ZenLib/Project/GNU/Library/config.status
 ext/mediainfo/ZenLib/Project/GNU/Library/libtool
 ext/mediainfo/ZenLib/Project/GNU/Library/libzen-config
 ext/mediainfo/ZenLib/Project/GNU/Library/libzen.pc
+
+# mp4v2
+.dirstamp
+ext/mp4v2/mp4v2/GNUmakefile
+ext/mp4v2/mp4v2/GNUmakefile.in
+ext/mp4v2/mp4v2/aclocal.m4
+ext/mp4v2/mp4v2/autoaux/
+ext/mp4v2/mp4v2/autom4te.cache/
+ext/mp4v2/mp4v2/config.log
+ext/mp4v2/mp4v2/config.status
+ext/mp4v2/mp4v2/configure
+ext/mp4v2/mp4v2/include/mp4v2/project.h
+ext/mp4v2/mp4v2/libplatform/stamp-h1
+ext/mp4v2/mp4v2/libtool
+ext/mp4v2/mp4v2/project/project.m4
+ext/mp4v2/mp4v2/libplatform/config.h
+lib/mp4v2/mp4v2.bundle

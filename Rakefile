@@ -24,12 +24,17 @@ gem = Hoe.spec 'mkm4v' do
   self.readme_file = 'README.rdoc'
   self.history_file = 'Changelog.rdoc'
   self.test_globs = 'spec/**/*_spec.rb'
-  self.spec_extras = { extensions: ["ext/mediainfo/extconf.rb"] }
+  self.spec_extras = { extensions: ["ext/mediainfo/extconf.rb", "ext/mp4v2/extconf.rb"] }
 end
 
 require "rake/extensiontask"
 Rake::ExtensionTask.new('mediainfo', gem.spec) do |ext|
   ext.lib_dir = File.join('lib', 'mediainfo')
+  ext.source_pattern = "*.{c,cpp}"
+end
+
+Rake::ExtensionTask.new('mp4v2', gem.spec) do |ext|
+  ext.lib_dir = File.join('lib', 'mp4v2')
   ext.source_pattern = "*.{c,cpp}"
 end
 
@@ -76,6 +81,6 @@ task :man => "man:build" do
 end
 
 desc "Open and irb session with the project environment"
-task :irb do
+task :irb => :compile do
   sh "bundle exec irb -r./lib/mkm4v"
 end
