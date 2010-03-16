@@ -5,29 +5,210 @@
   extern "C" {
 #endif
 
-static VALUE rb_cMp4v2;
+#include <ruby/encoding.h>
+
+static VALUE rb_cMp4v2, rb_cArtwork;
 
 #define MP4V2(obj) (Check_Type(obj, T_DATA), (MP4FileHandle)DATA_PTR(obj))
 
-static void mp4v2_mark(MP4FileHandle mp4v2) {
-  
+static VALUE rb_utf8_str(const char *str) {
+  return rb_enc_str_new(str, strlen(str), rb_utf8_encoding());
 }
 
-static void mp4v2_free(MP4FileHandle mp4v2) {
-  if (mp4v2) {
-    MP4Close(mp4v2);
+static VALUE rb_encode_utf8(VALUE str) {
+  return rb_funcall(str, rb_intern("encode"), 1, rb_const_get(rb_cEncoding, rb_intern("UTF_8")));
+}
+
+#define SET(attr, val) (rb_funcall(self, rb_intern(#attr "="), 1, val))
+#define TAG_SET(tag, accessor) if (tags->tag) { SET(accessor, rb_utf8_str(tags->tag)); }
+#define TAG_NUM(tag, accessor) if (tags->tag) { SET(accessor, INT2FIX(*tags->tag)); }
+#define TAG_BOOL(tag, accessor, truth) \
+  if (tags->tag) { \
+    rb_ivar_set(self, rb_intern("@" #accessor), *tags->tag == truth ? Qtrue : Qfalse); \
+    rb_funcall(self, rb_intern("instance_eval"), 1, rb_utf8_str("def " #accessor "?; @" #accessor " end")); \
   }
+
+#define TAG_DATE(tag, accessor) \
+  if (tags->tag) { \
+    VALUE date = rb_const_get(rb_cObject, rb_intern("Date")), entry; \
+    VALUE parsed = rb_funcall(date, rb_intern("_parse"), 2, rb_utf8_str(tags->tag), Qfalse); \
+    parsed = rb_funcall(parsed, rb_intern("values_at"), 8, SYM("year"), SYM("mon"), SYM("mday"), SYM("hour"), SYM("min"), SYM("sec"), SYM("zone"), SYM("sec_fraction")); \
+    \
+    for (int i = RARRAY_LEN(parsed) - 1; i >= 0; i--) { \
+      if (rb_ary_entry(parsed, i) == Qnil) { \
+        rb_ary_store(parsed, i, INT2FIX(0)); \
+      } \
+    } \
+    \
+    rb_ary_store(parsed, 5, DBL2NUM(NUM2DBL(rb_ary_entry(parsed, 5)) + NUM2DBL(rb_ary_pop(parsed)))); \
+    \
+    SET(accessor, rb_apply(rb_const_get(rb_cObject, rb_intern("DateTime")), rb_intern("civil"), parsed)); \
+  }
+
+#define SYM(sym) (ID2SYM(rb_intern(sym)))
+
+static VALUE mp4v2_init(VALUE self, VALUE filename) {
+  if (NIL_P(filename)) {
+    rb_raise(rb_eArgError, "a filename must be given");
+  }
+
+  VALUE name = rb_funcall(filename, rb_intern("to_s"), 0);
+
+  // Make sure the file exists then open it
+  if (rb_funcall(rb_cFile, rb_intern("exists?"), 1, name) == Qfalse) {
+    rb_raise(rb_eArgError, "file does not exist - %s", RSTRING_PTR(name));
+  }
+
+  // Convert string to abosolute path utf8 for passing to lib
+  name = rb_funcall(rb_cFile, rb_intern("absolute_path"), 1, name);
+  name = rb_encode_utf8(name);
+  rb_call_super(0, NULL);
+  SET(file, rb_funcall(rb_const_get(rb_cObject, rb_intern("Pathname")), rb_intern("new"), 1, name));
+
+  MP4FileHandle mp4v2 = MP4Read(RSTRING_PTR(name));
+  if (mp4v2 == MP4_INVALID_FILE_HANDLE) {
+    rb_raise(rb_eTypeError, "%s is not a valid mp4 file", RSTRING_PTR(name));
+  }
+
+  const MP4Tags *tags = MP4TagsAlloc();
+  MP4TagsFetch(tags, mp4v2);
+
+  TAG_SET(name, name);
+  TAG_SET(artist, artist);
+  TAG_SET(albumArtist, album_artist);
+  TAG_SET(album, album);
+  TAG_SET(grouping, grouping);
+  TAG_SET(composer, composer);
+  TAG_SET(comments, comments);
+  TAG_SET(genre, genre);
+  TAG_DATE(releaseDate, released);
+
+  if (tags->track) {
+    SET(track, INT2FIX(tags->track->index));
+    SET(tracks, INT2FIX(tags->track->total));
+  }
+
+  if (tags->disk) {
+    SET(disk, INT2FIX(tags->disk->index));
+    SET(disks, INT2FIX(tags->disk->total));
+  }
+
+  TAG_NUM(tempo, tempo);
+  TAG_BOOL(compilation, compilation, 1);
+  TAG_SET(tvShow, show);
+  TAG_SET(tvEpisodeID, episode_id);
+  TAG_NUM(tvSeason, season);
+  TAG_NUM(tvEpisode, episode);
+  TAG_SET(tvNetwork, network);
+  TAG_SET(description, description);
+  TAG_SET(longDescription, long_description);
+  TAG_SET(lyrics, lyrics);
+  TAG_SET(copyright, copyright);
+  TAG_SET(encodingTool, encoding_tool);
+  TAG_SET(encodedBy, encoded_by);
+  TAG_BOOL(podcast, podcast, 1);
+  TAG_BOOL(hdVideo, hd, 1);
+
+  switch(*tags->mediaType) {
+    case 0:
+      SET(kind, SYM("music"));
+      break;
+    case 2:
+      SET(kind, SYM("audiobook"));
+      break;
+    case 6:
+      SET(kind, SYM("music_video"));
+      break;
+    case 9:
+      SET(kind, SYM("movie"));
+      break;
+    case 10:
+      SET(kind, SYM("tv"));
+      break;
+    case 11:
+      SET(kind, SYM("booklet"));
+      break;
+    case 14:
+      SET(kind, SYM("ringtone"));
+      break;
+    default:;
+  }
+
+  switch(*tags->contentRating) {
+    case 0:
+      SET(advisory, SYM("none"));
+      break;
+    case 2:
+      SET(advisory, SYM("clean"));
+      break;
+    case 4:
+      SET(advisory, SYM("explicit"));
+      break;
+    default:;
+  }
+
+  TAG_BOOL(gapless, gapless, 1);
+
+  TAG_DATE(purchaseDate, purchased);
+  TAG_SET(iTunesAccount, account);
+  TAG_NUM(cnID, cnID);
+
+  // Artwork, need to think on this one
+  if (tags->artwork) {
+    VALUE regex = rb_funcall(rb_cRegexp, rb_intern("new"), 1, rb_utf8_str("\\.[^\\.]+$"));
+    const char *ext;
+    VALUE artworks = rb_ary_new(), art;//2(tags->artworkCount), art;
+
+    //for (int i = tags->artworkCount - 1; i >= 0; i++) {
+      switch(tags->artwork->type) {
+        case MP4_ART_BMP:
+          ext = ".bmp";
+          break;
+        case MP4_ART_GIF:
+          ext = ".gif";
+          break;
+        case MP4_ART_JPEG:
+          ext = ".jpg";
+          break;
+        case MP4_ART_PNG:
+          ext = ".png";
+          break;
+        default:
+          ext = ".unkwn";
+      }
+
+      art = rb_funcall(name, rb_intern("sub"), 2, regex, rb_utf8_str(ext));
+      rb_ary_push(artworks, art = rb_funcall(rb_cArtwork, rb_intern("new"), 1, art));
+      rb_ivar_set(art, rb_intern("@source"), name);
+      rb_ivar_set(art, rb_intern("@number"), INT2FIX(1));
+    //}
+
+    SET(artwork, artworks);
+  }
+
+  MP4TagsFree(tags);
+
+  MP4Close(mp4v2);
+
+  return self;
 }
 
-static VALUE mp4v2_alloc(VALUE klass) {
-  void *mp4v2 = NULL;
+static VALUE mp4v2_artwork_init(VALUE self, VALUE filename) {
+  return self;
+}
 
-  return Data_Wrap_Struct(klass, mp4v2_mark, mp4v2_free, mp4v2);
+static VALUE mp4v2_artwork_save(int argc, VALUE *args, VALUE self) {
+
 }
 
 void Init_mp4v2() {
-  rb_cMp4v2 = rb_define_class("Mp4v2", rb_cObject);
-  rb_define_alloc_func(rb_cMp4v2, mp4v2_alloc);
+  rb_cMp4v2 = rb_define_class("Mp4v2", rb_const_get(rb_cObject, rb_intern("OpenStruct")));
+  rb_define_method(rb_cMp4v2, "initialize", (VALUE (*)(...))mp4v2_init, 1);
+
+  rb_cArtwork = rb_define_class_under(rb_cMp4v2, "Artwork", rb_cObject);
+  // rb_define_alloc_func(rb_cMp4v2, mp4v2_alloc);
+  rb_define_method(rb_cArtwork, "initialize", (VALUE (*)(...))mp4v2_artwork_init, 1);
+  rb_define_method(rb_cArtwork, "save", (VALUE (*)(...))mp4v2_artwork_save, -1);
 }
 
 #ifdef __cplusplus
