@@ -61,30 +61,36 @@ static VALUE rb_encode_utf8(VALUE str) {
 
 #define SYM(sym) (ID2SYM(rb_intern(sym)))
 
-static VALUE mp4v2_init(VALUE self, VALUE filename) {
-  if (NIL_P(filename)) {
-    rb_raise(rb_eArgError, "a filename must be given");
+typedef struct MP4V2_Handles_s {
+  VALUE self;
+  VALUE filename;
+  MP4FileHandle file;
+  MP4Tags *tags;
+  MP4ItmfItemList *list;
+} MP4V2_Handles;
+
+static VALUE ensure_close(MP4V2_Handles *handle) {
+  if (handle->list) {
+    MP4ItmfItemListFree(handle->list);
   }
-
-  VALUE name = rb_funcall(filename, rb_intern("to_s"), 0);
-
-  // Make sure the file exists then open it
-  if (rb_funcall(rb_cFile, rb_intern("exists?"), 1, name) == Qfalse) {
-    rb_raise(rb_eArgError, "file does not exist - %s", RSTRING_PTR(name));
+  if (handle->tags) {
+    MP4TagsFree(handle->tags);
   }
+  if (handle->file) {
+    MP4Close(handle->file);
+  }
+}
 
-  // Convert string to abosolute path utf8 for passing to lib
-  name = rb_funcall(rb_cFile, rb_intern("absolute_path"), 1, name);
-  name = rb_encode_utf8(name);
-  rb_call_super(0, NULL);
-  SET(file, rb_funcall(rb_const_get(rb_cObject, rb_intern("Pathname")), rb_intern("new"), 1, name));
+static VALUE mp4v2_read_metadata(MP4V2_Handles *handle) {
+  VALUE self = handle->self;
 
-  MP4FileHandle mp4v2 = MP4Read(RSTRING_PTR(name));
+  MP4FileHandle mp4v2 = handle->file = MP4Read(RSTRING_PTR(handle->filename));
   if (mp4v2 == MP4_INVALID_FILE_HANDLE) {
-    rb_raise(rb_eTypeError, "%s is not a valid mp4 file", RSTRING_PTR(name));
+    rb_raise(rb_eTypeError, "%s is not a valid mp4 file", RSTRING_PTR(handle->filename));
   }
 
-  const MP4Tags *tags = MP4TagsAlloc();
+  handle->tags = (MP4Tags*)MP4TagsAlloc();
+  const MP4Tags *tags = handle->tags;
   MP4TagsFetch(tags, mp4v2);
 
   TAG_SET(name, name);
@@ -195,9 +201,9 @@ static VALUE mp4v2_init(VALUE self, VALUE filename) {
           sprintf(ext, ".%02d.unknown", i+1);
       }
 
-      art = rb_funcall(name, rb_intern("sub"), 2, regex, rb_utf8_str(ext));
+      art = rb_funcall(handle->filename, rb_intern("sub"), 2, regex, rb_utf8_str(ext));
       rb_ary_unshift(artworks, art = rb_funcall(rb_cArtwork, rb_intern("new"), 1, art));
-      rb_ivar_set(art, rb_intern("@source"), name);
+      rb_ivar_set(art, rb_intern("@source"), handle->filename);
       rb_ivar_set(art, rb_intern("@number"), INT2FIX(i));
       rb_define_singleton_method(art, "save", (VALUE (*)(...))mp4v2_artwork_save, 0);
     }
@@ -206,7 +212,7 @@ static VALUE mp4v2_init(VALUE self, VALUE filename) {
   }
 
   // Rating information
-  MP4ItmfItemList *ratings = MP4ItmfGetItemsByMeaning(mp4v2, "com.apple.iTunes", "iTunEXTC");
+  MP4ItmfItemList *ratings = handle->list = MP4ItmfGetItemsByMeaning(mp4v2, "com.apple.iTunes", "iTunEXTC");
   if (ratings && ratings->size > 0 && ratings->elements->dataList.size > 0) {
     MP4ItmfData *data = &ratings->elements->dataList.elements[0];
 
@@ -217,9 +223,10 @@ static VALUE mp4v2_init(VALUE self, VALUE filename) {
     }
 
     MP4ItmfItemListFree(ratings);
+    handle->list = NULL;
   }
 
-  MP4ItmfItemList *plist = MP4ItmfGetItemsByMeaning(mp4v2, "com.apple.iTunes", "iTunMOVI");
+  MP4ItmfItemList *plist = handle->list = MP4ItmfGetItemsByMeaning(mp4v2, "com.apple.iTunes", "iTunMOVI");
   if (plist && plist->size > 0 && plist->elements->dataList.size > 0) {
     MP4ItmfData *data = &plist->elements->dataList.elements[0];
     VALUE rb_cPlist = rb_const_get(rb_cObject, rb_intern("Plist")), val;
@@ -235,11 +242,44 @@ static VALUE mp4v2_init(VALUE self, VALUE filename) {
     }
 
     MP4ItmfItemListFree(plist);
+    handle->list = NULL;
   }
 
   MP4TagsFree(tags);
+  handle->tags = NULL;
 
   MP4Close(mp4v2);
+  handle->file = NULL;
+
+  return self;
+}
+
+static VALUE mp4v2_init(VALUE self, VALUE filename) {
+  if (NIL_P(filename)) {
+    rb_raise(rb_eArgError, "a filename must be given");
+  }
+
+  VALUE name = rb_funcall(filename, rb_intern("to_s"), 0);
+
+  // Make sure the file exists then open it
+  if (rb_funcall(rb_cFile, rb_intern("exists?"), 1, name) == Qfalse) {
+    rb_raise(rb_eArgError, "file does not exist - %s", RSTRING_PTR(name));
+  }
+
+  // Convert string to abosolute path utf8 for passing to lib
+  name = rb_funcall(rb_cFile, rb_intern("absolute_path"), 1, name);
+  name = rb_encode_utf8(name);
+  rb_call_super(0, NULL);
+  SET(file, rb_funcall(rb_const_get(rb_cObject, rb_intern("Pathname")), rb_intern("new"), 1, name));
+
+  MP4V2_Handles handle;
+  handle.self = self;
+  handle.filename = name;
+  handle.file = NULL;
+  handle.tags = NULL;
+  handle.list = NULL;
+
+  rb_ensure((VALUE (*)(...))mp4v2_read_metadata, (VALUE)&handle, (VALUE (*)(...))ensure_close, (VALUE)&handle);
 
   return self;
 }
