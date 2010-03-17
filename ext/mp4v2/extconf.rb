@@ -16,7 +16,7 @@ Dir.chdir root + "mp4v2" do
 end
 
 # Wow mkmf is such a pain to get this working
-with_cflags "-I#{root + "mp4v2/include"}" do
+with_cflags "-I#{root + "mp4v2/include"} -Wall" do
   with_ldflags "-L#{root + "mp4v2/.libs"} -lmp4v2" do
     create_makefile("mp4v2/mp4v2")
   end

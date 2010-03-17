@@ -32,7 +32,7 @@ static VALUE rb_encode_utf8(VALUE str) {
 
 #define TAG_DATE(tag, accessor) \
   if (tags->tag) { \
-    VALUE date = rb_const_get(rb_cObject, rb_intern("Date")), entry; \
+    VALUE date = rb_const_get(rb_cObject, rb_intern("Date")); \
     VALUE parsed = rb_funcall(date, rb_intern("_parse"), 2, rb_utf8_str(tags->tag), Qfalse); \
     parsed = rb_funcall(parsed, rb_intern("values_at"), 8, SYM("year"), SYM("mon"), SYM("mday"), SYM("hour"), SYM("min"), SYM("sec"), SYM("zone"), SYM("sec_fraction")); \
     \
@@ -79,6 +79,8 @@ static VALUE ensure_close(MP4V2_Handles *handle) {
   if (handle->file) {
     MP4Close(handle->file);
   }
+  
+  return handle->self;
 }
 
 static VALUE mp4v2_read_metadata(MP4V2_Handles *handle) {
@@ -310,7 +312,7 @@ static VALUE mp4v2_artwork_save(VALUE self) {
   const MP4Tags *tags = MP4TagsAlloc();
   MP4TagsFetch(tags, mp4v2);
 
-  if (!tags->artwork || tags->artworkCount <= number) {
+  if (!tags->artwork || tags->artworkCount <= (uint32_t)number) {
     MP4TagsFree(tags);
     MP4Close(mp4v2);
     rb_raise(rb_eStandardError, "this artwork doesn't exist in the source file %s", RSTRING_PTR(source));
