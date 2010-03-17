@@ -11,6 +11,8 @@ static VALUE rb_cMp4v2, rb_cArtwork;
 
 #define MP4V2(obj) (Check_Type(obj, T_DATA), (MP4FileHandle)DATA_PTR(obj))
 
+static VALUE mp4v2_artwork_save(VALUE self);
+
 static VALUE rb_utf8_str(const char *str) {
   return rb_enc_str_new(str, strlen(str), rb_utf8_encoding());
 }
@@ -160,32 +162,33 @@ static VALUE mp4v2_init(VALUE self, VALUE filename) {
   // Artwork, need to think on this one
   if (tags->artwork) {
     VALUE regex = rb_funcall(rb_cRegexp, rb_intern("new"), 1, rb_utf8_str("\\.[^\\.]+$"));
-    const char *ext;
+    char ext[30];
     VALUE artworks = rb_ary_new(), art;//2(tags->artworkCount), art;
 
-    //for (int i = tags->artworkCount - 1; i >= 0; i++) {
-      switch(tags->artwork->type) {
+    for (int i = tags->artworkCount - 1; i >= 0; i--) {
+      switch(tags->artwork[i].type) {
         case MP4_ART_BMP:
-          ext = ".bmp";
+          sprintf(ext, ".%02d.bmp", i+1);
           break;
         case MP4_ART_GIF:
-          ext = ".gif";
+          sprintf(ext, ".%02d.gif", i+1);
           break;
         case MP4_ART_JPEG:
-          ext = ".jpg";
+          sprintf(ext, ".%02d.jpg", i+1);
           break;
         case MP4_ART_PNG:
-          ext = ".png";
+          sprintf(ext, ".%02d.png", i+1);
           break;
         default:
-          ext = ".unkwn";
+          sprintf(ext, ".%02d.unknown", i+1);
       }
 
       art = rb_funcall(name, rb_intern("sub"), 2, regex, rb_utf8_str(ext));
-      rb_ary_push(artworks, art = rb_funcall(rb_cArtwork, rb_intern("new"), 1, art));
+      rb_ary_unshift(artworks, art = rb_funcall(rb_cArtwork, rb_intern("new"), 1, art));
       rb_ivar_set(art, rb_intern("@source"), name);
-      rb_ivar_set(art, rb_intern("@number"), INT2FIX(1));
-    //}
+      rb_ivar_set(art, rb_intern("@number"), INT2FIX(i));
+      rb_define_singleton_method(art, "save", (VALUE (*)(...))mp4v2_artwork_save, 0);
+    }
 
     SET(artwork, artworks);
   }
@@ -201,8 +204,46 @@ static VALUE mp4v2_artwork_init(VALUE self, VALUE filename) {
   return self;
 }
 
-static VALUE mp4v2_artwork_save(int argc, VALUE *args, VALUE self) {
+static VALUE mp4v2_artwork_save(VALUE self) {
+  VALUE source = rb_ivar_get(self, rb_intern("@source"));
 
+  if (rb_funcall(rb_cFile, rb_intern("exists?"), 1, source) == Qfalse) {
+    rb_raise(rb_eIOError, "file does not exist - %s", RSTRING_PTR(source));
+  }
+
+  MP4FileHandle mp4v2 = MP4Read(RSTRING_PTR(source));
+  if (mp4v2 == MP4_INVALID_FILE_HANDLE) {
+    rb_raise(rb_eTypeError, "%s is not a valid mp4 file", RSTRING_PTR(source));
+  }
+
+  VALUE file = rb_funcall(rb_ivar_get(self, rb_intern("@file")), rb_intern("to_s"), 0);
+  int number = FIX2INT(rb_ivar_get(self, rb_intern("@number")));
+
+  // All ruby methods have been called so we are clear or exceptions happening in ruby
+  const MP4Tags *tags = MP4TagsAlloc();
+  MP4TagsFetch(tags, mp4v2);
+
+  if (!tags->artwork || tags->artworkCount <= number) {
+    MP4TagsFree(tags);
+    MP4Close(mp4v2);
+    rb_raise(rb_eStandardError, "this artwork doesn't exist in the source file %s", RSTRING_PTR(source));
+  }
+
+  FILE *artwork = fopen(RSTRING_PTR(file), "wb");
+
+  if (!artwork) {
+    MP4TagsFree(tags);
+    MP4Close(mp4v2);
+    rb_raise(rb_eIOError, "unable to open %s", RSTRING_PTR(file));
+  }
+
+  fwrite(tags->artwork[number].data, sizeof(uint8_t), tags->artwork[number].size, artwork);
+  fclose(artwork);
+
+  MP4TagsFree(tags);
+  MP4Close(mp4v2);
+
+  return file;
 }
 
 void Init_mp4v2() {
@@ -210,9 +251,7 @@ void Init_mp4v2() {
   rb_define_method(rb_cMp4v2, "initialize", (VALUE (*)(...))mp4v2_init, 1);
 
   rb_cArtwork = rb_define_class_under(rb_cMp4v2, "Artwork", rb_cObject);
-  // rb_define_alloc_func(rb_cMp4v2, mp4v2_alloc);
   rb_define_method(rb_cArtwork, "initialize", (VALUE (*)(...))mp4v2_artwork_init, 1);
-  rb_define_method(rb_cArtwork, "save", (VALUE (*)(...))mp4v2_artwork_save, -1);
 }
 
 #ifdef __cplusplus
