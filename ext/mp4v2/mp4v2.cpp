@@ -109,42 +109,46 @@ static VALUE mp4v2_init(VALUE self, VALUE filename) {
   TAG_BOOL(podcast, podcast, 1);
   TAG_BOOL(hdVideo, hd, 1);
 
-  switch(*tags->mediaType) {
-    case 0:
-      SET(kind, SYM("music"));
-      break;
-    case 2:
-      SET(kind, SYM("audiobook"));
-      break;
-    case 6:
-      SET(kind, SYM("music_video"));
-      break;
-    case 9:
-      SET(kind, SYM("movie"));
-      break;
-    case 10:
-      SET(kind, SYM("tv"));
-      break;
-    case 11:
-      SET(kind, SYM("booklet"));
-      break;
-    case 14:
-      SET(kind, SYM("ringtone"));
-      break;
-    default:;
+  if (tags->mediaType) {
+    switch(*tags->mediaType) {
+      case 0:
+        SET(kind, SYM("music"));
+        break;
+      case 2:
+        SET(kind, SYM("audiobook"));
+        break;
+      case 6:
+        SET(kind, SYM("music_video"));
+        break;
+      case 9:
+        SET(kind, SYM("movie"));
+        break;
+      case 10:
+        SET(kind, SYM("tv"));
+        break;
+      case 11:
+        SET(kind, SYM("booklet"));
+        break;
+      case 14:
+        SET(kind, SYM("ringtone"));
+        break;
+      default:;
+    }
   }
 
-  switch(*tags->contentRating) {
-    case 0:
-      SET(advisory, SYM("none"));
-      break;
-    case 2:
-      SET(advisory, SYM("clean"));
-      break;
-    case 4:
-      SET(advisory, SYM("explicit"));
-      break;
-    default:;
+  if (tags->contentRating) {
+    switch(*tags->contentRating) {
+      case 0:
+        SET(advisory, SYM("none"));
+        break;
+      case 2:
+        SET(advisory, SYM("clean"));
+        break;
+      case 4:
+        SET(advisory, SYM("explicit"));
+        break;
+      default:;
+    }
   }
 
   TAG_BOOL(gapless, gapless, 1);
