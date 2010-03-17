@@ -176,6 +176,9 @@ static VALUE mp4v2_read_metadata(MP4V2_Handles *handle) {
   TAG_DATE(purchaseDate, purchased);
   TAG_SET(iTunesAccount, account);
   TAG_NUM(cnID, cnID);
+  TAG_NUM(atID, atID);
+  TAG_NUM(plID, plID);
+  TAG_NUM(geID, geID);
 
   // Artwork, need to think on this one
   if (tags->artwork) {
