@@ -203,6 +203,8 @@ static VALUE mp4v2_init(VALUE self, VALUE filename) {
     if (rating != Qnil) {
       SET(rating, rating);
     }
+
+    MP4ItmfItemListFree(ratings);
   }
 
   MP4TagsFree(tags);
