@@ -193,6 +193,18 @@ static VALUE mp4v2_init(VALUE self, VALUE filename) {
     SET(artwork, artworks);
   }
 
+  // Rating information
+  MP4ItmfItemList *ratings = MP4ItmfGetItemsByMeaning(mp4v2, "com.apple.iTunes", "iTunEXTC");
+  if (ratings && ratings->size > 0 && ratings->elements->dataList.size > 0) {
+    MP4ItmfData *data = &ratings->elements->dataList.elements[0];
+
+    VALUE rating = rb_funcall(self, rb_intern("rating_from_itmf"), 1, rb_enc_str_new((const char*)data->value, data->valueSize, rb_utf8_encoding()));
+
+    if (rating != Qnil) {
+      SET(rating, rating);
+    }
+  }
+
   MP4TagsFree(tags);
 
   MP4Close(mp4v2);
