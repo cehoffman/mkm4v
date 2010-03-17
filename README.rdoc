@@ -22,6 +22,7 @@ Ruby Gems
 
 * fraction - 0.1
 * trollop - 1.15
+* plist - 3.1.0
 
 System Applications
 

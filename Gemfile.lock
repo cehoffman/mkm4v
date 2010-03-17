@@ -1,5 +1,5 @@
 --- 
-hash: 6346f403a72df394d36cc58bb17e08c63f2af993
+hash: 37c2e1733810b659a675aa1108196f76c2e7ad2f
 sources: 
 - Rubygems: 
     uri: http://gemcutter.org
@@ -10,6 +10,8 @@ specs:
     version: "0.1"
 - trollop: 
     version: "1.15"
+- plist: 
+    version: 3.1.0
 - ronn: 
     version: 0.4.1
 - rspec: 
@@ -51,6 +53,10 @@ dependencies:
     - :default
   trollop: 
     version: ~> 1.15
+    group: 
+    - :default
+  plist: 
+    version: ~> 3.1.0
     group: 
     - :default
   ronn: 
