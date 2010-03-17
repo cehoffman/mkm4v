@@ -47,6 +47,18 @@ static VALUE rb_encode_utf8(VALUE str) {
     SET(accessor, rb_apply(rb_const_get(rb_cObject, rb_intern("DateTime")), rb_intern("civil"), parsed)); \
   }
 
+#define TAG_PEOPLE(tag, accessor) \
+  if ((val = rb_hash_aref(info, rb_utf8_str(#tag))) != Qnil) {\
+    VALUE arr = rb_ary_new2(RARRAY_LEN(val));\
+    for (int i = RARRAY_LEN(val) - 1; i >= 0; i--) {\
+      rb_ary_unshift(arr, rb_hash_aref(rb_ary_entry(val, i), rb_utf8_str("name")));\
+    } \
+    \
+    SET(accessor, arr); \
+  } else { \
+    SET(accessor, rb_ary_new()); \
+  }
+
 #define SYM(sym) (ID2SYM(rb_intern(sym)))
 
 static VALUE mp4v2_init(VALUE self, VALUE filename) {
@@ -205,6 +217,24 @@ static VALUE mp4v2_init(VALUE self, VALUE filename) {
     }
 
     MP4ItmfItemListFree(ratings);
+  }
+
+  MP4ItmfItemList *plist = MP4ItmfGetItemsByMeaning(mp4v2, "com.apple.iTunes", "iTunMOVI");
+  if (plist && plist->size > 0 && plist->elements->dataList.size > 0) {
+    MP4ItmfData *data = &plist->elements->dataList.elements[0];
+    VALUE rb_cPlist = rb_const_get(rb_cObject, rb_intern("Plist")), val;
+
+    if (rb_cPlist != Qnil) {
+      VALUE info = rb_funcall(rb_cPlist, rb_intern("parse_xml"), 1, rb_enc_str_new((const char*)data->value, data->valueSize, rb_utf8_encoding()));
+
+      TAG_PEOPLE(cast, cast);
+      TAG_PEOPLE(directors, directors);
+      TAG_PEOPLE(codirectors, codirectors);
+      TAG_PEOPLE(producers, producers);
+      TAG_PEOPLE(screenwriters, writers);
+    }
+
+    MP4ItmfItemListFree(plist);
   }
 
   MP4TagsFree(tags);

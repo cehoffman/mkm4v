@@ -1,4 +1,5 @@
 require "ostruct"
+require "plist"
 require File.expand_path("../mp4v2/mp4v2", __FILE__)
 require File.expand_path("../mp4v2/artwork", __FILE__)
 
