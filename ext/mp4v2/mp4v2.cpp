@@ -465,7 +465,12 @@ static VALUE mp4v2_modify_file(MP4V2Handles *handle) {
   } else if (index == SYM("ringtone")) {
     type = 14;
   }
-  MODIFY(MediaType, &type);
+
+  if (type) {
+    MODIFY(MediaType, &type);
+  } else {
+    MODIFY(MediaType, NULL);
+  }
 
   index = GET(advisory);
   type = NULL;
