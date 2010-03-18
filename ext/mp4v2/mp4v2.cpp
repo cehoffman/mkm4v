@@ -332,6 +332,19 @@ static VALUE mp4v2_read_metadata(MP4V2Handles *handle) {
   return self;
 }
 
+static VALUE mp4v2_reload(VALUE self) {
+  MP4V2Handles handle;
+  handle.self = self;
+  handle.filename = rb_funcall(GET(file), rb_intern("to_s"), 0);
+  handle.file = NULL;
+  handle.tags = NULL;
+  handle.list = NULL;
+
+  rb_ensure((VALUE (*)(...))mp4v2_read_metadata, (VALUE)&handle, (VALUE (*)(...))ensure_close, (VALUE)&handle);
+
+  return self;
+}
+
 static VALUE mp4v2_init(VALUE self, VALUE filename) {
   VALUE name = rb_funcall(filename, rb_intern("to_s"), 0);
 
@@ -352,10 +365,6 @@ static VALUE mp4v2_init(VALUE self, VALUE filename) {
 
   return self;
 }
-
-// static VALUE mp4v2_artwork_init(VALUE self, VALUE filename) {
-//   return self;
-// }
 
 static VALUE mp4v2_optimize(VALUE self) {
   VALUE path = rb_funcall(rb_funcall(self, rb_intern("file"), 0), rb_intern("to_s"), 0);
@@ -517,7 +526,7 @@ static VALUE mp4v2_modify_file(MP4V2Handles *handle) {
   handle->list = NULL;
 
   VALUE rating = GET(itmf_from_rating);
-  if (rating != Qnil && TYPE(rating) == T_STRING) {
+  if (TYPE(rating) == T_STRING) {
     MP4ItmfItem *item = MP4ItmfItemAlloc("----", 1);
     item->mean = (char *)"com.apple.iTunes";
     item->name = (char *)"iTunEXTC";
@@ -672,11 +681,11 @@ static VALUE mp4v2_artwork_data(VALUE self) {
 void Init_mp4v2() {
   rb_cMp4v2 = rb_define_class("Mp4v2", rb_const_get(rb_cObject, rb_intern("OpenStruct")));
   rb_define_method(rb_cMp4v2, "initialize", (VALUE (*)(...))mp4v2_init, 1);
+  rb_define_method(rb_cMp4v2, "reload!", (VALUE (*)(...))mp4v2_reload, 0);
   rb_define_method(rb_cMp4v2, "save", (VALUE (*)(...))mp4v2_save, -2);
   rb_define_method(rb_cMp4v2, "optimize!", (VALUE (*)(...))mp4v2_optimize, 0);
 
   rb_cArtwork = rb_define_class_under(rb_cMp4v2, "Artwork", rb_cObject);
-  //rb_define_method(rb_cArtwork, "initialize", (VALUE (*)(...))mp4v2_artwork_init, 1);
 }
 
 #ifdef __cplusplus
