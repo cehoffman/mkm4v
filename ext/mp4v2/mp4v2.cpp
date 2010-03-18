@@ -254,7 +254,7 @@ static VALUE mp4v2_read_metadata(MP4V2Handles *handle) {
   if (tags->artwork) {
     VALUE regex = rb_funcall(rb_cRegexp, rb_intern("new"), 1, rb_utf8_str("\\.[^\\.]+$"));
     char ext[30];
-    VALUE artworks = rb_ary_new(), art;//2(tags->artworkCount), art;
+    VALUE artworks = rb_ary_new(), art;
 
     for (int i = tags->artworkCount - 1; i >= 0; i--) {
       switch(tags->artwork[i].type) {
