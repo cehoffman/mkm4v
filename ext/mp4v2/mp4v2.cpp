@@ -32,9 +32,9 @@ static inline VALUE rb_encode_utf8(VALUE str) {
   }
 #define TAG_BOOL(tag, accessor, truth) \
   if (tags->tag) { \
-    rb_ivar_set(self, rb_intern("@" #accessor), *tags->tag == truth ? Qtrue : Qfalse); \
-    rb_funcall(self, rb_intern("instance_eval"), 1, rb_utf8_str("def " #accessor "?; @" #accessor " end")); \
-  }
+    SET(accessor, *tags->tag == truth ? Qtrue : Qfalse); \
+  } \
+  rb_funcall(self, rb_intern("instance_eval"), 1, rb_utf8_str("def " #accessor "?; !!self." #accessor " end"));
 
 #define TAG_DATE(tag, accessor) \
   if (tags->tag) { \
@@ -108,7 +108,7 @@ static inline VALUE rb_encode_utf8(VALUE str) {
   }
 
 #define MODIFY_BOOL(func, accessor) \
-  if (GET(#accessor "?") == Qtrue) { \
+  if (rb_funcall(self, rb_intern(#accessor "?"), 0) == Qtrue) { \
     uint8_t truth = 1; \
     MODIFY(func, &truth); \
   } else { \
