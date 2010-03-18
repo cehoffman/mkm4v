@@ -137,6 +137,15 @@ static inline VALUE rb_encode_utf8(VALUE str) {
 
 #define SYM(sym) (ID2SYM(rb_intern(sym)))
 
+#define MP4HANDLES_INIT(handle, selfref, filepath) \
+  handle.self = selfref; \
+  handle.filename = rb_funcall(filepath, rb_intern("to_s"), 0); \
+  handle.optimize = false; \
+  handle.file = NULL; \
+  handle.tags = NULL; \
+  handle.list = NULL; \
+  handle.chapters = NULL;
+
 typedef struct MP4V2Handles_s {
   VALUE self;
   VALUE filename;
@@ -144,9 +153,22 @@ typedef struct MP4V2Handles_s {
   MP4FileHandle file;
   MP4Tags *tags;
   MP4ItmfItemList *list;
+  MP4Chapter_t *chapters;
 } MP4V2Handles;
 
+#define INSTANCE_OF(obj, klass, name) \
+    if (rb_obj_is_instance_of(obj, klass) != Qtrue) { \
+      rb_raise(rb_eTypeError, #name " should be an instance of %s", RSTRING_PTR(rb_funcall(klass, rb_intern("name"), 0))); \
+    }
+#define RARRAY_ALL_INSTANCE(array, klass, name) \
+  for (int32_t i = RARRAY_LEN(array) - 1; i >= 0; i--) { \
+    INSTANCE_OF(rb_ary_entry(array, i), klass, name); \
+  }
+
 static VALUE ensure_close(MP4V2Handles *handle) {
+  if (handle->chapters) {
+    free(handle->chapters);
+  }
   if (handle->list) {
     MP4ItmfItemListFree(handle->list);
   }
@@ -285,6 +307,9 @@ static VALUE mp4v2_read_metadata(MP4V2Handles *handle) {
     SET(artwork, artworks);
   }
 
+  MP4TagsFree(tags);
+  handle->tags = NULL;
+
   // Rating information
   MP4ItmfItemList *ratings = handle->list = MP4ItmfGetItemsByMeaning(mp4v2, "com.apple.iTunes", "iTunEXTC");
   if (ratings && ratings->size > 0 && ratings->elements->dataList.size > 0) {
@@ -319,8 +344,23 @@ static VALUE mp4v2_read_metadata(MP4V2Handles *handle) {
     handle->list = NULL;
   }
 
-  MP4TagsFree(tags);
-  handle->tags = NULL;
+  MP4Chapter_t *chaps = NULL;
+  uint32_t count;
+  MP4GetChapters(mp4v2, &chaps, &count, MP4ChapterTypeAny);
+  handle->chapters = chaps;
+  VALUE chapters = rb_ary_new2(count), chapter;
+  VALUE rb_cChapter = rb_const_get(rb_cMp4v2, rb_intern("Chapter"));
+
+  MP4Duration sum = 0;
+  for (uint32_t i = 0; i < count; i++) {
+    chapter = rb_funcall(rb_cChapter, rb_intern("new"), 2, DBL2NUM(sum/1000.0), rb_utf8_str(chaps[i].title));
+    rb_ary_push(chapters, chapter);
+    sum += chaps[i].duration;
+  }
+  SET(chapters, chapters);
+
+  MP4Free(chaps);
+  handle->chapters = NULL;
 
   MP4Close(mp4v2);
   handle->file = NULL;
@@ -330,11 +370,7 @@ static VALUE mp4v2_read_metadata(MP4V2Handles *handle) {
 
 static VALUE mp4v2_reload(VALUE self) {
   MP4V2Handles handle;
-  handle.self = self;
-  handle.filename = rb_funcall(GET(file), rb_intern("to_s"), 0);
-  handle.file = NULL;
-  handle.tags = NULL;
-  handle.list = NULL;
+  MP4HANDLES_INIT(handle, self, GET(file));
 
   rb_ensure((VALUE (*)(...))mp4v2_read_metadata, (VALUE)&handle, (VALUE (*)(...))ensure_close, (VALUE)&handle);
 
@@ -351,11 +387,7 @@ static VALUE mp4v2_init(VALUE self, VALUE filename) {
   SET(file, rb_funcall(rb_const_get(rb_cObject, rb_intern("Pathname")), rb_intern("new"), 1, name));
 
   MP4V2Handles handle;
-  handle.self = self;
-  handle.filename = name;
-  handle.file = NULL;
-  handle.tags = NULL;
-  handle.list = NULL;
+  MP4HANDLES_INIT(handle, self, name);
 
   rb_ensure((VALUE (*)(...))mp4v2_read_metadata, (VALUE)&handle, (VALUE (*)(...))ensure_close, (VALUE)&handle);
 
@@ -579,6 +611,51 @@ static VALUE mp4v2_modify_file(MP4V2Handles *handle) {
     MP4ItmfAddItem(mp4v2, item);
   }
 
+  VALUE chapters = GET(chapters), chapter, title;
+  double last_stamp = 0, stamp;
+  VALUE rb_cChapter = rb_const_get(rb_cMp4v2, rb_intern("Chapter"));
+  MP4Chapter_t *chaps;
+  count = 0;
+  switch(TYPE(chapters)) {
+    case T_ARRAY:
+      RARRAY_ALL_INSTANCE(chapters, rb_cChapter, chapter);
+
+      // Make chapters go in order of timestamp
+      rb_funcall(chapters, rb_intern("sort!"), 0);
+
+      count = RARRAY_LEN(chapters);
+      chaps = handle->chapters = ALLOC_N(MP4Chapter_t, count);
+      for (uint32_t i = 0; i < count; i++) {
+        // Calculate the duration of chapter from previous timestamp and current
+        chapter = rb_ary_entry(chapters, i);
+        stamp = NUM2DBL(rb_ivar_get(rb_ivar_get(chapter, rb_intern("@timestamp")), rb_intern("@seconds"))) * 1000.0;
+        chaps[i].duration = stamp - last_stamp;
+        last_stamp = stamp;
+
+        // Get the title of the chapter
+        title = rb_encode_utf8(rb_ivar_get(chapter, rb_intern("@title")));
+        if (RSTRING_LEN(title) > MP4V2_CHAPTER_TITLE_MAX) {
+          rb_raise(rb_eStandardError, "chapter title '%s' is too long, it should be at most %d bytes", RSTRING_PTR(title), MP4V2_CHAPTER_TITLE_MAX);
+        }
+
+        strncpy(chaps[i].title, RSTRING_PTR(title), RSTRING_LEN(title));
+      }
+
+      if (count > 0) {
+        MP4SetChapters(mp4v2, chaps, count, MP4ChapterTypeAny);
+      } else {
+        MP4DeleteChapters(mp4v2, MP4ChapterTypeAny);
+      }
+
+      free(chaps);
+      handle->chapters = NULL;
+      break;
+    case T_NIL:
+      MP4DeleteChapters(mp4v2, MP4ChapterTypeAny);
+      break;
+    default:;
+  }
+
   MP4Close(mp4v2);
   handle->file = NULL;
 
@@ -598,15 +675,9 @@ static VALUE mp4v2_save(VALUE self, VALUE args) {
     path = rb_funcall(self, rb_intern("file"), 0);
   }
 
-  path = rb_funcall(path, rb_intern("to_s"), 0);
 
   MP4V2Handles handle;
-  handle.self = self;
-  handle.filename = path;
-  handle.file = NULL;
-  handle.tags = NULL;
-  handle.list = NULL;
-  handle.optimize = false;
+  MP4HANDLES_INIT(handle, self, path);
 
   if (TYPE(hash) == T_HASH && rb_hash_aref(hash, SYM("optimize")) == Qtrue) {
     handle.optimize = true;
