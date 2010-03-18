@@ -184,6 +184,7 @@ static VALUE mp4v2_read_metadata(MP4V2Handles *handle) {
   TAG_SET(composer, composer);
   TAG_SET(comments, comments);
   TAG_SET(genre, genre);
+  TAG_NUM(genreType, genre_type);
   TAG_DATE(releaseDate, released);
   TAG_TOTAL(track, track, tracks);
   TAG_TOTAL(disk, disk, disks);
@@ -399,6 +400,7 @@ static VALUE mp4v2_modify_file(MP4V2Handles *handle) {
   MODIFY_STR(Composer, composer);
   MODIFY_STR(Comments, comments);
   MODIFY_STR(Genre, genre);
+  MODIFY_NUM16(GenreType, genre_type);
   MODIFY_DATE(ReleaseDate, released);
   MODIFY_TOTAL(Track, track, tracks);
   MODIFY_TOTAL(Disk, disk, disks);
@@ -444,9 +446,13 @@ static VALUE mp4v2_modify_file(MP4V2Handles *handle) {
   } else if (index == SYM("clean")) {
     type = 2;
   } else if (index == SYM("explicit")) {
-    type = 4;
   }
-  MODIFY(ContentRating, &type);
+
+  if (type != NULL) {
+    MODIFY(ContentRating, &type);
+  } else {
+    MODIFY(ContentRating, NULL);
+  }
 
   MODIFY_BOOL(Gapless, gapless);
 
