@@ -369,8 +369,13 @@ static VALUE mp4v2_read_metadata(MP4V2Handles *handle) {
 }
 
 static VALUE mp4v2_reload(VALUE self) {
+  VALUE file = GET(file);
   MP4V2Handles handle;
-  MP4HANDLES_INIT(handle, self, GET(file));
+  MP4HANDLES_INIT(handle, self, file);
+
+  // Drop everything and reinitialize
+  rb_funcall(self, rb_intern("clear"), 0);
+  SET(file, file);
 
   rb_ensure((VALUE (*)(...))mp4v2_read_metadata, (VALUE)&handle, (VALUE (*)(...))ensure_close, (VALUE)&handle);
 
