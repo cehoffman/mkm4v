@@ -12,6 +12,7 @@ static VALUE rb_cMp4v2, rb_cArtwork;
 #define MP4V2(obj) (Check_Type(obj, T_DATA), (MP4FileHandle)DATA_PTR(obj))
 
 static VALUE mp4v2_artwork_save(VALUE self);
+static VALUE mp4v2_artwork_data(VALUE self);
 
 static inline VALUE rb_utf8_str(const char *str) {
   return rb_enc_str_new(str, strlen(str), rb_utf8_encoding());
@@ -57,9 +58,9 @@ static inline VALUE rb_encode_utf8(VALUE str) {
 
 #define TAG_PEOPLE(tag, accessor) \
   if ((val = rb_hash_aref(info, rb_utf8_str(#tag))) != Qnil) {\
-    VALUE arr = rb_ary_new2(RARRAY_LEN(val));\
+    VALUE arr = rb_ary_new2(RARRAY_LEN(val)), key = rb_utf8_str("name");\
     for (int i = RARRAY_LEN(val) - 1; i >= 0; i--) {\
-      rb_ary_unshift(arr, rb_hash_aref(rb_ary_entry(val, i), rb_utf8_str("name")));\
+      rb_ary_unshift(arr, rb_hash_aref(rb_ary_entry(val, i), key));\
     } \
     \
     SET(accessor, arr); \
@@ -128,16 +129,16 @@ static inline VALUE rb_encode_utf8(VALUE str) {
 
 #define SYM(sym) (ID2SYM(rb_intern(sym)))
 
-typedef struct MP4V2_Handles_s {
+typedef struct MP4V2Handles_s {
   VALUE self;
   VALUE filename;
   bool optimize;
   MP4FileHandle file;
   MP4Tags *tags;
   MP4ItmfItemList *list;
-} MP4V2_Handles;
+} MP4V2Handles;
 
-static VALUE ensure_close(MP4V2_Handles *handle) {
+static VALUE ensure_close(MP4V2Handles *handle) {
   if (handle->list) {
     MP4ItmfItemListFree(handle->list);
   }
@@ -151,7 +152,7 @@ static VALUE ensure_close(MP4V2_Handles *handle) {
   return handle->self;
 }
 
-static VALUE mp4v2_read_metadata(MP4V2_Handles *handle) {
+static VALUE mp4v2_read_metadata(MP4V2Handles *handle) {
   VALUE self = handle->self;
 
   MP4FileHandle mp4v2 = handle->file = MP4Read(RSTRING_PTR(handle->filename));
@@ -270,6 +271,7 @@ static VALUE mp4v2_read_metadata(MP4V2_Handles *handle) {
       rb_ivar_set(art, rb_intern("@source"), handle->filename);
       rb_ivar_set(art, rb_intern("@number"), INT2FIX(i));
       rb_define_singleton_method(art, "save", (VALUE (*)(...))mp4v2_artwork_save, 0);
+      rb_define_singleton_method(art, "data", (VALUE (*)(...))mp4v2_artwork_data, 0);
     }
 
     SET(artwork, artworks);
@@ -327,7 +329,7 @@ static VALUE mp4v2_init(VALUE self, VALUE filename) {
   rb_call_super(0, NULL);
   SET(file, rb_funcall(rb_const_get(rb_cObject, rb_intern("Pathname")), rb_intern("new"), 1, name));
 
-  MP4V2_Handles handle;
+  MP4V2Handles handle;
   handle.self = self;
   handle.filename = name;
   handle.file = NULL;
@@ -345,19 +347,18 @@ static VALUE mp4v2_init(VALUE self, VALUE filename) {
 
 static VALUE mp4v2_optimize(VALUE self) {
   VALUE path = rb_funcall(rb_funcall(self, rb_intern("file"), 0), rb_intern("to_s"), 0);
-  //VALUE tmppath = rb_str_cat(rb_str_dup(path), ".tmp", 4);
+  VALUE tmppath = rb_str_cat(rb_str_dup(path), ".tmp", 4);
 
-  if (MP4Optimize(RSTRING_PTR(path)) == false) {//, RSTRING_PTR(tmppath), MP4_DETAILS_ERROR)) {
-    //rb_funcall(rb_cFile, rb_intern("delete"), 1, path);
-    //rb_funcall(rb_cFile, rb_intern("move"), 2, tmppath, path);
-  //} else {
+  if (MP4Optimize(RSTRING_PTR(path), RSTRING_PTR(tmppath))) {
+    rb_funcall(rb_cFile, rb_intern("rename"), 2, tmppath, path);
+  } else {
     rb_raise(rb_eIOError, "there was an error optimizing");
   }
 
   return Qtrue;
 }
 
-static VALUE mp4v2_modify_file(MP4V2_Handles *handle) {
+static VALUE mp4v2_modify_file(MP4V2Handles *handle) {
   VALUE self = handle->self;
 
   MP4FileHandle mp4v2 = handle->file = MP4Modify(RSTRING_PTR(handle->filename));
@@ -436,6 +437,59 @@ static VALUE mp4v2_modify_file(MP4V2_Handles *handle) {
   MODIFY_NUM(GEID, geID);
 
   // Artwork yet again, blah
+  VALUE artworks = GET(artwork);
+  if (artworks != Qnil && TYPE(artworks) == T_ARRAY) {
+    for (uint32_t i = 0; i < RARRAY_LEN(artworks); i++) {
+      VALUE artwork = rb_ary_entry(artworks, i);
+      if (rb_obj_is_instance_of(artwork, rb_cArtwork) == Qfalse) {
+        rb_raise(rb_eTypeError, "invalid object in artwork list at index %d", i);
+      }
+
+      VALUE data = rb_funcall(artwork, rb_intern("data"), 0);
+      if (TYPE(data) != T_STRING) {
+        rb_raise(rb_eTypeError, "the data for artwork %d is not valid - it should be a binary packed string", i);
+      }
+
+      // Skip setting image if it is equal to the one already there
+      if (tags->artworkCount > i &&
+          RSTRING_LEN(data) == tags->artwork[i].size &&
+          memcmp(tags->artwork[i].data, RSTRING_PTR(data), tags->artwork[i].size) == 0) {
+        printf("Not modifying artwork %d\n", i);
+        continue;
+      }
+
+      ID kind = SYM2ID(rb_funcall(artwork, rb_intern("format"), 0));
+      MP4TagArtwork art;
+      art.data = (void *)RSTRING_PTR(data);
+      art.size = RSTRING_LEN(data);
+
+      if (kind == rb_intern("jpeg")) {
+        art.type = MP4_ART_JPEG;
+      } else if (kind == rb_intern("png")) {
+        art.type = MP4_ART_PNG;
+      } else if (kind == rb_intern("bmp")) {
+        art.type = MP4_ART_BMP;
+      } else if (kind == rb_intern("gif")) {
+        art.type = MP4_ART_GIF;
+      } else {
+        art.type = MP4_ART_UNDEFINED;
+      }
+
+      if (tags->artworkCount > i) {
+        printf("Setting artwork at position %d\n", i);
+        MP4TagsSetArtwork(tags, i, &art);
+      } else {
+        printf("Adding a new piece of artwork %d\n", i);
+        MP4TagsAddArtwork(tags, &art);
+      }
+    }
+
+    // Delete any artwork that is in file but not in array
+    for (uint32_t i = RARRAY_LEN(artworks); i < tags->artworkCount; i++) {
+      printf("Removing artwork at %d\n", i);
+      MP4TagsRemoveArtwork(tags, i);
+    }
+  }
 
   MP4TagsStore(tags, mp4v2);
   MP4TagsFree(tags);
@@ -462,7 +516,7 @@ static VALUE mp4v2_save(VALUE self, VALUE args) {
 
   path = rb_funcall(path, rb_intern("to_s"), 0);
 
-  MP4V2_Handles handle;
+  MP4V2Handles handle;
   handle.self = self;
   handle.filename = path;
   handle.file = NULL;
@@ -482,23 +536,19 @@ static VALUE mp4v2_save(VALUE self, VALUE args) {
 static VALUE mp4v2_artwork_save(VALUE self) {
   VALUE source = rb_ivar_get(self, rb_intern("@source"));
 
-  if (rb_funcall(rb_cFile, rb_intern("exists?"), 1, source) == Qfalse) {
-    rb_raise(rb_eIOError, "file does not exist - %s", RSTRING_PTR(source));
-  }
-
   MP4FileHandle mp4v2 = MP4Read(RSTRING_PTR(source));
   if (mp4v2 == MP4_INVALID_FILE_HANDLE) {
     rb_raise(rb_eTypeError, "%s is not a valid mp4 file", RSTRING_PTR(source));
   }
 
   VALUE file = rb_funcall(rb_ivar_get(self, rb_intern("@file")), rb_intern("to_s"), 0);
-  int number = FIX2INT(rb_ivar_get(self, rb_intern("@number")));
+  uint32_t number = FIX2UINT(rb_ivar_get(self, rb_intern("@number")));
 
   // All ruby methods have been called so we are clear of exceptions happening in ruby
   const MP4Tags *tags = MP4TagsAlloc();
   MP4TagsFetch(tags, mp4v2);
 
-  if (!tags->artwork || tags->artworkCount <= (uint32_t)number) {
+  if (!tags->artwork || tags->artworkCount <= number) {
     MP4TagsFree(tags);
     MP4Close(mp4v2);
     rb_raise(rb_eStandardError, "this artwork doesn't exist in the source file %s", RSTRING_PTR(source));
@@ -519,6 +569,34 @@ static VALUE mp4v2_artwork_save(VALUE self) {
   MP4Close(mp4v2);
 
   return file;
+}
+
+static VALUE mp4v2_artwork_data(VALUE self) {
+  VALUE source = rb_ivar_get(self, rb_intern("@source"));
+
+  MP4FileHandle mp4v2 = MP4Read(RSTRING_PTR(source));
+  if (mp4v2 == MP4_INVALID_FILE_HANDLE) {
+    rb_raise(rb_eTypeError, "%s is not a valid mp4 file", RSTRING_PTR(source));
+  }
+
+  uint32_t number = FIX2UINT(rb_ivar_get(self, rb_intern("@number")));
+
+  // All ruby methods have been called so we are clear of exceptions happening in ruby
+  const MP4Tags *tags = MP4TagsAlloc();
+  MP4TagsFetch(tags, mp4v2);
+
+  if (!tags->artwork || tags->artworkCount <= number) {
+    MP4TagsFree(tags);
+    MP4Close(mp4v2);
+    rb_raise(rb_eStandardError, "this artwork doesn't exist in the source file %s", RSTRING_PTR(source));
+  }
+
+  VALUE data = rb_str_new((const char*)tags->artwork[number].data, tags->artwork[number].size);
+
+  MP4TagsFree(tags);
+  MP4Close(mp4v2);
+
+  return data;
 }
 
 void Init_mp4v2() {
