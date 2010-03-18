@@ -11,6 +11,10 @@ class Mp4v2::Artwork
     @file.open("wb") { |f| f << @data }
   end
 
+  def ==(other)
+    @data == other.data && @file == other.instance_variable_get(:@file)
+  end
+
   def inspect
     "#<#{self.class} file=#{@file.basename.inspect} format=#{@format}>"
   end
