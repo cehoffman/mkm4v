@@ -11,9 +11,6 @@ static VALUE rb_cMp4v2, rb_cArtwork;
 
 #define MP4V2(obj) (Check_Type(obj, T_DATA), (MP4FileHandle)DATA_PTR(obj))
 
-static VALUE mp4v2_artwork_save(VALUE self);
-static VALUE mp4v2_artwork_data(VALUE self);
-
 static inline VALUE rb_utf8_str(const char *str) {
   return rb_enc_str_new(str, strlen(str), rb_utf8_encoding());
 }
@@ -280,11 +277,7 @@ static VALUE mp4v2_read_metadata(MP4V2Handles *handle) {
       }
 
       art = rb_funcall(handle->filename, rb_intern("sub"), 2, regex, rb_utf8_str(ext));
-      rb_ary_unshift(artworks, art = rb_funcall(rb_cArtwork, rb_intern("new"), 1, art));
-      rb_ivar_set(art, rb_intern("@source"), handle->filename);
-      rb_ivar_set(art, rb_intern("@number"), INT2FIX(i));
-      rb_define_singleton_method(art, "save", (VALUE (*)(...))mp4v2_artwork_save, 0);
-      rb_define_singleton_method(art, "data", (VALUE (*)(...))mp4v2_artwork_data, 0);
+      rb_ary_unshift(artworks, art = rb_funcall(rb_cArtwork, rb_intern("new"), 2, art, rb_str_new((const char*)tags->artwork[i].data, tags->artwork[i].size)));
     }
 
     SET(artwork, artworks);
@@ -446,9 +439,10 @@ static VALUE mp4v2_modify_file(MP4V2Handles *handle) {
   } else if (index == SYM("clean")) {
     type = 2;
   } else if (index == SYM("explicit")) {
+    type = 4;
   }
 
-  if (type != NULL) {
+  if (type) {
     MODIFY(ContentRating, &type);
   } else {
     MODIFY(ContentRating, NULL);
@@ -616,72 +610,6 @@ static VALUE mp4v2_save(VALUE self, VALUE args) {
   rb_ensure((VALUE (*)(...))mp4v2_modify_file, (VALUE)&handle, (VALUE (*)(...))ensure_close, (VALUE)&handle);
 
   return path;
-}
-
-static VALUE mp4v2_artwork_save(VALUE self) {
-  VALUE source = rb_ivar_get(self, rb_intern("@source"));
-
-  MP4FileHandle mp4v2 = MP4Read(RSTRING_PTR(source));
-  if (mp4v2 == MP4_INVALID_FILE_HANDLE) {
-    rb_raise(rb_eTypeError, "%s is not a valid mp4 file", RSTRING_PTR(source));
-  }
-
-  VALUE file = rb_funcall(rb_ivar_get(self, rb_intern("@file")), rb_intern("to_s"), 0);
-  uint32_t number = FIX2UINT(rb_ivar_get(self, rb_intern("@number")));
-
-  // All ruby methods have been called so we are clear of exceptions happening in ruby
-  const MP4Tags *tags = MP4TagsAlloc();
-  MP4TagsFetch(tags, mp4v2);
-
-  if (!tags->artwork || tags->artworkCount <= number) {
-    MP4TagsFree(tags);
-    MP4Close(mp4v2);
-    rb_raise(rb_eStandardError, "this artwork doesn't exist in the source file %s", RSTRING_PTR(source));
-  }
-
-  FILE *artwork = fopen(RSTRING_PTR(file), "wb");
-
-  if (!artwork) {
-    MP4TagsFree(tags);
-    MP4Close(mp4v2);
-    rb_raise(rb_eIOError, "unable to open %s for writing", RSTRING_PTR(file));
-  }
-
-  fwrite(tags->artwork[number].data, sizeof(uint8_t), tags->artwork[number].size, artwork);
-  fclose(artwork);
-
-  MP4TagsFree(tags);
-  MP4Close(mp4v2);
-
-  return file;
-}
-
-static VALUE mp4v2_artwork_data(VALUE self) {
-  VALUE source = rb_ivar_get(self, rb_intern("@source"));
-
-  MP4FileHandle mp4v2 = MP4Read(RSTRING_PTR(source));
-  if (mp4v2 == MP4_INVALID_FILE_HANDLE) {
-    rb_raise(rb_eTypeError, "%s is not a valid mp4 file", RSTRING_PTR(source));
-  }
-
-  uint32_t number = FIX2UINT(rb_ivar_get(self, rb_intern("@number")));
-
-  // All ruby methods have been called so we are clear of exceptions happening in ruby
-  const MP4Tags *tags = MP4TagsAlloc();
-  MP4TagsFetch(tags, mp4v2);
-
-  if (!tags->artwork || tags->artworkCount <= number) {
-    MP4TagsFree(tags);
-    MP4Close(mp4v2);
-    rb_raise(rb_eStandardError, "this artwork doesn't exist in the source file %s", RSTRING_PTR(source));
-  }
-
-  VALUE data = rb_str_new((const char*)tags->artwork[number].data, tags->artwork[number].size);
-
-  MP4TagsFree(tags);
-  MP4Close(mp4v2);
-
-  return data;
 }
 
 void Init_mp4v2() {
