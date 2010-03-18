@@ -27,11 +27,11 @@ static ID xml;
 
 #define MEDIAINFO(obj) (Check_Type(obj, T_DATA), (void *)DATA_PTR(obj))
 
-static VALUE rb_utf8_str(const char *str) {
+static inline VALUE rb_utf8_str(const char *str) {
   return rb_enc_str_new(str, strlen(str), rb_utf8_encoding());
 }
 
-static VALUE rb_encode_utf8(VALUE str) {
+static inline VALUE rb_encode_utf8(VALUE str) {
   return rb_funcall(str, rb_intern("encode"), 1, rb_const_get(rb_cEncoding, rb_intern("UTF_8")));
 }
 
@@ -249,10 +249,12 @@ static VALUE mediainfo_static_options(VALUE self, VALUE args) {
 
 static VALUE mediainfo_open(VALUE self) {
   MediaInfo_Open(MEDIAINFO(self), RSTRING_PTR(rb_funcall(rb_funcall(self, rb_intern("file"), 0), rb_intern("to_s"), 0)));
+  return self;
 }
 
 static VALUE mediainfo_close(VALUE self) {
   MediaInfo_Close(MEDIAINFO(self));
+  return self;
 }
 
 void Init_mediainfo() {
