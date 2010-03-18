@@ -1,9 +1,18 @@
-require "ostruct"
 require "plist"
 require File.expand_path("../mp4v2/mp4v2", __FILE__)
 require File.expand_path("../mp4v2/artwork", __FILE__)
 
 class Mp4v2
+
+  def method_missing(method, *args)
+    case method
+    when /(.+)=$/
+      instance_eval "def #{$1}; self[:#{$1}] end; def #{method}(val); self[:#{$1}] = val end"
+      send method, *args
+    else
+      self[method]
+    end
+  end
 
 private
   @@rating_map = [
@@ -45,13 +54,10 @@ private
                  ]
 
   def rating_from_itmf(itmf)
-    puts "Getting rating for '#{itmf}'"
-
     rating = @@rating_map.select { |map| map.first == itmf }.pop
-
     rating && rating.last || nil
   end
-  
+
   def itmf_from_rating
     itmf = @@rating_map.select { |map| map.last == self.rating }
     itmf = self.kind == :tv && itmf.last || itmf.first

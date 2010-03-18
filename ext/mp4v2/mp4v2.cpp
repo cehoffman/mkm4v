@@ -679,7 +679,7 @@ static VALUE mp4v2_artwork_data(VALUE self) {
 }
 
 void Init_mp4v2() {
-  rb_cMp4v2 = rb_define_class("Mp4v2", rb_const_get(rb_cObject, rb_intern("OpenStruct")));
+  rb_cMp4v2 = rb_define_class("Mp4v2", rb_cHash);
   rb_define_method(rb_cMp4v2, "initialize", (VALUE (*)(...))mp4v2_init, 1);
   rb_define_method(rb_cMp4v2, "reload!", (VALUE (*)(...))mp4v2_reload, 0);
   rb_define_method(rb_cMp4v2, "save", (VALUE (*)(...))mp4v2_save, -2);
