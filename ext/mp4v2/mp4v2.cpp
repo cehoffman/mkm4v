@@ -507,6 +507,38 @@ static VALUE mp4v2_modify_file(MP4V2Handles *handle) {
   MP4TagsFree(tags);
   handle->tags = NULL;
 
+  MP4ItmfItemList *list = handle->list = MP4ItmfGetItemsByMeaning(mp4v2, "com.apple.iTunes", "iTunEXTC");
+  if (list) {
+    for (uint32_t i = 0; i < list->size; i++) {
+      MP4ItmfRemoveItem(mp4v2, &list->elements[i]);
+    }
+  }
+  MP4ItmfItemListFree(list);
+  handle->list = NULL;
+
+  VALUE rating = GET(itmf_from_rating);
+  if (rating != Qnil && TYPE(rating) == T_STRING) {
+    MP4ItmfItem *item = MP4ItmfItemAlloc("----", 1);
+    item->mean = (char *)"com.apple.iTunes";
+    item->name = (char *)"iTunEXTC";
+
+    MP4ItmfData *data = &item->dataList.elements[0];
+    data->typeCode = MP4_ITMF_BT_UTF8;
+    data->valueSize = RSTRING_LEN(rating);
+    data->value = (uint8_t *)RSTRING_PTR(rating);
+
+    // This free's the allocated object above too
+    MP4ItmfAddItem(mp4v2, item);
+  }
+
+  list = handle->list = MP4ItmfGetItemsByMeaning(mp4v2, "com.apple.iTunes", "iTunMOVI");
+  if (list) {
+    for (uint32_t i = 0; i < list->size; i++) {
+      MP4ItmfRemoveItem(mp4v2, &list->elements[i]);
+    }
+  }
+  MP4ItmfItemListFree(list);
+  handle->list = NULL;
 
   VALUE cast = GET(cast), directors = GET(directors), writers = GET(writers);
   VALUE codirectors = GET(codirectors), producers = GET(producers);
@@ -519,15 +551,6 @@ static VALUE mp4v2_modify_file(MP4V2Handles *handle) {
     MODIFY_PEOPLE(screenwriters, writers);
     MODIFY_PEOPLE(producers, producers);
     plist = rb_funcall(plist, rb_intern("to_plist"), 0);
-
-    MP4ItmfItemList *list = handle->list = MP4ItmfGetItemsByMeaning(mp4v2, "com.apple.iTunes", "iTunMOVI");
-    if (list) {
-      for (uint32_t i = 0; i < list->size; i++) {
-        MP4ItmfRemoveItem(mp4v2, &list->elements[i]);
-      }
-    }
-    MP4ItmfItemListFree(list);
-    handle->list = NULL;
 
     MP4ItmfItem *item = MP4ItmfItemAlloc("----", 1);
     item->mean = (char *)"com.apple.iTunes";
