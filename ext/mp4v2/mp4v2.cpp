@@ -81,6 +81,7 @@ static inline VALUE rb_encode_utf8(VALUE str) {
   } else { \
     MODIFY(func, NULL); \
   }
+#define MODIFY_NUM8(func, accessor) MODIFY_NUMBITS(func, accessor, 8)
 #define MODIFY_NUM16(func, accessor) MODIFY_NUMBITS(func, accessor, 16)
 #define MODIFY_NUM32(func, accessor) MODIFY_NUMBITS(func, accessor, 32)
 #define MODIFY_NUM64(func, accessor) MODIFY_NUMBITS(func, accessor, 64)
@@ -197,6 +198,7 @@ static VALUE mp4v2_read_metadata(MP4V2Handles *handle) {
   TAG_SET(encodingTool, encoding_tool);
   TAG_SET(encodedBy, encoded_by);
   TAG_BOOL(podcast, podcast, 1);
+  TAG_SET(category, category);
   TAG_BOOL(hdVideo, hd, 1);
 
   if (tags->mediaType) {
@@ -245,6 +247,8 @@ static VALUE mp4v2_read_metadata(MP4V2Handles *handle) {
 
   TAG_DATE(purchaseDate, purchased);
   TAG_SET(iTunesAccount, account);
+  TAG_NUM(iTunesAccountType, account_type);
+  TAG_NUM(iTunesCountry, country);
   TAG_NUM(cnID, cnID);
   TAG_NUM(atID, atID);
   TAG_NUM(plID, plID);
@@ -409,6 +413,7 @@ static VALUE mp4v2_modify_file(MP4V2Handles *handle) {
   MODIFY_STR(EncodingTool, encoding_tool);
   MODIFY_STR(EncodedBy, encoded_by);
   MODIFY_BOOL(Podcast, podcast);
+  MODIFY_STR(Category, category);
   MODIFY_BOOL(HDVideo, hd);
 
   VALUE index = GET(kind);
@@ -450,6 +455,8 @@ static VALUE mp4v2_modify_file(MP4V2Handles *handle) {
 
   MODIFY_DATE(PurchaseDate, purchased);
   MODIFY_STR(ITunesAccount, account);
+  MODIFY_NUM8(ITunesAccountType, account_type);
+  MODIFY_NUM(ITunesCountry, country);
   MODIFY_NUM(CNID, cnID);
   MODIFY_NUM(ATID, atID);
   MODIFY_NUM64(PLID, plID);
