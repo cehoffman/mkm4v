@@ -137,15 +137,8 @@ static inline VALUE rb_encode_utf8(VALUE str) {
 
 #define SYM(sym) (ID2SYM(rb_intern(sym)))
 
-#define MP4HANDLES_INIT(handle, selfref, filepath) \
-  handle.self = selfref; \
-  handle.filename = rb_funcall(filepath, rb_intern("to_s"), 0); \
-  handle.optimize = false; \
-  handle.file = NULL; \
-  handle.tags = NULL; \
-  handle.list = NULL; \
-  handle.chapters = NULL;
-
+// Ensure all pointers to allocated objects are at end of
+// structure so literal initilizations sets pointers to NULL;
 typedef struct MP4V2Handles_s {
   VALUE self;
   VALUE filename;
@@ -370,12 +363,11 @@ static VALUE mp4v2_read_metadata(MP4V2Handles *handle) {
 
 static VALUE mp4v2_reload(VALUE self) {
   VALUE file = GET(file);
-  MP4V2Handles handle;
-  MP4HANDLES_INIT(handle, self, file);
-
-  // Drop everything and reinitialize
   rb_funcall(self, rb_intern("clear"), 0);
   SET(file, file);
+
+  file = rb_funcall(file, rb_intern("to_s"), 0);
+  MP4V2Handles handle = { self, file };
 
   rb_ensure((VALUE (*)(...))mp4v2_read_metadata, (VALUE)&handle, (VALUE (*)(...))ensure_close, (VALUE)&handle);
 
@@ -391,8 +383,7 @@ static VALUE mp4v2_init(VALUE self, VALUE filename) {
   rb_call_super(0, NULL);
   SET(file, rb_funcall(rb_const_get(rb_cObject, rb_intern("Pathname")), rb_intern("new"), 1, name));
 
-  MP4V2Handles handle;
-  MP4HANDLES_INIT(handle, self, name);
+  MP4V2Handles handle = { self, name };
 
   rb_ensure((VALUE (*)(...))mp4v2_read_metadata, (VALUE)&handle, (VALUE (*)(...))ensure_close, (VALUE)&handle);
 
@@ -691,9 +682,8 @@ static VALUE mp4v2_save(VALUE self, VALUE args) {
     path = rb_funcall(self, rb_intern("file"), 0);
   }
 
-
-  MP4V2Handles handle;
-  MP4HANDLES_INIT(handle, self, path);
+  path = rb_funcall(path, rb_intern("to_s"), 0);
+  MP4V2Handles handle = { self, path, false };
 
   if (TYPE(hash) == T_HASH && rb_hash_aref(hash, SYM("optimize")) == Qtrue) {
     handle.optimize = true;
