@@ -158,6 +158,31 @@ typedef struct MP4V2Handles_s {
     INSTANCE_OF(rb_ary_entry(array, i), klass, name); \
   }
 
+#define DELETE_ITMF(meaning, name) \
+  { \
+    MP4ItmfItemList *list = handle->list = MP4ItmfGetItemsByMeaning(mp4v2, meaning, name); \
+    if (list) { \
+      for (uint32_t i = 0; i < list->size; i++) { \
+        MP4ItmfRemoveItem(mp4v2, &list->elements[i]); \
+      } \
+    } \
+    MP4ItmfItemListFree(list); \
+    handle->list = NULL; \
+  }
+#define ADD_ITMF(meaning, naming, val) \
+  { \
+    MP4ItmfItem *item = MP4ItmfItemAlloc("----", 1); \
+    item->mean = (char *)meaning; \
+    item->name = (char *)naming; \
+    \
+    MP4ItmfData *data = &item->dataList.elements[0]; \
+    data->typeCode = MP4_ITMF_BT_UTF8; \
+    data->valueSize = RSTRING_LEN(val); \
+    data->value = (uint8_t *)RSTRING_PTR(val); \
+    \
+    MP4ItmfAddItem(mp4v2, item); \
+  }
+
 static VALUE ensure_close(MP4V2Handles *handle) {
   if (handle->chapters) {
     free(handle->chapters);
@@ -558,40 +583,16 @@ static VALUE mp4v2_modify_file(MP4V2Handles *handle) {
   MP4TagsFree(tags);
   handle->tags = NULL;
 
-  MP4ItmfItemList *list = handle->list = MP4ItmfGetItemsByMeaning(mp4v2, "com.apple.iTunes", "iTunEXTC");
-  if (list) {
-    for (uint32_t i = 0; i < list->size; i++) {
-      MP4ItmfRemoveItem(mp4v2, &list->elements[i]);
-    }
-  }
-  MP4ItmfItemListFree(list);
-  handle->list = NULL;
+  DELETE_ITMF("com.apple.iTunes", "iTunEXTC");
 
   VALUE rating = GET(itmf_from_rating);
   if (TYPE(rating) == T_STRING) {
     rating = rb_encode_utf8(rating);
 
-    MP4ItmfItem *item = MP4ItmfItemAlloc("----", 1);
-    item->mean = (char *)"com.apple.iTunes";
-    item->name = (char *)"iTunEXTC";
-
-    MP4ItmfData *data = &item->dataList.elements[0];
-    data->typeCode = MP4_ITMF_BT_UTF8;
-    data->valueSize = RSTRING_LEN(rating);
-    data->value = (uint8_t *)RSTRING_PTR(rating);
-
-    // This free's the allocated object above too
-    MP4ItmfAddItem(mp4v2, item);
+    ADD_ITMF("com.apple.iTunes", "iTunEXTC", rating);
   }
 
-  list = handle->list = MP4ItmfGetItemsByMeaning(mp4v2, "com.apple.iTunes", "iTunMOVI");
-  if (list) {
-    for (uint32_t i = 0; i < list->size; i++) {
-      MP4ItmfRemoveItem(mp4v2, &list->elements[i]);
-    }
-  }
-  MP4ItmfItemListFree(list);
-  handle->list = NULL;
+  DELETE_ITMF("com.apple.iTunes", "iTunMOVI");
 
   VALUE cast = GET(cast), directors = GET(directors), writers = GET(writers);
   VALUE codirectors = GET(codirectors), producers = GET(producers);
@@ -605,17 +606,7 @@ static VALUE mp4v2_modify_file(MP4V2Handles *handle) {
     MODIFY_PEOPLE(producers, producers);
     plist = rb_encode_utf8(rb_funcall(plist, rb_intern("to_plist"), 0));
 
-    MP4ItmfItem *item = MP4ItmfItemAlloc("----", 1);
-    item->mean = (char *)"com.apple.iTunes";
-    item->name = (char *)"iTunMOVI";
-
-    MP4ItmfData *data = &item->dataList.elements[0];
-    data->typeCode = MP4_ITMF_BT_UTF8;
-    data->valueSize = RSTRING_LEN(plist);
-    data->value = (uint8_t *)RSTRING_PTR(plist);
-
-    // This free's the allocated object above too
-    MP4ItmfAddItem(mp4v2, item);
+    ADD_ITMF("com.apple.iTunes", "iTunMOVI", plist);
   }
 
   VALUE chapters = GET(chapters), chapter, title;
