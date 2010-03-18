@@ -33,7 +33,7 @@ class Timestamp
     when Timestamp then Timestamp.new @seconds + other.seconds
     when Numeric then Timestamp.new @seconds + other
     else
-      other.respond_to(:to_i) && Timestamp.new(@secons + other) || raise(TypeError, "#{other.class} can't be coerced into a Fixnum")
+      other.respond_to(:to_i) && Timestamp.new(@seconds + other.to_i) || raise(TypeError, "#{other.class} can't be coerced into a Fixnum")
     end
   end
 
@@ -42,7 +42,7 @@ class Timestamp
     when Timestamp then Timestamp.new @seconds - other.seconds
     when Numeric then Timestamp.new @seconds - other
     else
-      other.respond_to(:to_i) && Timestamp.new(@secons - other) || raise(TypeError, "#{other.class} can't be coerced into a Fixnum")
+      other.respond_to(:to_i) && Timestamp.new(@seconds - other.to_i) || raise(TypeError, "#{other.class} can't be coerced into a Fixnum")
     end
   end
 
