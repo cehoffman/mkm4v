@@ -125,7 +125,19 @@ static inline VALUE rb_encode_utf8(VALUE str) {
       rb_raise(rb_eTypeError, #accessor " should be an instance of DateTime or nil"); \
     } \
   }
-
+#define MODIFY_PEOPLE(tag, list) \
+  if (TYPE(list) == T_ARRAY && RARRAY_LEN(list) > 0) { \
+    VALUE key = rb_utf8_str("name"); \
+    \
+    for (int32_t i = RARRAY_LEN(list) - 1; i >= 0; i--) { \
+      VALUE hash = rb_hash_new(), name = rb_ary_pop(list); \
+      Check_Type(name, T_STRING); \
+      rb_hash_aset(hash, key, name); \
+      rb_ary_unshift(list, hash); \
+    } \
+    \
+    rb_hash_aset(plist, rb_utf8_str(#tag), list); \
+  }
 
 #define SYM(sym) (ID2SYM(rb_intern(sym)))
 
@@ -494,6 +506,41 @@ static VALUE mp4v2_modify_file(MP4V2Handles *handle) {
   MP4TagsStore(tags, mp4v2);
   MP4TagsFree(tags);
   handle->tags = NULL;
+
+
+  VALUE cast = GET(cast), directors = GET(directors), writers = GET(writers);
+  VALUE codirectors = GET(codirectors), producers = GET(producers);
+  if (cast != Qnil || directors != Qnil || writers != Qnil || codirectors != Qnil || producers != Qnil) {
+    VALUE plist = rb_hash_new();
+
+    MODIFY_PEOPLE(cast, cast);
+    MODIFY_PEOPLE(directors, directors);
+    MODIFY_PEOPLE(codirectors, codirectors);
+    MODIFY_PEOPLE(screenwriters, writers);
+    MODIFY_PEOPLE(producers, producers);
+    plist = rb_funcall(plist, rb_intern("to_plist"), 0);
+
+    MP4ItmfItemList *list = handle->list = MP4ItmfGetItemsByMeaning(mp4v2, "com.apple.iTunes", "iTunMOVI");
+    if (list) {
+      for (uint32_t i = 0; i < list->size; i++) {
+        MP4ItmfRemoveItem(mp4v2, &list->elements[i]);
+      }
+    }
+    MP4ItmfItemListFree(list);
+    handle->list = NULL;
+
+    MP4ItmfItem *item = MP4ItmfItemAlloc("----", 1);
+    item->mean = (char *)"com.apple.iTunes";
+    item->name = (char *)"iTunMOVI";
+
+    MP4ItmfData *data = &item->dataList.elements[0];
+    data->typeCode = MP4_ITMF_BT_UTF8;
+    data->valueSize = RSTRING_LEN(plist);
+    data->value = (uint8_t *)RSTRING_PTR(plist);
+
+    // This free's the allocated object above too
+    MP4ItmfAddItem(mp4v2, item);
+  }
 
   MP4Close(mp4v2);
   handle->file = NULL;
