@@ -496,57 +496,61 @@ static VALUE mp4v2_modify_file(MP4V2Handles *handle) {
 
   // Artwork yet again, blah
   VALUE artworks = GET(artwork);
-  if (artworks != Qnil && TYPE(artworks) == T_ARRAY) {
-    for (uint32_t i = 0; i < RARRAY_LEN(artworks); i++) {
-      VALUE artwork = rb_ary_entry(artworks, i);
-      if (rb_obj_is_instance_of(artwork, rb_cArtwork) == Qfalse) {
-        rb_raise(rb_eTypeError, "invalid object in artwork list at index %d", i);
+  uint32_t count = 0;
+  switch(TYPE(artworks)) {
+    case T_ARRAY: // fall through to T_NIL to remove extra artwork
+      RARRAY_ALL_INSTANCE(artworks, rb_cArtwork, artwork);
+
+      count = RARRAY_LEN(artworks);
+      for (uint32_t i = 0; i < count; i++) {
+        VALUE artwork = rb_ary_entry(artworks, i);
+
+        VALUE data = rb_funcall(artwork, rb_intern("data"), 0);
+        if (TYPE(data) != T_STRING) {
+          rb_raise(rb_eTypeError, "the data for artwork %d is not valid - it should be a binary packed string", i);
+        }
+
+        // Skip setting image if it is equal to the one already there
+        if (tags->artworkCount > i &&
+            RSTRING_LEN(data) == tags->artwork[i].size &&
+            memcmp(tags->artwork[i].data, RSTRING_PTR(data), tags->artwork[i].size) == 0) {
+          printf("Not modifying artwork %d\n", i);
+          continue;
+        }
+
+        ID kind = SYM2ID(rb_funcall(artwork, rb_intern("format"), 0));
+        MP4TagArtwork art;
+        art.data = (void *)RSTRING_PTR(data);
+        art.size = RSTRING_LEN(data);
+
+        if (kind == rb_intern("jpeg")) {
+          art.type = MP4_ART_JPEG;
+        } else if (kind == rb_intern("png")) {
+          art.type = MP4_ART_PNG;
+        } else if (kind == rb_intern("bmp")) {
+          art.type = MP4_ART_BMP;
+        } else if (kind == rb_intern("gif")) {
+          art.type = MP4_ART_GIF;
+        } else {
+          art.type = MP4_ART_UNDEFINED;
+        }
+
+        if (tags->artworkCount > i) {
+          printf("Setting artwork at position %d\n", i);
+          MP4TagsSetArtwork(tags, i, &art);
+        } else {
+          printf("Adding a new piece of artwork %d\n", i);
+          MP4TagsAddArtwork(tags, &art);
+        }
       }
-
-      VALUE data = rb_funcall(artwork, rb_intern("data"), 0);
-      if (TYPE(data) != T_STRING) {
-        rb_raise(rb_eTypeError, "the data for artwork %d is not valid - it should be a binary packed string", i);
+    case T_NIL:
+      // Delete any artwork that is left in file but not in list
+      for (uint32_t i = count; i < tags->artworkCount; i++) {
+        printf("Removing artwork at %d\n", i);
+        MP4TagsRemoveArtwork(tags, i);
       }
-
-      // Skip setting image if it is equal to the one already there
-      if (tags->artworkCount > i &&
-          RSTRING_LEN(data) == tags->artwork[i].size &&
-          memcmp(tags->artwork[i].data, RSTRING_PTR(data), tags->artwork[i].size) == 0) {
-        printf("Not modifying artwork %d\n", i);
-        continue;
-      }
-
-      ID kind = SYM2ID(rb_funcall(artwork, rb_intern("format"), 0));
-      MP4TagArtwork art;
-      art.data = (void *)RSTRING_PTR(data);
-      art.size = RSTRING_LEN(data);
-
-      if (kind == rb_intern("jpeg")) {
-        art.type = MP4_ART_JPEG;
-      } else if (kind == rb_intern("png")) {
-        art.type = MP4_ART_PNG;
-      } else if (kind == rb_intern("bmp")) {
-        art.type = MP4_ART_BMP;
-      } else if (kind == rb_intern("gif")) {
-        art.type = MP4_ART_GIF;
-      } else {
-        art.type = MP4_ART_UNDEFINED;
-      }
-
-      if (tags->artworkCount > i) {
-        printf("Setting artwork at position %d\n", i);
-        MP4TagsSetArtwork(tags, i, &art);
-      } else {
-        printf("Adding a new piece of artwork %d\n", i);
-        MP4TagsAddArtwork(tags, &art);
-      }
-    }
-
-    // Delete any artwork that is in file but not in array
-    for (uint32_t i = RARRAY_LEN(artworks); i < tags->artworkCount; i++) {
-      printf("Removing artwork at %d\n", i);
-      MP4TagsRemoveArtwork(tags, i);
-    }
+      break;
+    default:;
   }
 
   MP4TagsStore(tags, mp4v2);
