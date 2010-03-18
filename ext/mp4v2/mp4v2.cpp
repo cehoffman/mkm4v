@@ -9,8 +9,6 @@
 
 static VALUE rb_cMp4v2, rb_cArtwork;
 
-#define MP4V2(obj) (Check_Type(obj, T_DATA), (MP4FileHandle)DATA_PTR(obj))
-
 static inline VALUE rb_utf8_str(const char *str) {
   return rb_enc_str_new(str, strlen(str), rb_utf8_encoding());
 }
