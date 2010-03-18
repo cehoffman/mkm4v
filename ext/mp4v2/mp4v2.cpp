@@ -573,6 +573,8 @@ static VALUE mp4v2_modify_file(MP4V2Handles *handle) {
 
   VALUE rating = GET(itmf_from_rating);
   if (TYPE(rating) == T_STRING) {
+    rating = rb_encode_utf8(rating);
+
     MP4ItmfItem *item = MP4ItmfItemAlloc("----", 1);
     item->mean = (char *)"com.apple.iTunes";
     item->name = (char *)"iTunEXTC";
@@ -605,7 +607,7 @@ static VALUE mp4v2_modify_file(MP4V2Handles *handle) {
     MODIFY_PEOPLE(codirectors, codirectors);
     MODIFY_PEOPLE(screenwriters, writers);
     MODIFY_PEOPLE(producers, producers);
-    plist = rb_funcall(plist, rb_intern("to_plist"), 0);
+    plist = rb_encode_utf8(rb_funcall(plist, rb_intern("to_plist"), 0));
 
     MP4ItmfItem *item = MP4ItmfItemAlloc("----", 1);
     item->mean = (char *)"com.apple.iTunes";
