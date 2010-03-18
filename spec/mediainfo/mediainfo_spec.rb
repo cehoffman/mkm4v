@@ -12,7 +12,7 @@ describe MediaInfo do
   end
 
   it "should raise an error when file doesn't exist" do
-    -> { MediaInfo.new "will/not/exist.mkv" }.should raise_error(ArgumentError, "file does not exist - will/not/exist.mkv")
+    -> { MediaInfo.new "will/not/exist.mkv" }.should raise_error(IOError, /unable to open file - .*will\/not\/exist\.mkv$/)
   end
 
   it "should provide access to all the track types" do

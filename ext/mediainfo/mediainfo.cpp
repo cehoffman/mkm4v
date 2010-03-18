@@ -73,16 +73,7 @@ static VALUE mediainfo_alloc(VALUE klass) {
 }
 
 static VALUE mediainfo_init(VALUE self, VALUE filename) {
-  if (NIL_P(filename)) {
-    rb_raise(rb_eArgError, "a filename must be given");
-  }
-
   VALUE name = rb_funcall(filename, rb_intern("to_s"), 0);
-
-  // Make sure the file exists then open it
-  if (rb_funcall(rb_cFile, rb_intern("exists?"), 1, name) == Qfalse) {
-    rb_raise(rb_eArgError, "file does not exist - %s", RSTRING_PTR(name));
-  }
 
   void *mi = MEDIAINFO(self);
   name = rb_funcall(rb_cFile, rb_intern("absolute_path"), 1, name);
@@ -90,7 +81,9 @@ static VALUE mediainfo_init(VALUE self, VALUE filename) {
   // Convert string to utf8 for mediainfo consumption
   name = rb_encode_utf8(name);
 
-  MediaInfo_Open(mi, RSTRING_PTR(name));
+  if (!MediaInfo_Open(mi, RSTRING_PTR(name))) {
+    rb_raise(rb_eIOError, "unable to open file - %s", RSTRING_PTR(name));
+  }
 
   VALUE tracks = rb_ary_new();
   rb_ivar_set(self, rb_intern("@tracks"), tracks);
