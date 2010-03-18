@@ -241,7 +241,11 @@ static VALUE mediainfo_static_options(VALUE self, VALUE args) {
 }
 
 static VALUE mediainfo_open(VALUE self) {
-  MediaInfo_Open(MEDIAINFO(self), RSTRING_PTR(rb_funcall(rb_funcall(self, rb_intern("file"), 0), rb_intern("to_s"), 0)));
+  VALUE file = rb_funcall(rb_funcall(self, rb_intern("file"), 0), rb_intern("to_s"), 0);
+  if (!MediaInfo_Open(MEDIAINFO(self), RSTRING_PTR(file))) {
+    rb_raise(rb_eIOError, "unable to open file - %s", RSTRING_PTR(file));
+  }
+
   return self;
 }
 
