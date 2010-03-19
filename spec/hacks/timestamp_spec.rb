@@ -99,7 +99,8 @@ describe Timestamp do
   end
 
   it "should be ducktypable to a string" do
-    ("" + Timestamp.new(234)).should == "00:00:00.234"
+    ("" + Timestamp.new(234)).should == "00:00:00.234" # uses to_str
+    "#{Timestamp.new(1001)}".should == "00:00:01.001" # uses to_s
   end
 
   describe "#-" do
