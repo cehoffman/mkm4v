@@ -27,18 +27,20 @@ class Timestamp
   end
 
   def +(other)
-    case other
-    when Timestamp then Timestamp.new(@milliseconds + other.milliseconds)
+    if other.respond_to?(:coerce)
+      other = other.coerce(@milliseconds)
+      Timestamp.new(other.first + other.last)
     else
-      other.respond_to?(:coerce) && Timestamp.new(@milliseconds + other.coerce(@milliseconds)) || raise(TypeError, "#{other.class} can't be coerced into a Fixnum")
+      raise(TypeError, "#{other.class} can't be coerced into a Fixnum")
     end
   end
 
   def -(other)
-    case other
-    when Timestamp then Timestamp.new(@milliseconds - other.milliseconds)
+    if other.respond_to?(:coerce)
+      other = other.coerce(@milliseconds)
+      Timestamp.new(other.first - other.last)
     else
-      other.respond_to?(:coerce) && Timestamp.new(@milliseconds - other.coerce(@milliseconds)) || raise(TypeError, "#{other.class} can't be coerced into a Fixnum")
+      raise(TypeError, "#{other.class} can't be coerced into a Fixnum")
     end
   end
 

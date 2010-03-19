@@ -66,12 +66,18 @@ describe Timestamp do
 
   describe "#+" do
     class NotDuckTyped; end
-    class DuckTyped; def coerce(num); 30 end end
+    class DuckTyped; def coerce(num); [num, 30] end end
 
     it "should add with Timestamps" do
       stamp = Timestamp.new(30) + Timestamp.new(21)
 
       stamp.should be_an_instance_of(Timestamp)
+      stamp.milliseconds.should == 51
+    end
+
+    it "should add with numbers" do
+      stamp = Timestamp.new(30) + 21
+
       stamp.milliseconds.should == 51
     end
 
@@ -105,12 +111,18 @@ describe Timestamp do
 
   describe "#-" do
     class NotDuckTyped; end
-    class DuckTyped; def coerce(num); 30 end end
+    class DuckTyped; def coerce(num); [num, 30] end end
 
     it "should subtract with Timestamps" do
       stamp = Timestamp.new(30) - Timestamp.new(21)
 
       stamp.should be_an_instance_of(Timestamp)
+      stamp.milliseconds.should == 9
+    end
+
+    it "should subtract with numbers" do
+      stamp = Timestamp.new(30) - 21
+
       stamp.milliseconds.should == 9
     end
 
