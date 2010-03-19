@@ -39,6 +39,10 @@ void _mp4v2_write_chapters(MP4V2Handles *handle) {
 
       count = RARRAY_LEN(chapters);
       chaps = handle->chapters = (MP4Chapter_t *)malloc(sizeof(MP4Chapter_t) * count);
+      if (!chaps) {
+        rb_raise(rb_eNoMemError, "unable to save all changes to file");
+      }
+
       for (uint32_t i = 0; i < count; i++) {
         // Calculate the duration of chapter from previous timestamp and current
         chapter = rb_ary_entry(chapters, i);
