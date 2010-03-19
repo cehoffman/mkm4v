@@ -49,24 +49,26 @@ describe Timestamp do
     -> { Timestamp.new "invalid" }.should raise_error(ArgumentError)
   end
 
-  it "should be comparable with other Timestamps" do
-    earlier, later = Timestamp.new(0), Timestamp.new(33.2)
+  describe "#<=>" do
+    it "should be comparable with other Timestamps" do
+      earlier, later = Timestamp.new(0), Timestamp.new(33.2)
 
-    earlier.should < later
-    earlier.should == Timestamp.new(0)
-    later.should > earlier
-  end
+      earlier.should < later
+      earlier.should == Timestamp.new(0)
+      later.should > earlier
+    end
 
-  it "should be comparable with other Numbers" do
-    earlier, later = Timestamp.new(0), 33.2
+    it "should be comparable with other Numbers" do
+      earlier, later = Timestamp.new(0), 33.2
 
-    earlier.should < later
-    earlier.should == Timestamp.new(0)
+      earlier.should < later
+      earlier.should == Timestamp.new(0)
+      later.should > earlier
+    end
   end
 
   describe "#+" do
     class NotDuckTyped; end
-    class DuckTyped; def coerce(num); [num, 30] end end
 
     it "should add with Timestamps" do
       stamp = Timestamp.new(30) + Timestamp.new(21)
@@ -84,17 +86,7 @@ describe Timestamp do
     it "should raise a type error if it can't coerce to integer" do
       not_ducked = NotDuckTyped.new
 
-      -> { Timestamp.new(0) + not_ducked }.should raise_error(TypeError)
-    end
-
-    it "should be addable with items than can be converted to integers" do
-      ducked = DuckTyped.new
-
-      -> { Timestamp.new(0)  + ducked }.should_not raise_error
-
-      stamp = Timestamp.new(1) + ducked
-      stamp.should be_an_instance_of(Timestamp)
-      stamp.should == 31
+      -> { Timestamp.new(0) + not_ducked }.should raise_error(TypeError, "NotDuckTyped can't be coerced into a Fixnum or String")
     end
 
     it "should add to strings a string representation of self" do
@@ -108,14 +100,13 @@ describe Timestamp do
     stamp.to_i.should == 2340
   end
 
-  it "should be ducktypable to a string" do
+  it "should be duck typable to a string" do
     ("Timestamp: " + Timestamp.new(234)).should == "Timestamp: 00:00:00.234" # uses to_str
     "#{Timestamp.new(1001)}".should == "00:00:01.001" # uses to_s
   end
 
   describe "#-" do
     class NotDuckTyped; end
-    class DuckTyped; def coerce(num); [num, 30] end end
 
     it "should subtract with Timestamps" do
       stamp = Timestamp.new(30) - Timestamp.new(21)
@@ -133,17 +124,7 @@ describe Timestamp do
     it "should raise a type error if it can't coerce to integer" do
       not_ducked = NotDuckTyped.new
 
-      -> { Timestamp.new(0) + not_ducked }.should raise_error(TypeError)
-    end
-
-    it "should be subtract with items than can be converted to integers" do
-      ducked = DuckTyped.new
-
-      -> { Timestamp.new(0)  - ducked }.should_not raise_error
-
-      stamp = Timestamp.new(56) - ducked
-      stamp.should be_an_instance_of(Timestamp)
-      stamp.should == 26
+      -> { Timestamp.new(0) - not_ducked }.should raise_error(TypeError, "NotDuckTyped can't be coerced into a Fixnum")
     end
   end
 

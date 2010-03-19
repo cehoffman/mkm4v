@@ -33,7 +33,7 @@ class Timestamp
       other = other.coerce(@milliseconds)
       Timestamp.new(other.first + other.last)
     else
-      raise(TypeError, "#{other.class} can't be coerced into a Fixnum")
+      raise(TypeError, "#{other.class} can't be coerced into a Fixnum or String")
     end
   end
 
@@ -59,6 +59,7 @@ class Timestamp
   end
 
   # This is for ducktyping to a number
+  # allows it to be comparable with numbers
   def coerce(num)
     @milliseconds.coerce(num)
   end
