@@ -24,7 +24,7 @@ VALUE _mp4v2_track_init(VALUE self, MP4FileHandle mp4v2, MP4TrackId track_id) {
 
   uint64_t duration = MP4ConvertFromTrackDuration(mp4v2, track_id, MP4GetTrackDuration(mp4v2, track_id), MP4_MSECS_TIME_SCALE);
   VALUE stamp = rb_const_get(rb_cObject, rb_intern("Timestamp"));
-  stamp = rb_funcall(stamp, rb_intern("new"), 1, DBL2NUM(duration/1000.0));
+  stamp = rb_funcall(stamp, rb_intern("new"), 1, ULL2NUM(duration));
   rb_ivar_set(self, rb_intern("@duration"), stamp);
 
   uint32_t timescale = MP4GetTrackTimeScale(mp4v2, track_id);

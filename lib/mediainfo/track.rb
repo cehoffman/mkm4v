@@ -23,7 +23,7 @@ module MediaInfo::Track
   String = ->(raw) { raw }
   Pathname = ->(raw) { ::Pathname.new raw }
   Encoding = ->(raw) { ::Encoding.find raw rescue raw }
-  Timestamp = ->(raw) { ::Timestamp.new raw.to_i/1000.0 }
+  Timestamp = ->(raw) { ::Timestamp.new raw.to_i }
 
   class Boolean
     def initialize(true_value)
