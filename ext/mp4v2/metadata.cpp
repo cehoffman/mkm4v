@@ -311,16 +311,15 @@ void _mp4v2_write_metadata(MP4V2Handles *handle) {
   MP4TagsFree(tags);
   handle->tags = NULL;
 
-  DELETE_ITMF("com.apple.iTunes", "iTunEXTC");
-
   VALUE rating = GET(itmf_from_rating);
   if (TYPE(rating) == T_STRING) {
     rating = rb_encode_utf8(rating);
 
+    DELETE_ITMF("com.apple.iTunes", "iTunEXTC");
     ADD_ITMF("com.apple.iTunes", "iTunEXTC", rating);
+  } else {
+    DELETE_ITMF("com.apple.iTunes", "iTunEXTC");
   }
-
-  DELETE_ITMF("com.apple.iTunes", "iTunMOVI");
 
   VALUE cast = GET(cast), directors = GET(directors), writers = GET(writers);
   VALUE codirectors = GET(codirectors), producers = GET(producers);
@@ -334,6 +333,9 @@ void _mp4v2_write_metadata(MP4V2Handles *handle) {
     MODIFY_PEOPLE(producers, producers);
     plist = rb_encode_utf8(rb_funcall(plist, rb_intern("to_plist"), 0));
 
+    DELETE_ITMF("com.apple.iTunes", "iTunMOVI");
     ADD_ITMF("com.apple.iTunes", "iTunMOVI", plist);
+  } else {
+    DELETE_ITMF("com.apple.iTunes", "iTunMOVI");
   }
 }
