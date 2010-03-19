@@ -2,15 +2,10 @@
 
 void _mp4v2_read_chapters(MP4V2Handles *handle) {
   VALUE self = handle->self;
-  MP4Chapter_t *tmp = NULL, *chaps;
+  MP4Chapter_t *chaps = NULL;
   uint32_t count;
 
-  // Let the library determine how much memory is needed and then
-  // copy it over to ruby managed space
-  MP4GetChapters(handle->file, &tmp, &count, MP4ChapterTypeAny);
-  chaps = handle->chapters = ALLOC_N(MP4Chapter_t, count);
-  memcpy(chaps, tmp, sizeof(MP4Chapter_t)*count);
-  MP4Free(tmp);
+  MP4GetChapters(handle->file, &chaps, &count, MP4ChapterTypeAny);
 
   VALUE chapters = rb_ary_new2(count), chapter;
 
@@ -21,7 +16,7 @@ void _mp4v2_read_chapters(MP4V2Handles *handle) {
     sum += chaps[i].duration;
   }
 
-  xfree(chaps);
+  free(chaps);
   handle->chapters = NULL;
 
   SET(chapters, chapters);
@@ -43,7 +38,7 @@ void _mp4v2_write_chapters(MP4V2Handles *handle) {
       rb_ary_sort_bang(chapters);
 
       count = RARRAY_LEN(chapters);
-      chaps = handle->chapters = ALLOC_N(MP4Chapter_t, count);
+      chaps = handle->chapters = (MP4Chapter_t *)malloc(sizeof(MP4Chapter_t) * count);
       for (uint32_t i = 0; i < count; i++) {
         // Calculate the duration of chapter from previous timestamp and current
         chapter = rb_ary_entry(chapters, i);
@@ -66,7 +61,7 @@ void _mp4v2_write_chapters(MP4V2Handles *handle) {
         MP4DeleteChapters(mp4v2, MP4ChapterTypeAny);
       }
 
-      xfree(chaps);
+      free(chaps);
       handle->chapters = NULL;
       break;
     case T_NIL:
