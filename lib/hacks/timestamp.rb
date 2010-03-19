@@ -1,19 +1,21 @@
 class Timestamp
   include Comparable
 
-  attr_reader :seconds
+  attr_reader :milliseconds
 
   def initialize(stamp)
     if stamp.is_a?(Numeric)
-      @seconds = stamp
+      @milliseconds = stamp
     else
       raise ArgumentError, "invalid timestamp format '#{stamp}'" unless self.class.valid?(stamp)
-      @seconds = stamp.split(':').reverse.inject({:sum => 0.0, :unit => 1.0}) do |held, part|
+      @milliseconds = stamp.split(':').reverse.inject({:sum => 0.0, :unit => 1.0}) do |held, part|
         held[:sum] += held[:unit]*part.to_f
         held[:unit] *= 60
         held
-      end[:sum]
+      end[:sum]*1000
     end
+
+    @milliseconds = @milliseconds.to_i
   end
 
   def self.valid?(stamp)
@@ -21,54 +23,46 @@ class Timestamp
   end
 
   def <=>(other)
-    case other
-    when Timestamp then @seconds - other.seconds
-    when Numeric then @seconds - other
-    else raise ArgumentError, "comparision of Timestamp with #{other.class}"
-    end
+    @milliseconds - other
   end
 
   def +(other)
     case other
-    when Timestamp then Timestamp.new @seconds + other.seconds
-    when Numeric then Timestamp.new @seconds + other
+    when Timestamp then Timestamp.new(@milliseconds + other.milliseconds)
     else
-      other.respond_to(:to_i) && Timestamp.new(@seconds + other.to_i) || raise(TypeError, "#{other.class} can't be coerced into a Fixnum")
+      other.respond_to?(:coerce) && Timestamp.new(@milliseconds + other.coerce(@milliseconds)) || raise(TypeError, "#{other.class} can't be coerced into a Fixnum")
     end
   end
 
   def -(other)
     case other
-    when Timestamp then Timestamp.new @seconds - other.seconds
-    when Numeric then Timestamp.new @seconds - other
+    when Timestamp then Timestamp.new(@milliseconds - other.milliseconds)
     else
-      other.respond_to(:to_i) && Timestamp.new(@seconds - other.to_i) || raise(TypeError, "#{other.class} can't be coerced into a Fixnum")
+      other.respond_to?(:coerce) && Timestamp.new(@milliseconds - other.coerce(@milliseconds)) || raise(TypeError, "#{other.class} can't be coerced into a Fixnum")
     end
   end
 
   def hours
-    @seconds/3600.0
+    @milliseconds/3600000.0
   end
 
   def minutes
-    @seconds/60.0
+    @milliseconds/60000.0
   end
 
-  def milliseconds
-    @seconds * 1000
+  def seconds
+    @milliseconds/1000.0
   end
+
+  # This is for ducktyping to a number
+  def coerce(num)
+    @milliseconds.coerce(num)
+  end
+
+  alias_method :to_i, :milliseconds
 
   def to_s
-    num = @seconds
-
-    hours = (num/(60*60)).to_i
-    num -= hours*(60*60)
-
-    minutes = (num/60).to_i
-    num -= minutes*60
-    secs = num.to_i
-    num -= secs
-
-    "%02d:%02d:%02d%s" % [hours, minutes, secs, ("%.03f" % num)[1..-1]]
+    "%02d:%02d:%02d.%03d" % [hours.to_i, minutes % 60, seconds % 60, milliseconds % 1000]
   end
+  alias_method :to_str, :to_s
 end
