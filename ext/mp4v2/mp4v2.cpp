@@ -7,7 +7,7 @@ VALUE rb_cMp4v2, rb_cArtwork, rb_cChapter, rb_cVideo, rb_cAudio, rb_cTrack;
 
 static VALUE ensure_close(MP4V2Handles *handle) {
   if (handle->chapters) {
-    free(handle->chapters);
+    xfree(handle->chapters);
   }
   if (handle->list) {
     MP4ItmfItemListFree(handle->list);
