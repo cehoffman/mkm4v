@@ -39,26 +39,28 @@ static VALUE mp4v2_read(MP4V2Handles *handle) {
   for (uint32_t i = 0; i < count; i++) {
     track_id = MP4FindTrackId(mp4v2, i);
     if (MP4HaveTrackAtom(mp4v2, track_id, "tref.chap")) {
-      MP4GetTrackIntegerProperty(mp4v2, track_id, "tref.chap.entries.trackId", (uint64_t *)&chapter_id);
+      uint64_t tmp;
+      MP4GetTrackIntegerProperty(mp4v2, track_id, "tref.chap.entries.trackId", (uint64_t *)&tmp);
+      chapter_id = (MP4TrackId)tmp;
       break;
     }
   }
 
+  VALUE audios = rb_ary_new(), videos = rb_ary_new();
   for (uint32_t i = 0; i < count; i++) {
     track_id = MP4FindTrackId(mp4v2, i);
     const char *type = MP4GetTrackType(mp4v2, track_id);
-
     if (MP4_IS_AUDIO_TRACK_TYPE(type)) {
-
+      rb_ary_push(audios, _mp4v2_audio_init(mp4v2, track_id));
     } else if (MP4_IS_VIDEO_TRACK_TYPE(type)) {
-      VALUE video = _mp4v2_video_init(mp4v2, track_id);
-
-      SET(video, video);
-
+      rb_ary_push(videos, _mp4v2_video_init(mp4v2, track_id));
     } else if (MP4_IS_TEXT_TRACK_TYPE(type) && track_id != chapter_id) {
 
     }
   }
+
+  SET(audio, audios);
+  SET(video, videos);
 
   MP4Close(mp4v2);
   handle->file = NULL;
@@ -161,9 +163,11 @@ void Init_mp4v2() {
   rb_define_method(rb_cMp4v2, "save", (VALUE (*)(...))mp4v2_save, -2);
   rb_define_method(rb_cMp4v2, "optimize!", (VALUE (*)(...))mp4v2_optimize, 0);
 
+  rb_cTrack = rb_define_class_under(rb_cMp4v2, "Track", rb_cObject);
   rb_cArtwork = rb_define_class_under(rb_cMp4v2, "Artwork", rb_cObject);
   rb_cChapter = rb_define_class_under(rb_cMp4v2, "Chapter", rb_cObject);
-  rb_cVideo = rb_define_class_under(rb_cMp4v2, "Video", rb_cObject);
+  rb_cVideo = rb_define_class_under(rb_cMp4v2, "Video", rb_cTrack);
+  rb_cAudio = rb_define_class_under(rb_cMp4v2, "Audio", rb_cTrack);
 }
 
 #ifdef __cplusplus

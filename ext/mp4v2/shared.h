@@ -42,9 +42,10 @@ void _mp4v2_read_metadata(MP4V2Handles *handle);
 void _mp4v2_write_metadata(MP4V2Handles *handle);
 void _mp4v2_read_chapters(MP4V2Handles *handle);
 void _mp4v2_write_chapters(MP4V2Handles *handle);
-  
+
 VALUE _mp4v2_track_init(VALUE self, MP4FileHandle mp4v2, MP4TrackId track_id);
 VALUE _mp4v2_video_init(MP4FileHandle mp4v2, MP4TrackId track_id);
+VALUE _mp4v2_audio_init(MP4FileHandle mp4v2, MP4TrackId track_id);
 
 extern rb_encoding *utf8_encoding;
 inline VALUE rb_utf8_str(const char *str) {
