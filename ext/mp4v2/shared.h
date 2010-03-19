@@ -38,9 +38,11 @@ typedef struct MP4V2Handles_s {
     INSTANCE_OF(rb_ary_entry(array, i), klass, name); \
   }
 
-void _mp4v2_metadata_read(MP4V2Handles *handle);
-void _mp4v2_metadata_write(MP4V2Handles *handle);
-
+void _mp4v2_read_metadata(MP4V2Handles *handle);
+void _mp4v2_write_metadata(MP4V2Handles *handle);
+void _mp4v2_read_chapters(MP4V2Handles *handle);
+void _mp4v2_write_chapters(MP4V2Handles *handle);
+  
 VALUE _mp4v2_track_init(VALUE self, MP4FileHandle mp4v2, MP4TrackId track_id);
 VALUE _mp4v2_video_init(MP4FileHandle mp4v2, MP4TrackId track_id);
 

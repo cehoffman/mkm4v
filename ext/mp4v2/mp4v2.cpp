@@ -1,9 +1,5 @@
 #include "shared.h"
 
-#ifdef __cplusplus
-  extern "C" {
-#endif
-
 VALUE rb_cMp4v2, rb_cArtwork, rb_cChapter, rb_cVideo, rb_cAudio, rb_cTrack;
 
 #define MP4_IS_TEXT_TRACK_TYPE(type) (!strcasecmp(type, MP4_TEXT_TRACK_TYPE))
@@ -33,28 +29,11 @@ static VALUE mp4v2_read(MP4V2Handles *handle) {
     rb_raise(rb_eArgError, "%s is not a valid mp4 file", RSTRING_PTR(handle->filename));
   }
 
-  _mp4v2_metadata_read(handle);
-
-  MP4Chapter_t *chaps = NULL;
-  uint32_t count;
-  MP4GetChapters(mp4v2, &chaps, &count, MP4ChapterTypeAny);
-  handle->chapters = chaps;
-  VALUE chapters = rb_ary_new2(count), chapter;
-  VALUE rb_cChapter = rb_const_get(rb_cMp4v2, rb_intern("Chapter"));
-
-  MP4Duration sum = 0;
-  for (uint32_t i = 0; i < count; i++) {
-    chapter = rb_funcall(rb_cChapter, rb_intern("new"), 2, DBL2NUM(sum/1000.0), rb_utf8_str(chaps[i].title));
-    rb_ary_push(chapters, chapter);
-    sum += chaps[i].duration;
-  }
-  SET(chapters, chapters);
-
-  MP4Free(chaps);
-  handle->chapters = NULL;
+  _mp4v2_read_metadata(handle);
+  _mp4v2_read_chapters(handle);
 
   // Generate information for each type of supported track
-  count = MP4GetNumberOfTracks(mp4v2);
+  uint32_t count = MP4GetNumberOfTracks(mp4v2);
   MP4TrackId chapter_id = MP4_INVALID_TRACK_ID, track_id;
   for (uint32_t i = 0; i < count; i++) {
     track_id = MP4FindTrackId(mp4v2, i);
@@ -136,51 +115,8 @@ static VALUE mp4v2_modify_file(MP4V2Handles *handle) {
     rb_raise(rb_eTypeError, "%s is not a valid mp4 file", RSTRING_PTR(handle->filename));
   }
 
-  _mp4v2_metadata_write(handle);
-
-  VALUE chapters = GET(chapters), chapter, title;
-  double last_stamp = 0, stamp;
-  MP4Chapter_t *chaps;
-  uint32_t count = 0;
-  switch(TYPE(chapters)) {
-    case T_ARRAY:
-      RARRAY_ALL_INSTANCE(chapters, rb_cChapter, chapter);
-
-      // Make chapters go in order of timestamp
-      rb_funcall(chapters, rb_intern("sort!"), 0);
-
-      count = RARRAY_LEN(chapters);
-      chaps = handle->chapters = ALLOC_N(MP4Chapter_t, count);
-      for (uint32_t i = 0; i < count; i++) {
-        // Calculate the duration of chapter from previous timestamp and current
-        chapter = rb_ary_entry(chapters, i);
-        stamp = NUM2DBL(rb_ivar_get(rb_ivar_get(chapter, rb_intern("@timestamp")), rb_intern("@seconds"))) * 1000.0;
-        chaps[i].duration = stamp - last_stamp;
-        last_stamp = stamp;
-
-        // Get the title of the chapter
-        title = rb_encode_utf8(rb_ivar_get(chapter, rb_intern("@title")));
-        if (RSTRING_LEN(title) > MP4V2_CHAPTER_TITLE_MAX) {
-          rb_raise(rb_eStandardError, "chapter title '%s' is too long, it should be at most %d bytes", RSTRING_PTR(title), MP4V2_CHAPTER_TITLE_MAX);
-        }
-
-        strncpy(chaps[i].title, RSTRING_PTR(title), RSTRING_LEN(title));
-      }
-
-      if (count > 0) {
-        MP4SetChapters(mp4v2, chaps, count, MP4ChapterTypeAny);
-      } else {
-        MP4DeleteChapters(mp4v2, MP4ChapterTypeAny);
-      }
-
-      free(chaps);
-      handle->chapters = NULL;
-      break;
-    case T_NIL:
-      MP4DeleteChapters(mp4v2, MP4ChapterTypeAny);
-      break;
-    default:;
-  }
+  _mp4v2_write_metadata(handle);
+  _mp4v2_write_chapters(handle);
 
   MP4Close(mp4v2);
   handle->file = NULL;
@@ -201,7 +137,7 @@ static VALUE mp4v2_save(VALUE self, VALUE args) {
     path = rb_funcall(self, rb_intern("file"), 0);
   }
 
-  path = rb_funcall(path, rb_intern("to_s"), 0);
+  path = StringValue(path);
   MP4V2Handles handle = { self, path, false };
 
   if (TYPE(hash) == T_HASH && rb_hash_aref(hash, SYM("optimize")) == Qtrue) {
@@ -212,6 +148,10 @@ static VALUE mp4v2_save(VALUE self, VALUE args) {
 
   return path;
 }
+
+#ifdef __cplusplus
+  extern "C" {
+#endif
 
 void Init_mp4v2() {
   rb_cMp4v2 = rb_define_class("Mp4v2", rb_cHash);

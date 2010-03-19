@@ -1,7 +1,7 @@
 #include "shared.h"
 #include "metadata.h"
 
-void _mp4v2_metadata_read(MP4V2Handles *handle) {
+void _mp4v2_read_metadata(MP4V2Handles *handle) {
   VALUE self = handle->self;
   MP4FileHandle mp4v2 = handle->file;
 
@@ -160,7 +160,7 @@ void _mp4v2_metadata_read(MP4V2Handles *handle) {
   }
 }
 
-void _mp4v2_metadata_write(MP4V2Handles *handle) {
+void _mp4v2_write_metadata(MP4V2Handles *handle) {
   VALUE self = handle->self;
   MP4FileHandle mp4v2 = handle->file;
 
