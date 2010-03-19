@@ -1,51 +1,53 @@
 --- 
-hash: 37c2e1733810b659a675aa1108196f76c2e7ad2f
+hash: 2e712b47b05c979b09bd0ff41b222729afe018b5
 sources: 
 - Rubygems: 
     uri: http://gemcutter.org
 specs: 
 - rake: 
     version: 0.8.7
+- archive-tar-minitar: 
+    version: 0.5.2
+- columnize: 
+    version: 0.3.1
+- fakefs: 
+    version: 0.2.1
 - fraction: 
     version: "0.1"
-- trollop: 
-    version: "1.15"
-- plist: 
-    version: 3.1.0
-- ronn: 
-    version: 0.4.1
-- rspec: 
-    version: 1.3.0
+- json_pure: 
+    version: 1.2.3
+- gemcutter: 
+    version: 0.5.0
+- rubyforge: 
+    version: 2.0.4
 - hoe: 
     version: 2.5.0
 - hoe-git: 
     version: 1.3.0
-- rdiscount: 
-    version: 1.5.8.1
-- ruby-debug19: 
-    version: 0.11.6
 - hpricot: 
     version: 0.8.2
-- fakefs: 
-    version: 0.2.1
-- rubyforge: 
-    version: 2.0.4
-- gemcutter: 
-    version: 0.5.0
-- rake-compiler: 
-    version: 0.7.0
-- columnize: 
-    version: 0.3.1
-- linecache19: 
-    version: 0.5.11
-- ruby-debug-base19: 
-    version: 0.11.23
+- iso-639: 
+    version: 0.0.2
 - ruby_core_source: 
     version: 0.1.4
-- archive-tar-minitar: 
-    version: 0.5.2
-- json_pure: 
-    version: 1.2.3
+- linecache19: 
+    version: 0.5.11
+- plist: 
+    version: 3.1.0
+- rake-compiler: 
+    version: 0.7.0
+- rdiscount: 
+    version: 1.5.8.1
+- ronn: 
+    version: 0.4.1
+- rspec: 
+    version: 1.3.0
+- ruby-debug-base19: 
+    version: 0.11.23
+- ruby-debug19: 
+    version: 0.11.6
+- trollop: 
+    version: "1.15"
 dependencies: 
   fraction: 
     version: ~> 0.1
@@ -57,6 +59,10 @@ dependencies:
     - :default
   plist: 
     version: ~> 3.1.0
+    group: 
+    - :default
+  iso-639: 
+    version: ~> 0.0.2
     group: 
     - :default
   ronn: 

@@ -3,6 +3,7 @@ source :gemcutter
 gem "fraction", "~> 0.1"
 gem "trollop", "~> 1.15"
 gem "plist", "~> 3.1.0"
+gem "iso-639", "~> 0.0.2"
 
 group :dev do
   gem "ronn", "~> 0.4.1"
