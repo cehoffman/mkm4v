@@ -27,12 +27,17 @@ static ID xml;
 
 #define MEDIAINFO(obj) (Check_Type(obj, T_DATA), (void *)DATA_PTR(obj))
 
-static inline VALUE rb_utf8_str(const char *str) {
-  return rb_enc_str_new(str, strlen(str), rb_utf8_encoding());
+rb_encoding *utf8_encoding = rb_utf8_encoding();
+inline VALUE rb_utf8_str(const char *str) {
+  return rb_enc_str_new(str, strlen(str), utf8_encoding);
 }
 
-static inline VALUE rb_encode_utf8(VALUE str) {
-  return rb_funcall(str, rb_intern("encode"), 1, rb_const_get(rb_cEncoding, rb_intern("UTF_8")));
+#define UTF8_P(_obj) (ENC_TO_ENCINDEX(rb_enc_get(_obj)) == ENC_TO_ENCINDEX(utf8_encoding))
+inline VALUE rb_encode_utf8(VALUE str) {
+  if (!UTF8_P(str)) {
+    str = rb_str_export_to_enc(str, utf8_encoding);
+  }
+  return str;
 }
 
 static MediaInfo_stream_C get_stream(ID kind) {
@@ -73,13 +78,8 @@ static VALUE mediainfo_alloc(VALUE klass) {
 }
 
 static VALUE mediainfo_init(VALUE self, VALUE filename) {
-  VALUE name = StringValue(filename);
-
   void *mi = MEDIAINFO(self);
-  name = rb_funcall(rb_cFile, rb_intern("absolute_path"), 1, name);
-
-  // Convert string to utf8 for mediainfo consumption
-  name = rb_encode_utf8(name);
+  VALUE name = rb_encode_utf8(rb_file_absolute_path(StringValue(filename), Qnil));
 
   if (!MediaInfo_Open(mi, RSTRING_PTR(name))) {
     rb_raise(rb_eIOError, "unable to open file - %s", RSTRING_PTR(name));
@@ -99,14 +99,14 @@ static VALUE mediainfo_init(VALUE self, VALUE filename) {
     VALUE kind = rb_ary_new2(tracks);
     rb_ivar_set(self, rb_to_id(rb_str_concat(rb_utf8_str("@"), track_type)), kind);
 
-    if (rb_funcall(rb_cMediaInfo, rb_intern("const_defined?"), 1, klass) == Qtrue) {
+    if (rb_const_defined(rb_cMediaInfo, rb_to_id(klass))) {
       klass = rb_const_get(rb_cMediaInfo, rb_intern(RSTRING_PTR(klass)));
     } else {
       continue;
     }
 
     VALUE track;
-    int num = MediaInfo_Count_Get(mi, get_stream(rb_intern(RSTRING_PTR(track_type))), -1); // returns 0 on unknown tracks
+    int num = MediaInfo_Count_Get(mi, get_stream(rb_intern_str(track_type)), -1); // returns 0 on unknown tracks
     for (int k = 0; k < num; k++) {
       track = rb_funcall(klass, rb_intern("new"), 2, self, INT2FIX(k));
       rb_ary_push(tracks, track);
@@ -169,7 +169,7 @@ static VALUE mediainfo_track_info(int argc, VALUE *args, VALUE self) {
     stream = rb_funcall(stream, rb_intern("to_sym"), 0);
   }
 
-  if (rb_funcall(track_types, rb_intern("include?"), 1, stream) == Qfalse) {
+  if (rb_ary_includes(track_types, stream) == Qfalse) {
     rb_raise(rb_eArgError, "'%s' is not a valid stream", RSTRING_PTR(rb_funcall(stream, rb_intern("inspect"), 0)));
   }
 
@@ -243,7 +243,7 @@ static VALUE mediainfo_static_options(VALUE self, VALUE args) {
 
 static VALUE mediainfo_open(VALUE self) {
   VALUE file = rb_funcall(self, rb_intern("file"), 0);
-  file = StringValue(file);
+  file = rb_encode_utf8(StringValue(file));
   if (!MediaInfo_Open(MEDIAINFO(self), RSTRING_PTR(file))) {
     rb_raise(rb_eIOError, "unable to open file - %s", RSTRING_PTR(file));
   }

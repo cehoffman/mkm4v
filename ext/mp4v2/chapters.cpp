@@ -23,7 +23,7 @@ void _mp4v2_read_chapters(MP4V2Handles *handle) {
 void _mp4v2_write_chapters(MP4V2Handles *handle) {
   VALUE self = handle->self;
   MP4FileHandle mp4v2 = handle->file;
-  VALUE chapters = GET(chapters), chapter, title;
+  VALUE chapters = rb_check_array_type(GET(chapters)), chapter, title;
   double last_stamp = 0, stamp;
   MP4Chapter_t *chaps;
   uint32_t count = 0;
@@ -33,7 +33,7 @@ void _mp4v2_write_chapters(MP4V2Handles *handle) {
       RARRAY_ALL_INSTANCE(chapters, rb_cChapter, chapter);
 
       // Make chapters go in order of timestamp
-      rb_funcall(chapters, rb_intern("sort!"), 0);
+      rb_ary_sort_bang(chapters);
 
       count = RARRAY_LEN(chapters);
       chaps = handle->chapters = ALLOC_N(MP4Chapter_t, count);

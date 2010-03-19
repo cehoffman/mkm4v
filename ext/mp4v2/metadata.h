@@ -105,7 +105,7 @@
   }
 #define MODIFY_PEOPLE(tag, list) \
   if (TYPE(list) == T_ARRAY && RARRAY_LEN(list) > 0) { \
-    VALUE key = rb_utf8_str("name"), tmp = rb_ary_new4(RARRAY_LEN(list), RARRAY_PTR(list)); \
+    VALUE key = rb_utf8_str("name"), tmp = rb_ary_dup(list); \
     \
     for (int32_t i = RARRAY_LEN(tmp) - 1; i >= 0; i--) { \
       VALUE hash = rb_hash_new(), name = rb_ary_pop(tmp); \

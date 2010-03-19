@@ -30,7 +30,7 @@ typedef struct MP4V2Handles_s {
 
 #define INSTANCE_OF(obj, klass, name) \
     if (rb_obj_is_instance_of(obj, klass) != Qtrue) { \
-      rb_raise(rb_eTypeError, #name " should be an instance of %s", RSTRING_PTR(rb_funcall(klass, rb_intern("name"), 0))); \
+      rb_raise(rb_eTypeError, #name " should be an instance of %s", rb_class2name(klass)); \
     }
 
 #define RARRAY_ALL_INSTANCE(array, klass, name) \
@@ -46,13 +46,17 @@ void _mp4v2_write_chapters(MP4V2Handles *handle);
 VALUE _mp4v2_track_init(VALUE self, MP4FileHandle mp4v2, MP4TrackId track_id);
 VALUE _mp4v2_video_init(MP4FileHandle mp4v2, MP4TrackId track_id);
 
-
+extern rb_encoding *utf8_encoding;
 inline VALUE rb_utf8_str(const char *str) {
-  return rb_enc_str_new(str, strlen(str), rb_utf8_encoding());
+  return rb_enc_str_new(str, strlen(str), utf8_encoding);
 }
 
+#define UTF8_P(_obj) (ENC_TO_ENCINDEX(rb_enc_get(_obj)) == ENC_TO_ENCINDEX(utf8_encoding))
 inline VALUE rb_encode_utf8(VALUE str) {
-  return rb_funcall(str, rb_intern("encode"), 1, rb_const_get(rb_cEncoding, rb_intern("UTF_8")));
+  if (!UTF8_P(str)) {
+    str = rb_str_export_to_enc(str, utf8_encoding);
+  }
+  return str;
 }
 
 #ifdef __cplusplus

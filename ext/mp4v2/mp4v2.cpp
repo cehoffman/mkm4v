@@ -1,5 +1,6 @@
 #include "shared.h"
 
+rb_encoding *utf8_encoding = rb_utf8_encoding();
 VALUE rb_cMp4v2, rb_cArtwork, rb_cChapter, rb_cVideo, rb_cAudio, rb_cTrack;
 
 #define MP4_IS_TEXT_TRACK_TYPE(type) (!strcasecmp(type, MP4_TEXT_TRACK_TYPE))
