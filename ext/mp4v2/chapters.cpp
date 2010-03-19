@@ -52,7 +52,7 @@ void _mp4v2_write_chapters(MP4V2Handles *handle) {
           rb_raise(rb_eStandardError, "chapter title '%s' is too long, it should be at most %d bytes", RSTRING_PTR(title), MP4V2_CHAPTER_TITLE_MAX);
         }
 
-        strncpy(chaps[i].title, RSTRING_PTR(title), RSTRING_LEN(title));
+        memcpy(chaps[i].title, RSTRING_PTR(title), RSTRING_LEN(title)+1);
       }
 
       if (count > 0) {
