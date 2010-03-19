@@ -22,7 +22,8 @@ class Mkm4v::Transcoder::Mkv
 
     order = @info.tracks.map(&:id).sort.map { |id| "0:#{id}" } - ["0:0"]
     order[track.id] = "1:0"
-    system %{mkvmerge -o "#{newfile}" --track-order #{order.join(',')} #{import} "#{@info.file}" --language 0:#{track.lang} "#{newtrack}"}
+    lang = track.lang.empty? && "eng" || track.lang
+    system %{mkvmerge -o "#{newfile}" --track-order #{order.join(',')} #{import} "#{@info.file}" --language 0:#{lang} "#{newtrack}"}
     File.delete rawtrack, newtrack
 
     newfile
