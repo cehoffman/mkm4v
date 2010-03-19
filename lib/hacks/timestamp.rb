@@ -27,7 +27,9 @@ class Timestamp
   end
 
   def +(other)
-    if other.respond_to?(:coerce)
+    if !other.is_a?(Timestamp) && other.respond_to?(:to_str)
+      self.to_str + other
+    elsif other.respond_to?(:coerce)
       other = other.coerce(@milliseconds)
       Timestamp.new(other.first + other.last)
     else

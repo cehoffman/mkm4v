@@ -96,6 +96,10 @@ describe Timestamp do
       stamp.should be_an_instance_of(Timestamp)
       stamp.should == 31
     end
+
+    it "should add to strings a string representation of self" do
+      (Timestamp.new(30) + " timestamp").should == "00:00:00.030 timestamp"
+    end
   end
 
   it "should be convertable integer using to_i" do
@@ -105,7 +109,7 @@ describe Timestamp do
   end
 
   it "should be ducktypable to a string" do
-    ("" + Timestamp.new(234)).should == "00:00:00.234" # uses to_str
+    ("Timestamp: " + Timestamp.new(234)).should == "Timestamp: 00:00:00.234" # uses to_str
     "#{Timestamp.new(1001)}".should == "00:00:01.001" # uses to_s
   end
 
