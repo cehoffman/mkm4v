@@ -73,7 +73,7 @@ static VALUE mediainfo_alloc(VALUE klass) {
 }
 
 static VALUE mediainfo_init(VALUE self, VALUE filename) {
-  VALUE name = rb_funcall(filename, rb_intern("to_s"), 0);
+  VALUE name = StringValue(filename);
 
   void *mi = MEDIAINFO(self);
   name = rb_funcall(rb_cFile, rb_intern("absolute_path"), 1, name);
@@ -94,10 +94,10 @@ static VALUE mediainfo_init(VALUE self, VALUE filename) {
   // track of that type create a new instance of that class passing
   // in self and number of track being processed.
   for (int i = RARRAY_LEN(track_types) - 1; i >= 0; i--) {
-    VALUE track_type = rb_ary_entry(track_types, i);
-    VALUE klass = rb_str_cat(rb_funcall(rb_funcall(track_type, rb_intern("to_s"), 0), rb_intern("capitalize"), 0), "Track", 5);
+    VALUE track_type = rb_funcall(rb_ary_entry(track_types, i), rb_intern("to_s"), 0);
+    VALUE klass = rb_str_cat(rb_funcall(track_type, rb_intern("capitalize"), 0), "Track", 5);
     VALUE kind = rb_ary_new2(tracks);
-    rb_ivar_set(self, rb_to_id(rb_str_concat(rb_utf8_str("@"), rb_funcall(track_type, rb_intern("to_s"), 0))), kind);
+    rb_ivar_set(self, rb_to_id(rb_str_concat(rb_utf8_str("@"), track_type)), kind);
 
     if (rb_funcall(rb_cMediaInfo, rb_intern("const_defined?"), 1, klass) == Qtrue) {
       klass = rb_const_get(rb_cMediaInfo, rb_intern(RSTRING_PTR(klass)));
@@ -106,7 +106,7 @@ static VALUE mediainfo_init(VALUE self, VALUE filename) {
     }
 
     VALUE track;
-    int num = MediaInfo_Count_Get(mi, get_stream(SYM2ID(track_type)), -1); // returns 0 on unknown tracks
+    int num = MediaInfo_Count_Get(mi, get_stream(rb_intern(RSTRING_PTR(track_type))), -1); // returns 0 on unknown tracks
     for (int k = 0; k < num; k++) {
       track = rb_funcall(klass, rb_intern("new"), 2, self, INT2FIX(k));
       rb_ary_push(tracks, track);
@@ -162,7 +162,7 @@ static VALUE mediainfo_track_info(int argc, VALUE *args, VALUE self) {
   VALUE stream = args[0], num = args[1], type = args[2];
 
   if (TYPE(type) != T_STRING && TYPE(type) != T_FIXNUM) {
-    rb_raise(rb_eTypeError, "'%s' should be a string or fixnum", RSTRING_PTR(rb_funcall(type, rb_intern("to_s"), 0)));
+    rb_raise(rb_eTypeError, "'%s' should be a string or fixnum", RSTRING_PTR(rb_funcall(type, rb_intern("inspect"), 0)));
   }
 
   if (TYPE(stream) != T_SYMBOL && rb_respond_to(stream, rb_intern("to_sym"))) {
@@ -170,7 +170,7 @@ static VALUE mediainfo_track_info(int argc, VALUE *args, VALUE self) {
   }
 
   if (rb_funcall(track_types, rb_intern("include?"), 1, stream) == Qfalse) {
-    rb_raise(rb_eArgError, "'%s' is not a valid stream", RSTRING_PTR(rb_funcall(stream, rb_intern("to_s"), 0)));
+    rb_raise(rb_eArgError, "'%s' is not a valid stream", RSTRING_PTR(rb_funcall(stream, rb_intern("inspect"), 0)));
   }
 
   MediaInfo_info_C info = MediaInfo_Info_Text;
@@ -212,16 +212,17 @@ static VALUE set_options(void *mi, VALUE args) {
     VALUE opt, val;
 
     for (int i = RARRAY_LEN(keys) - 1; i >= 0; i--) {
-      opt = rb_funcall(rb_ary_entry(keys, i), rb_intern("to_s"), 0);
-      val = rb_funcall(rb_ary_entry(vals, i), rb_intern("to_s"), 0);
-      MediaInfo_Option(mi, RSTRING_PTR(rb_encode_utf8(opt)), RSTRING_PTR(rb_encode_utf8(val)));
+      opt = rb_ary_entry(keys, i);
+      val = rb_ary_entry(vals, i);
+      MediaInfo_Option(mi, RSTRING_PTR(rb_encode_utf8(StringValue(opt))), RSTRING_PTR(rb_encode_utf8(StringValue(val))));
     }
   } else { // otherwise we are going to read options
     VALUE vals = rb_hash_new();
     VALUE opt, val;
 
     for (int i = RARRAY_LEN(normalized) - 1; i >= 0; i--) {
-      opt = rb_encode_utf8(rb_funcall(rb_ary_entry(normalized, i), rb_intern("to_s"), 0));
+      opt = rb_ary_entry(normalized, i);
+      opt = rb_encode_utf8(StringValue(opt));
       val = rb_utf8_str(MediaInfo_Option(mi, RSTRING_PTR(opt), ""));
       rb_hash_aset(vals, opt, rb_funcall(val, rb_intern("gsub"), 2, rb_utf8_str("\r"), rb_gv_get("$/")));
     }
@@ -241,7 +242,8 @@ static VALUE mediainfo_static_options(VALUE self, VALUE args) {
 }
 
 static VALUE mediainfo_open(VALUE self) {
-  VALUE file = rb_funcall(rb_funcall(self, rb_intern("file"), 0), rb_intern("to_s"), 0);
+  VALUE file = rb_funcall(self, rb_intern("file"), 0);
+  file = StringValue(file);
   if (!MediaInfo_Open(MEDIAINFO(self), RSTRING_PTR(file))) {
     rb_raise(rb_eIOError, "unable to open file - %s", RSTRING_PTR(file));
   }

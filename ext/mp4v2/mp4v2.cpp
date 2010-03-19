@@ -70,7 +70,7 @@ static VALUE mp4v2_reload(VALUE self) {
   rb_funcall(self, rb_intern("clear"), 0);
   SET(file, file);
 
-  file = rb_funcall(file, rb_intern("to_s"), 0);
+  file = StringValue(file);
   MP4V2Handles handle = { self, file };
 
   rb_ensure((VALUE (*)(...))mp4v2_read, (VALUE)&handle, (VALUE (*)(...))ensure_close, (VALUE)&handle);
@@ -79,7 +79,7 @@ static VALUE mp4v2_reload(VALUE self) {
 }
 
 static VALUE mp4v2_init(VALUE self, VALUE filename) {
-  VALUE name = rb_funcall(filename, rb_intern("to_s"), 0);
+  VALUE name = StringValue(filename);
 
   // Convert string to abosolute path utf8 for passing to lib
   name = rb_funcall(rb_cFile, rb_intern("absolute_path"), 1, name);
