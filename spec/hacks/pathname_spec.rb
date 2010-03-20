@@ -9,6 +9,10 @@ describe Pathname do
     @path.should respond_to(:to_str)
   end
 
+  it "should have to_str equal to_s" do
+    @path.to_str.should == @path.to_s
+  end
+
   it "should create a new pathname object with new extension" do
     saved = @path
     newpath = @path.extname "new"
@@ -34,5 +38,10 @@ describe Pathname do
   it "should create temporary files with given extension if given" do
     tmp = Pathname.tmpfile @path, "tmp"
     tmp.to_s.should =~ /#{@path.extname("tmp").basename}$/
+  end
+
+  it "should be comparable with regexs" do
+    @path.should respond_to(:=~)
+    @path.should =~ /pathname_spec\.rb$/
   end
 end
