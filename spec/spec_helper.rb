@@ -36,4 +36,8 @@ end
 
 Spec::Runner.configure do |config|
   config.include ConsoleHelpers
+
+  def fixtures
+    Pathname.new(__FILE__).dirname + "fixtures"
+  end
 end
