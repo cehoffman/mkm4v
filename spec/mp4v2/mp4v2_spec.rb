@@ -140,6 +140,26 @@ describe Mp4v2 do
     @mp4.should be_gapless
   end
 
+  specify "bool fields should only be true if value is set to true" do
+    @mp4.gapless = "true"
+    @mp4.should_not be_gapless
+  end
+
+  it "should raise error when setting string field with non string value" do
+    @mp4.name = 2010
+    -> { @mp4.save }.should raise_error(TypeError)
+  end
+
+  it "should raise error when setting a number field with a non number" do
+    @mp4.episode = "4"
+    -> { @mp4.save }.should raise_error(TypeError)
+  end
+
+  it "should raise error when setting bool field with non bool" do
+    @mp4.podcast = "yes"
+    -> { @mp4.save }.should raise_error(TypeError, "podcast is not a truth value or nil")
+  end
+
   describe "#save" do
     it "should accept a hash of options" do
       @mp4.save option: "Value"

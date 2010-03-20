@@ -23,7 +23,7 @@
   } else { \
     SET(accessor, Qfalse); \
   } \
-  rb_funcall(self, rb_intern("instance_eval"), 1, rb_utf8_str("def " #accessor "?; !!self." #accessor " end"));
+  rb_funcall(self, rb_intern("instance_eval"), 1, rb_utf8_str("def " #accessor "?; self." #accessor " == true end"));
 
 #define TAG_DATE(tag, accessor) \
   if (tags->tag) { \
@@ -97,11 +97,20 @@
   }
 
 #define MODIFY_BOOL(func, accessor) \
-  if (rb_funcall(self, rb_intern(#accessor "?"), 0) == Qtrue) { \
+  { \
+    VALUE data = GET(accessor); \
     uint8_t truth = 1; \
-    MODIFY(func, &truth); \
-  } else { \
-    MODIFY(func, NULL); \
+    switch(TYPE(data)) { \
+      case T_TRUE: \
+        MODIFY(func, &truth); \
+        break; \
+      case T_FALSE: \
+      case T_NIL: \
+        MODIFY(func, NULL); \
+        break; \
+      default: \
+      rb_raise(rb_eTypeError, #accessor " is not a truth value or nil"); \
+    } \
   }
 #define MODIFY_DATE(func, accessor) \
   { \
