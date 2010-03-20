@@ -2,7 +2,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe MediaInfo::MenuTrack do
   before(:all) do
-    @menu = MediaInfo.new(File.expand_path("../../fixtures/dts.mkv", __FILE__)).menu.first
+    @menu = MediaInfo.new(fixtures + "dts.mkv").menu.first
   end
 
   it "should have a list of chapters" do

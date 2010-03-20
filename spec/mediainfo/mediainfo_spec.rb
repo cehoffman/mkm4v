@@ -2,7 +2,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe MediaInfo do
   before(:all) do
-    @mediainfo = MediaInfo.new(File.expand_path("../../fixtures/sample_mpeg4.mp4", __FILE__))
+    @mediainfo = MediaInfo.new(fixtures + "sample_mpeg4.mp4")
     @system_newline = $/.dup
   end
 
@@ -34,7 +34,7 @@ describe MediaInfo do
 
     class ::MediaInfo::BogusTrack; end
     MediaInfo::TrackTypes << :bogus
-    mediainfo = MediaInfo.new(File.expand_path("../../fixtures/sample_mpeg4.mp4", __FILE__))
+    mediainfo = MediaInfo.new(fixtures + "sample_mpeg4.mp4")
 
     mediainfo.instance_variable_get(:@bogus).should be_an_instance_of(Array)
 
@@ -86,30 +86,30 @@ describe MediaInfo do
   end
 
   it "should output information in xml" do
-    @mediainfo.to_xml.gsub($/, "\n").should == File.read(File.expand_path("../../fixtures/sample_mpeg4.xml", __FILE__))
+    @mediainfo.to_xml.gsub($/, "\n").should == (fixtures + "sample_mpeg4.xml").read
   end
 
   it "should output information in xml using system newlines" do
     $/ = "\r\n"
-    @mediainfo.to_xml.should == File.read(File.expand_path("../../fixtures/sample_mpeg4.xml", __FILE__)).gsub("\n", "\r\n")
+    @mediainfo.to_xml.should == (fixtures + "sample_mpeg4.xml").read.gsub("\n", "\r\n")
   end
 
   it "should output information in html" do
-    @mediainfo.to_html.gsub($/, "\n").should == File.read(File.expand_path("../../fixtures/sample_mpeg4.html", __FILE__))
+    @mediainfo.to_html.gsub($/, "\n").should == (fixtures + "sample_mpeg4.html").read
   end
 
   it "should output information in html using system newlines" do
     $/ = "\r\n"
-    @mediainfo.to_html.should == File.read(File.expand_path("../../fixtures/sample_mpeg4.html", __FILE__)).gsub("\n", "\r\n")
+    @mediainfo.to_html.should == (fixtures + "sample_mpeg4.html").read.gsub("\n", "\r\n")
   end
 
   it "should output information in a human readable format" do
-    @mediainfo.to_s.gsub($/, "\n").should == File.read(File.expand_path("../../fixtures/sample_mpeg4.txt", __FILE__))
+    @mediainfo.to_s.gsub($/, "\n").should == (fixtures + "sample_mpeg4.txt").read
   end
 
   it "should output information in a human readable format using system newlines" do
     $/ = "\r\n"
-    @mediainfo.to_s.should == File.read(File.expand_path("../../fixtures/sample_mpeg4.txt", __FILE__)).gsub("\n", "\r\n")
+    @mediainfo.to_s.should == (fixtures + "sample_mpeg4.txt").read.gsub("\n", "\r\n")
   end
 
   it "should return information forms in utf-8" do

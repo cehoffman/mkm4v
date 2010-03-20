@@ -2,7 +2,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe MediaInfo::TextTrack do
   before(:all) do
-    @text = MediaInfo.new(File.expand_path("../../fixtures/dts.mkv", __FILE__)).text.first
+    @text = MediaInfo.new(fixtures + "dts.mkv").text.first
   end
 
   it "should know the language of the track" do

@@ -2,11 +2,11 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe MediaInfo::GeneralTrack do
   before(:all) do
-    @general = MediaInfo.new(File.expand_path("../../fixtures/sample_mpeg4.mp4", __FILE__)).general.first
+    @general = MediaInfo.new(fixtures + "sample_mpeg4.mp4").general.first
   end
 
   it "should know the path to the opened file" do
-    @general.file.to_s.should == File.expand_path("../../fixtures/sample_mpeg4.mp4", __FILE__)
+    @general.file.should =~ /sample_mpeg4\.mp4$/
   end
 
   it "should return the path to the opened file as a Pathname" do

@@ -2,7 +2,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe MediaInfo::VideoTrack do
   before(:all) do
-    @video = MediaInfo.new(File.expand_path("../../fixtures/sample_mpeg4.mp4", __FILE__)).video.first
+    @video = MediaInfo.new(fixtures + "sample_mpeg4.mp4").video.first
   end
 
   it "should know the height" do

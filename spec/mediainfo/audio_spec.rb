@@ -2,7 +2,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe MediaInfo::AudioTrack do
   before(:all) do
-    @audio = MediaInfo.new(File.expand_path("../../fixtures/sample_mpeg4.mp4", __FILE__)).audio.first
+    @audio = MediaInfo.new(fixtures + "sample_mpeg4.mp4").audio.first
   end
 
   it "should know the codec" do
