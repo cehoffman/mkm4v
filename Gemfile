@@ -8,6 +8,8 @@ gem "iso-639", "~> 0.0.2"
 group :dev do
   gem "ronn", "~> 0.4.1"
   gem "rspec", "~> 1.3.0"
+  gem "diff-lcs", "~> 1.1.2"
+  gem "syntax", "~> 1.0.0"
   gem "hoe", "~> 2.5.0"
   gem "hoe-git", "~> 1.3.0"
   gem "rake-compiler", "~> 0.7.0"
