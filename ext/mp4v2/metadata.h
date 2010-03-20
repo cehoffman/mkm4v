@@ -2,15 +2,26 @@
 #define METADATA_H_1UAPHLN4
 
 #define TAG_SET(tag, accessor) if (tags->tag) { SET(accessor, rb_utf8_str(tags->tag)); }
-#define TAG_NUM(tag, accessor) if (tags->tag) { SET(accessor, INT2FIX(*tags->tag)); }
+#define _TAG_NUM(tag, accessor, converter) if (tags->tag) { SET(accessor, converter(*tags->tag)); }
+#define TAG_NUM32(tag, accessor) _TAG_NUM(tag, accessor, ULONG2NUM)
+#define TAG_NUM64(tag, accessor) _TAG_NUM(tag, accessor, ULL2NUM)
+#define TAG_NUM8 TAG_NUM32
+#define TAG_NUM16 TAG_NUM32
+#define TAG_NUM TAG_NUM32
 #define TAG_TOTAL(tag, idx, max) \
   if (tags->tag) { \
-    SET(idx, INT2FIX(tags->tag->index)); \
-    SET(max, INT2FIX(tags->tag->total)); \
+    if (tags->tag->index) { \
+      SET(idx, INT2FIX(tags->tag->index)); \
+    } \
+    if (tags->tag->total) { \
+      SET(max, INT2FIX(tags->tag->total)); \
+    } \
   }
 #define TAG_BOOL(tag, accessor, truth) \
   if (tags->tag) { \
     SET(accessor, *tags->tag == truth ? Qtrue : Qfalse); \
+  } else { \
+    SET(accessor, Qfalse); \
   } \
   rb_funcall(self, rb_intern("instance_eval"), 1, rb_utf8_str("def " #accessor "?; !!self." #accessor " end"));
 
@@ -51,14 +62,14 @@
   { \
     VALUE data = GET(accessor); \
     if (data != Qnil) { \
-      MODIFY(func, RSTRING_PTR(data)); \
+      MODIFY(func, RSTRING_PTR(StringValue(data))); \
     } else { \
       MODIFY(func, NULL); \
     } \
   }
 #define MODIFY_NUMBITS(func, accessor, bits) \
   if (GET(accessor) != Qnil) { \
-    uint ## bits ##_t num = (uint ## bits ##_t)NUM2LONG(GET(accessor)); \
+    uint ## bits ##_t num = (uint ## bits ##_t)NUM2ULL(GET(accessor)); \
     MODIFY(func, &num); \
   } else { \
     MODIFY(func, NULL); \

@@ -124,10 +124,6 @@ static VALUE mp4v2_modify_file(MP4V2Handles *handle) {
   MP4Close(mp4v2);
   handle->file = NULL;
 
-  if (handle->optimize) {
-    mp4v2_optimize(self);
-  }
-
   return self;
 }
 
@@ -141,15 +137,21 @@ static VALUE mp4v2_save(VALUE self, VALUE args) {
   }
 
   path = StringValue(path);
-  MP4V2Handles handle = { self, path, false };
-
-  if (TYPE(hash) == T_HASH && rb_hash_aref(hash, SYM("optimize")) == Qtrue) {
-    handle.optimize = true;
-  }
+  MP4V2Handles handle = { self, path };
 
   rb_ensure((VALUE (*)(...))mp4v2_modify_file, (VALUE)&handle, (VALUE (*)(...))ensure_close, (VALUE)&handle);
 
-  return path;
+  if (TYPE(hash) == T_HASH) {
+    if (rb_hash_aref(hash, SYM("optimize")) == Qtrue) {
+      rb_funcall(self, rb_intern("optimize!"), 0);
+    }
+
+    if (rb_hash_aref(hash, SYM("reload")) == Qtrue) {
+      rb_funcall(self, rb_intern("reload!"), 0);
+    }
+  }
+
+  return self;
 }
 
 #ifdef __cplusplus

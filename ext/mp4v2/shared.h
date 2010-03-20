@@ -16,7 +16,6 @@ extern VALUE rb_cMp4v2, rb_cArtwork, rb_cChapter, rb_cVideo, rb_cAudio, rb_cTrac
 typedef struct MP4V2Handles_s {
   VALUE self;
   VALUE filename;
-  bool optimize;
   MP4FileHandle file;
   MP4Tags *tags;
   MP4ItmfItemList *list;
