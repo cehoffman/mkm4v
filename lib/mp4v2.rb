@@ -8,6 +8,20 @@ require File.expand_path("../mp4v2/audio", __FILE__)
 
 class Mp4v2
 
+  alias_method :clear_original, :clear
+  def clear
+    audio, video, text, chapters, file = self.audio, self.video, self.text, self.chapters, self.file
+
+    self.clear_original
+
+    self.audio, self.video, self.text, self.chapters, self.file = audio, video, text, chapters, file
+  end
+  
+  def clear!
+    self.clear
+    self.save
+  end
+
   def method_missing(method, *args)
     case method
     when /(.+)=$/

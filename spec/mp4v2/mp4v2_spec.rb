@@ -210,13 +210,125 @@ describe Mp4v2 do
     end
   end
 
+  describe "#clear" do
+    it "should drop all metadata fields" do
+      audio, video, text, chapters, file = @mp4.audio, @mp4.video, @mp4.text, @mp4.chapters, @mp4.file
+
+      @mp4.name = "Filled"
+      @mp4.artist = "Filled"
+      @mp4.album_artist = "Filled"
+      @mp4.album = "Filled"
+      @mp4.grouping = "Filled"
+      @mp4.composer = "Filled"
+      @mp4.comments = "Filled"
+      @mp4.genre = "Filled"
+      @mp4.genre_type = 1
+      @mp4.released = DateTime.civil(2004, 3, 10)
+      @mp4.track = 1
+      @mp4.tracks = 10
+      @mp4.disk = 1
+      @mp4.disks = 2
+      @mp4.tempo = 50
+      @mp4.show = "Filled"
+      @mp4.episode_id = "Filled"
+      @mp4.season = 1
+      @mp4.episode = 1
+      @mp4.network = "Filled"
+      @mp4.description = "Filled"
+      @mp4.long_description = "Filled"
+      @mp4.lyrics = "Filled"
+      @mp4.copyright = "Filled"
+      @mp4.encoding_tool = "Filled"
+      @mp4.encoded_by = "Filled"
+      @mp4.category = "Filled"
+      @mp4.kind = :movie
+      @mp4.advisory = :clean
+      @mp4.purchased = DateTime.civil(2009, 12, 1)
+      @mp4.account = "Filled"
+      @mp4.account_type = 255
+      @mp4.country = 1
+      @mp4.cnID = 1
+      @mp4.atID = 1
+      @mp4.plID = 1
+      @mp4.geID = 1
+
+      @mp4.gapless = true
+      @mp4.compilation = true
+      @mp4.podcast = true
+      @mp4.hd = true
+
+      @mp4.clear
+
+      # Check that it didn't remove non metadata fields
+      @mp4.audio.should == audio
+      @mp4.video.should == video
+      @mp4.text.should == text
+      @mp4.chapters.should == chapters
+      @mp4.file.should == file
+
+      # Check that all metadata fields will be cleared
+      @mp4.name.should be_nil
+      @mp4.artist.should be_nil
+      @mp4.album_artist.should be_nil
+      @mp4.album.should be_nil
+      @mp4.grouping.should be_nil
+      @mp4.composer.should be_nil
+      @mp4.comments.should be_nil
+      @mp4.genre.should be_nil
+      @mp4.genre_type.should be_nil
+      @mp4.released.should be_nil
+      @mp4.track.should be_nil
+      @mp4.tracks.should be_nil
+      @mp4.disk.should be_nil
+      @mp4.disks.should be_nil
+      @mp4.tempo.should be_nil
+      @mp4.show.should be_nil
+      @mp4.episode_id.should be_nil
+      @mp4.season.should be_nil
+      @mp4.episode.should be_nil
+      @mp4.network.should be_nil
+      @mp4.description.should be_nil
+      @mp4.long_description.should be_nil
+      @mp4.lyrics.should be_nil
+      @mp4.copyright.should be_nil
+      @mp4.encoding_tool.should be_nil
+      @mp4.encoded_by.should be_nil
+      @mp4.category.should be_nil
+      @mp4.kind.should be_nil
+      @mp4.purchased.should be_nil
+      @mp4.account.should be_nil
+      @mp4.account_type.should be_nil
+      @mp4.country.should be_nil
+      @mp4.cnID.should be_nil
+      @mp4.atID.should be_nil
+      @mp4.plID.should be_nil
+      @mp4.geID.should be_nil
+
+      @mp4.advisory.should be_nil
+      @mp4.gapless.should be_false
+      @mp4.compilation.should be_false
+      @mp4.podcast.should be_false
+      @mp4.hd.should be_false
+
+      @mp4.keys.sort.should == [:audio, :chapters, :file, :text, :video]
+    end
+  end
+
+  describe "#clear!" do
+    it "should drop all metadata fields and save the file" do
+      @mp4.should_receive(:clear).once.ordered
+      @mp4.should_receive(:save).once.ordered
+      @mp4.clear!
+    end
+  end
+
   describe "#optimize!" do
     it "should return true if successful" do
       @mp4.optimize!.should == true
     end
 
     it "should replace file with optimized version" do
-      pending # It does optimize but there is a little different every time
+      pending # It does optimize but there is a little difference every time
       @mp4.optimize!
       File.open(@mp4.file, "rb") do |modified|
         File.open(fixtures + "mp4v2.optimized.m4v", "rb") do |optimized|

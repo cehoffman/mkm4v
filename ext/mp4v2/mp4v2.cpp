@@ -69,10 +69,9 @@ static VALUE mp4v2_read(MP4V2Handles *handle) {
 }
 
 static VALUE mp4v2_reload(VALUE self) {
-  VALUE file = GET(file);
   rb_funcall(self, rb_intern("clear"), 0);
-  SET(file, file);
 
+  VALUE file = GET(file);
   file = StringValue(file);
   MP4V2Handles handle = { self, file };
 
