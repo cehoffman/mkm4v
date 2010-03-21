@@ -1,6 +1,9 @@
 #ifndef METADATA_H_1UAPHLN4
 #define METADATA_H_1UAPHLN4
 
+VALUE rb_protect_funcall(VALUE receiver, ID function, int *state, int argc, ...);
+VALUE rb_protect_apply(VALUE receiver, ID function, VALUE args, int *state);
+
 #define TAG_SET(tag, accessor) if (tags->tag) { SET(accessor, rb_utf8_str(tags->tag)); }
 #define _TAG_NUM(tag, accessor, converter) if (tags->tag) { SET(accessor, converter(*tags->tag)); }
 #define TAG_NUM32(tag, accessor) _TAG_NUM(tag, accessor, ULONG2NUM)
@@ -23,7 +26,7 @@
   } else { \
     SET(accessor, Qfalse); \
   } \
-  rb_funcall(self, rb_intern("instance_eval"), 1, rb_utf8_str("def " #accessor "?; self." #accessor " == true end"));
+  rb_funcall(self, rb_intern("instance_eval"), 1, rb_utf8_str("def " #accessor "?; !!self." #accessor " end"));
 
 #define TAG_DATE(tag, accessor) \
   if (tags->tag) { \
@@ -40,8 +43,12 @@
       } \
       \
       rb_ary_store(parsed, 5, DBL2NUM(NUM2DBL(rb_ary_entry(parsed, 5)) + NUM2DBL(rb_ary_pop(parsed)))); \
-    \
-      SET(accessor, rb_apply(rb_const_get(rb_cObject, rb_intern("DateTime")), rb_intern("civil"), parsed)); \
+      \
+      int state = 0; \
+      date = rb_protect_apply(rb_const_get(rb_cObject, rb_intern("DateTime")), rb_intern("civil"), parsed, &state); \
+      if (state == 0) { \
+        SET(accessor, date); \
+      } \
     } \
   }
 
@@ -61,18 +68,64 @@
 #define MODIFY_STR(func, accessor) \
   { \
     VALUE data = GET(accessor); \
+    \
+    switch(TYPE(data)) { \
+      case T_NIL: \
+      case T_STRING: \
+        break; \
+      default: \
+        if (rb_respond_to(data, rb_intern("to_str"))) { \
+          data = rb_funcall(data, rb_intern("to_str"), 0); \
+        } else if (rb_respond_to(data, rb_intern("to_s"))) { \
+          data = rb_funcall(data, rb_intern("to_s"), 0); \
+        } \
+    } \
+    \
+    if (data != Qnil && TYPE(data) != T_STRING) { \
+      rb_raise(rb_eTypeError, "can't convert " #accessor " to string"); \
+    } \
+    \
     if (data != Qnil) { \
-      MODIFY(func, RSTRING_PTR(StringValue(data))); \
+      MODIFY(func, RSTRING_PTR(rb_encode_utf8(data))); \
     } else { \
       MODIFY(func, NULL); \
     } \
   }
+#define MAXU8  0xFF
+#define MAXU16 0xFFFF
+#define MAXU32 0xFFFFFFFF
+#define MAXU64 0xFFFFFFFFFFFFFFFF
 #define MODIFY_NUMBITS(func, accessor, bits) \
-  if (GET(accessor) != Qnil) { \
-    uint ## bits ##_t num = (uint ## bits ##_t)NUM2ULL(GET(accessor)); \
-    MODIFY(func, &num); \
-  } else { \
-    MODIFY(func, NULL); \
+  { \
+    VALUE data = GET(accessor); \
+    \
+    switch(TYPE(data)) { \
+      case T_NIL: \
+      case T_FIXNUM: \
+      case T_BIGNUM: \
+        break; \
+      default: \
+        if (rb_respond_to(data, rb_intern("to_int"))) { \
+          data = rb_funcall(data, rb_intern("to_int"), 0); \
+        } else if (rb_respond_to(data, rb_intern("to_i"))) { \
+          data = rb_funcall(data, rb_intern("to_i"), 0);\
+        } \
+    } \
+    \
+    if (data == Qnil) { \
+      MODIFY(func, NULL); \
+    } else if (TYPE(data) == T_FIXNUM || TYPE(data) == T_BIGNUM) { \
+      uint64_t num = (uint64_t)NUM2ULL(data); \
+      uint ## bits ## _t casted = (uint ## bits ## _t)num; \
+      \
+      if (num > (uint64_t)MAXU ## bits) { \
+        rb_raise(rb_eRangeError, #accessor " max value is %llu", (uint64_t)MAXU ## bits); \
+      } else { \
+        MODIFY(func, &casted); \
+      } \
+    } else { \
+      rb_raise(rb_eTypeError, "can't convert " #accessor " to integer"); \
+    } \
   }
 #define MODIFY_NUM8(func, accessor) MODIFY_NUMBITS(func, accessor, 8)
 #define MODIFY_NUM16(func, accessor) MODIFY_NUMBITS(func, accessor, 16)
@@ -97,24 +150,24 @@
   }
 
 #define MODIFY_BOOL(func, accessor) \
-  { \
-    VALUE data = GET(accessor); \
+  if (rb_funcall(self, rb_intern(#accessor "?"), 0) == Qtrue) { \
     uint8_t truth = 1; \
-    switch(TYPE(data)) { \
-      case T_TRUE: \
-        MODIFY(func, &truth); \
-        break; \
-      case T_FALSE: \
-      case T_NIL: \
-        MODIFY(func, NULL); \
-        break; \
-      default: \
-      rb_raise(rb_eTypeError, #accessor " is not a truth value or nil"); \
-    } \
+    MODIFY(func, &truth); \
+  } else { \
+    MODIFY(func, NULL); \
   }
 #define MODIFY_DATE(func, accessor) \
   { \
     VALUE date = GET(accessor), rb_cDateTime = rb_const_get(rb_cObject, rb_intern("DateTime")); \
+    \
+    if (TYPE(date) == T_STRING) { \
+      int state = 0; \
+      date = rb_protect_funcall(rb_cDateTime, rb_intern("parse"), &state, 1, date); \
+      if (state) { \
+        rb_raise(rb_eTypeError, "can't convert " #accessor " to DateTime"); \
+      } \
+    } \
+    \
     if (rb_obj_is_kind_of(date, rb_cDateTime) == Qtrue) { \
       MODIFY(func, RSTRING_PTR(rb_funcall(date, rb_intern("strftime"), 1, rb_utf8_str("%Y-%m-%dT%H:%M:%SZ")))); \
     } else if (date == Qnil) { \

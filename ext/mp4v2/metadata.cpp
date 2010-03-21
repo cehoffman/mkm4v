@@ -338,3 +338,37 @@ void _mp4v2_write_metadata(MP4V2Handles *handle) {
     DELETE_ITMF("com.apple.iTunes", "iTunMOVI");
   }
 }
+
+typedef struct RProtected_s {
+  VALUE receiver;
+  ID function;
+  int argc;
+  VALUE *args;
+} RProtected;
+
+static VALUE _protect_funcall(RProtected *params) {
+  return rb_funcall2(params->receiver, params->function, params->argc, params->args);
+}
+
+VALUE rb_protect_funcall(VALUE receiver, ID function, int *state, int argc, ...) {
+  RProtected params = { receiver, function, argc };
+
+  if (argc > 0) {
+    VALUE *args = params.args = ALLOCA_N(VALUE, argc);
+    va_list arg_list;
+    va_start(arg_list, argc);
+
+    for (int i = 0; i < argc; i++) {
+      args[i] = va_arg(arg_list, VALUE);
+    }
+
+    va_end(arg_list);
+  }
+
+  return rb_protect((VALUE (*)(VALUE))_protect_funcall, (VALUE)&params, state);
+}
+
+VALUE rb_protect_apply(VALUE receiver, ID function, VALUE args, int *state) {
+  RProtected params = { receiver, function, RARRAY_LEN(args), RARRAY_PTR(args) };
+  return rb_protect((VALUE (*)(VALUE))_protect_funcall, (VALUE)&params, state);
+}
