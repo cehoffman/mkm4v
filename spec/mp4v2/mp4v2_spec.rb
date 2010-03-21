@@ -38,11 +38,31 @@ describe Mp4v2 do
     @mp4.file.should =~ /\/mp4v2\.test$/
   end
 
-  def self.metadata(meta, value, &block)
-    specify "#{meta} should be gettable, settable, and clearable" do
-      @mp4[meta] = value
+  def self.metadata(meta, *values, &block)
+    values.flatten!
+    values.each do |value|
+      case value
+      when Hash
+        value.each_pair do |set, get|
+          specify "#{meta} should be settable to #{set.inspect}, gettable as #{get.inspect}" do
+            @mp4[meta] = set
+            @mp4.save reload: true
+            @mp4[meta].should == get
+          end
+        end
+      else
+        specify "#{meta} should be gettable, and settable as #{value.inspect}" do
+          @mp4[meta] = value
+          @mp4.save reload: true
+          @mp4[meta].should == value
+        end
+      end
+    end
+
+    specify "#{meta} should be clearable" do
+      @mp4[meta] = values.first
       @mp4.save reload: true
-      @mp4[meta].should == value
+      @mp4.should have_key(meta)
       @mp4[meta] = nil
       @mp4.save reload: true
       @mp4.should_not have_key(meta)
@@ -58,16 +78,16 @@ describe Mp4v2 do
   metadata :comments, "Comments"
   metadata :genre, "Genre"
   metadata :genre_type, 2**16 - 1
-  metadata :released, DateTime.civil(2004, 11, 16, 6)
-  metadata :track, 2**16 - 1
-  metadata :tracks, 2**16 - 1
-  metadata :disk, 2**16 - 1
-  metadata :disks, 2**16 - 1
-  metadata :tempo, 2**16 - 1
+  metadata :released, DateTime.civil(2004, 11, 16, 6), "2004/11/16" => DateTime.civil(2004, 11, 16)
+  metadata :track, 2**16 - 1, "1" => 1
+  metadata :tracks, 2**16 - 1, "10" => 10
+  metadata :disk, 2**16 - 1, "1" => 1
+  metadata :disks, 2**16 - 1, "2" => 2
+  metadata :tempo, 2**16 - 1, "50" => 50
   metadata :show, "Show"
   metadata :episode_id, "ID"
-  metadata :season, 2**32 - 1
-  metadata :episode, 2**32 - 1
+  metadata :season, 2**32 - 1, "1" => 1
+  metadata :episode, 2**32 - 1, "1" => 1
   metadata :network, "Network"
   metadata :description, "A Description"
   metadata :long_description, "A Long description"
@@ -78,13 +98,7 @@ describe Mp4v2 do
   metadata :category, "Category"
 
   # media type is a set of possible symbols
-  metadata :kind, :music
-  metadata :kind, :audiobook
-  metadata :kind, :music_video
-  metadata :kind, :movie
-  metadata :kind, :tv
-  metadata :kind, :booklet
-  metadata :kind, :ringtone
+  metadata :kind, :music, :audiobook, :music_video, :movie, :tv, :booklet, :ringtone
 
   specify "kind should not be sent when invalid" do
     @mp4.kind = :invalid
@@ -93,9 +107,7 @@ describe Mp4v2 do
   end
 
   # content rating is a set of possible symbols
-  metadata :advisory, :none
-  metadata :advisory, :clean
-  metadata :advisory, :explicit
+  metadata :advisory, :none, :clean, :explicit
 
   specify "advisory warning should not be set when invalid" do
     @mp4.advisory = :invalid
@@ -103,14 +115,14 @@ describe Mp4v2 do
     @mp4.should_not have_key(:invalid)
   end
 
-  metadata :purchased, DateTime.civil(2009, 12, 1)
+  metadata :purchased, DateTime.civil(2009, 12, 1), "2009-12-1" => DateTime.civil(2009, 12, 1)
   metadata :account, "iTunes account"
-  metadata :account_type, 255
-  metadata :country, 2*32 - 1
-  metadata :cnID, 2**32 - 1
-  metadata :atID, 2**32 - 1
-  metadata :plID, 2**64 - 1
-  metadata :geID, 2**32 - 1
+  metadata :account_type, 255, "1" => 1
+  metadata :country, 2*32 - 1, "1" => 1
+  metadata :cnID, 2**32 - 1, "1" => 1
+  metadata :atID, 2**32 - 1, "1" => 1
+  metadata :plID, 2**64 - 1, "1" => 1
+  metadata :geID, 2**32 - 1, "1" => 1
 
   specify "compilation should have a boolean accessor" do
     @mp4.should_not be_compilation
