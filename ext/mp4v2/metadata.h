@@ -93,22 +93,24 @@ int rb_protect_apply(VALUE *result, VALUE receiver, ID function, VALUE args);
 #define MAXU16 0xFFFF
 #define MAXU32 0xFFFFFFFF
 #define MAXU64 0xFFFFFFFFFFFFFFFF
+#define CONVERT_TO_INTEGER(data) \
+  switch(TYPE(data)) { \
+    case T_NIL: \
+    case T_FIXNUM: \
+    case T_BIGNUM: \
+      break; \
+    default: \
+      if (rb_respond_to(data, rb_intern("to_int"))) { \
+        data = rb_funcall(data, rb_intern("to_int"), 0); \
+      } else if (rb_respond_to(data, rb_intern("to_i"))) { \
+        data = rb_funcall(data, rb_intern("to_i"), 0);\
+      } \
+  }
 #define MODIFY_NUMBITS(func, accessor, bits) \
   { \
     VALUE data = GET(accessor); \
     \
-    switch(TYPE(data)) { \
-      case T_NIL: \
-      case T_FIXNUM: \
-      case T_BIGNUM: \
-        break; \
-      default: \
-        if (rb_respond_to(data, rb_intern("to_int"))) { \
-          data = rb_funcall(data, rb_intern("to_int"), 0); \
-        } else if (rb_respond_to(data, rb_intern("to_i"))) { \
-          data = rb_funcall(data, rb_intern("to_i"), 0);\
-        } \
-    } \
+    CONVERT_TO_INTEGER(data); \
     \
     if (data == Qnil) { \
       MODIFY(func, NULL); \
@@ -135,15 +137,27 @@ int rb_protect_apply(VALUE *result, VALUE receiver, ID function, VALUE args);
   { \
     VALUE index = rb_funcall(self, rb_intern(#idx), 0); \
     VALUE total = rb_funcall(self, rb_intern(#max), 0); \
-    if (index != Qnil || total != Qnil) { \
-      MP4Tag##func track; \
-      \
-      track.index = (index != Qnil) ? FIX2INT(index) : 0; \
-      track.total = (total != Qnil) ? FIX2INT(total) : 0; \
-      \
-      MODIFY(func, &track); \
-    } else { \
+    \
+    CONVERT_TO_INTEGER(index); \
+    CONVERT_TO_INTEGER(total); \
+    \
+    MP4Tag##func track; \
+    \
+    if (index != Qnil && TYPE(index) != T_FIXNUM) { \
+      rb_raise(rb_eTypeError, "can't convert " #idx " to integer"); \
+    } \
+    \
+    if (total != Qnil && TYPE(total) != T_FIXNUM) { \
+      rb_raise(rb_eTypeError, "can't convert " #max " to integer"); \
+    } \
+    \
+    track.index = (index != Qnil) ? FIX2INT(index) : 0; \
+    track.total = (total != Qnil) ? FIX2INT(total) : 0; \
+    \
+    if (track.index == 0 && track.total == 0) { \
       MODIFY(func, NULL); \
+    } else { \
+      MODIFY(func, &track); \
     } \
   }
 

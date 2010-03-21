@@ -44,14 +44,14 @@ describe Mp4v2 do
       case value
       when Hash
         value.each_pair do |set, get|
-          specify "#{meta} should be settable to #{set.inspect}, gettable as #{get.inspect}" do
+          specify "#{meta} should be settable with #{set.class} and gettable as #{get.class}" do
             @mp4[meta] = set
             @mp4.save reload: true
             @mp4[meta].should == get
           end
         end
       else
-        specify "#{meta} should be gettable, and settable as #{value.inspect}" do
+        specify "#{meta} should be and settable with #{value.class} and gettable as #{value.class}" do
           @mp4[meta] = value
           @mp4.save reload: true
           @mp4[meta].should == value
@@ -81,8 +81,30 @@ describe Mp4v2 do
   metadata :released, DateTime.civil(2004, 11, 16, 6), "2004/11/16" => DateTime.civil(2004, 11, 16)
   metadata :track, 2**16 - 1, "1" => 1
   metadata :tracks, 2**16 - 1, "10" => 10
+
+  specify "track should raise TypeError when it can't be converted to integer" do
+    @mp4.track = Object.new
+    -> { @mp4.save }.should raise_error(TypeError, "can't convert track to integer")
+  end
+
+  specify "tracks should raise TypeError when it can't be converted to integer" do
+    @mp4.tracks = Object.new
+    -> { @mp4.save }.should raise_error(TypeError, "can't convert tracks to integer")
+  end
+
   metadata :disk, 2**16 - 1, "1" => 1
   metadata :disks, 2**16 - 1, "2" => 2
+
+  specify "disk should raise TypeError when it can't be converted to integer" do
+    @mp4.disk = Object.new
+    -> { @mp4.save }.should raise_error(TypeError, "can't convert disk to integer")
+  end
+
+  specify "disks should raise TypeError when it can't be converted to integer" do
+    @mp4.disks = Object.new
+    -> { @mp4.save }.should raise_error(TypeError, "can't convert disks to integer")
+  end
+
   metadata :tempo, 2**16 - 1, "50" => 50
   metadata :show, "Show"
   metadata :episode_id, "ID"
