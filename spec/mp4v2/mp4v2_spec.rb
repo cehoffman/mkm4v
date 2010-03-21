@@ -15,13 +15,13 @@ describe Mp4v2 do
   end
 
   it "should have access to metadata through keys" do
-    @mp4.should have_key(:name)
-    @mp4[:name].should == "Pilot"
+    @mp4.should have_key(:hd)
+    @mp4[:hd].should == false
   end
 
   it "should have methods to access keys" do
-    @mp4.should respond_to(:name)
-    @mp4.name.should == "Pilot"
+    @mp4.should respond_to(:hd)
+    @mp4.hd.should == false
   end
 
   it "should set corresponding keys when setting properties from methods" do
@@ -207,6 +207,22 @@ describe Mp4v2 do
 
       @mp4.should_not have_key(:album_artist)
       @mp4.album_artist.should == nil
+    end
+  end
+
+  describe "#optimize!" do
+    it "should return true if successful" do
+      @mp4.optimize!.should == true
+    end
+
+    it "should replace file with optimized version" do
+      pending # It does optimize but there is a little different every time
+      @mp4.optimize!
+      File.open(@mp4.file, "rb") do |modified|
+        File.open(fixtures + "mp4v2.optimized.m4v", "rb") do |optimized|
+          modified.read.should == optimized.read
+        end
+      end
     end
   end
 end
