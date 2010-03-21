@@ -140,24 +140,132 @@ describe Mp4v2 do
     @mp4.should be_gapless
   end
 
-  specify "bool fields should only be true if value is set to true" do
-    @mp4.gapless = "true"
-    @mp4.should_not be_gapless
+  describe "string fields" do
+    it "should coerce to string when given non string value" do
+      @mp4.name = 2010
+
+      -> { @mp4.save reload: true }.should_not raise_error
+
+      @mp4.name.should == "2010"
+    end
+
+    it "should call to_str before to_s to coerce to string" do
+      class NonString
+        def to_str
+          "My Value"
+        end
+
+        def to_s
+        end
+      end
+
+      field = NonString.new
+      field.should_not_receive(:to_s)
+
+      @mp4.name = field
+      -> { @mp4.save reload: true }.should_not raise_error
+      @mp4.name.should == "My Value"
+    end
+
+    it "should raise a helpful TypeError when it can't be coerced" do
+      class Unconvertable
+        def to_str
+          234 # Not a string is the important part
+        end
+      end
+
+      @mp4.name = Unconvertable.new
+      -> { @mp4.save }.should raise_error(TypeError, "can't convert name to string")
+
+      class Unconvertable
+        undef to_str, to_s
+      end
+
+      @mp4.name = nil
+      @mp4.comments = Unconvertable.new
+      -> { @mp4.save }.should raise_error(TypeError, "can't convert comments to string")
+    end
   end
 
-  it "should raise error when setting string field with non string value" do
-    @mp4.name = 2010
-    -> { @mp4.save }.should raise_error(TypeError)
+  describe "numeric fields" do
+    it "should coerce to integer when given non integer" do
+      @mp4.cnID = "10001"
+
+      -> { @mp4.save reload: true }.should_not raise_error
+
+      @mp4.cnID.should == 10001
+    end
+
+    it "should raise error when setting number above max range of field" do
+      @mp4.cnID = 2**32
+
+      -> { @mp4.save }.should raise_error(RangeError, "cnID max value is #{2**32 - 1}")
+    end
+
+    it "should call to_int before to_i to coerce to integer" do
+      class NonFixnum
+        def to_int
+          2300
+        end
+
+        def to_i; end
+      end
+
+      field = NonFixnum.new
+      field.should_not_receive(:to_i)
+      @mp4.cnID = field
+
+      -> { @mp4.save reload: true }.should_not raise_error
+
+      @mp4.cnID.should == 2300
+    end
+
+    it "should raise a helpful TypeError when it can't be coerced" do
+      class Unconvertable
+        def to_int
+          "Not an integer"
+        end
+      end
+
+      @mp4.cnID = Unconvertable.new
+
+      -> { @mp4.save }.should raise_error(TypeError, "can't convert cnID to integer")
+
+      class Unconvertable
+        undef to_int
+      end
+
+      @mp4.cnID = Unconvertable.new
+
+      -> { @mp4.save }.should raise_error(TypeError, "can't convert cnID to integer")
+    end
   end
 
-  it "should raise error when setting a number field with a non number" do
-    @mp4.episode = "4"
-    -> { @mp4.save }.should raise_error(TypeError)
+  describe "boolean fields" do
+    it "should use ruby's truth system" do
+      @mp4.gapless = "Will be true"
+      @mp4.should be_gapless
+
+      -> { @mp4.save reload: true }.should_not raise_error
+
+      @mp4.gapless.should == true
+    end
   end
 
-  it "should raise error when setting bool field with non bool" do
-    @mp4.podcast = "yes"
-    -> { @mp4.save }.should raise_error(TypeError, "podcast is not a truth value or nil")
+  describe "date fields" do
+    it "should coerce strings to datetime" do
+      @mp4.released = "2004-11-27T04:00:01Z"
+
+      -> { @mp4.save reload: true }.should_not raise_error
+
+      @mp4.released.should == DateTime.civil(2004, 11, 27, 4, 0, 1)
+    end
+
+    it "should raise an error when unable to parse string" do
+      @mp4.released = "Some garbage"
+
+      -> { @mp4.save }.should raise_error(TypeError, "can't convert released to DateTime")
+    end
   end
 
   describe "#save" do
