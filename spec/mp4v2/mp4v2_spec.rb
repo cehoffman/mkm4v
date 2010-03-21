@@ -51,7 +51,7 @@ describe Mp4v2 do
           end
         end
       else
-        specify "#{meta} should be and settable with #{value.class} and gettable as #{value.class}" do
+        specify "#{meta} should be settable with #{value.class} and gettable as #{value.class}" do
           @mp4[meta] = value
           @mp4.save reload: true
           @mp4[meta].should == value
