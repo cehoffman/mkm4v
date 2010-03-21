@@ -198,15 +198,15 @@ describe Mp4v2 do
   end
 
   describe "#reload!" do
-    it "should drop all fields that are not in file" do
-      @mp4.should_not have_key(:album_artist)
-      @mp4.album_artist = "Your Mom"
-      @mp4.album_artist.should == "Your Mom"
+    it "should reread properties of file" do
+      @mp4.video.clear
+      @mp4.audio.clear
+      @mp4.should_receive(:clear).once
 
       @mp4.reload!
 
-      @mp4.should_not have_key(:album_artist)
-      @mp4.album_artist.should == nil
+      @mp4.video.should_not be_empty
+      @mp4.audio.should_not be_empty
     end
   end
 
