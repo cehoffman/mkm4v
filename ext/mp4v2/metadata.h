@@ -1,8 +1,8 @@
 #ifndef METADATA_H_1UAPHLN4
 #define METADATA_H_1UAPHLN4
 
-VALUE rb_protect_funcall(VALUE receiver, ID function, int *state, int argc, ...);
-VALUE rb_protect_apply(VALUE receiver, ID function, VALUE args, int *state);
+int rb_protect_funcall(VALUE *result, VALUE receiver, ID function, int argc, ...);
+int rb_protect_apply(VALUE *result, VALUE receiver, ID function, VALUE args);
 
 #define TAG_SET(tag, accessor) if (tags->tag) { SET(accessor, rb_utf8_str(tags->tag)); }
 #define _TAG_NUM(tag, accessor, converter) if (tags->tag) { SET(accessor, converter(*tags->tag)); }
@@ -44,9 +44,7 @@ VALUE rb_protect_apply(VALUE receiver, ID function, VALUE args, int *state);
       \
       rb_ary_store(parsed, 5, DBL2NUM(NUM2DBL(rb_ary_entry(parsed, 5)) + NUM2DBL(rb_ary_pop(parsed)))); \
       \
-      int state = 0; \
-      date = rb_protect_apply(rb_const_get(rb_cObject, rb_intern("DateTime")), rb_intern("civil"), parsed, &state); \
-      if (state == 0) { \
+      if (rb_protect_apply(&date, rb_const_get(rb_cObject, rb_intern("DateTime")), rb_intern("civil"), parsed) == 0) { \
         SET(accessor, date); \
       } \
     } \
@@ -160,12 +158,8 @@ VALUE rb_protect_apply(VALUE receiver, ID function, VALUE args, int *state);
   { \
     VALUE date = GET(accessor), rb_cDateTime = rb_const_get(rb_cObject, rb_intern("DateTime")); \
     \
-    if (TYPE(date) == T_STRING) { \
-      int state = 0; \
-      date = rb_protect_funcall(rb_cDateTime, rb_intern("parse"), &state, 1, date); \
-      if (state) { \
-        rb_raise(rb_eTypeError, "can't convert " #accessor " to DateTime"); \
-      } \
+    if (TYPE(date) == T_STRING && rb_protect_funcall(&date, rb_cDateTime, rb_intern("parse"), 1, date)) { \
+      rb_raise(rb_eTypeError, "can't convert " #accessor " to DateTime"); \
     } \
     \
     if (rb_obj_is_kind_of(date, rb_cDateTime) == Qtrue) { \

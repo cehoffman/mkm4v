@@ -340,18 +340,20 @@ void _mp4v2_write_metadata(MP4V2Handles *handle) {
 }
 
 typedef struct RProtected_s {
+  VALUE *result;
   VALUE receiver;
   ID function;
   int argc;
   VALUE *args;
+  int state;
 } RProtected;
 
-static VALUE _protect_funcall(RProtected *params) {
-  return rb_funcall2(params->receiver, params->function, params->argc, params->args);
+static void _protect_funcall(RProtected *params) {
+  *params->result = rb_funcall2(params->receiver, params->function, params->argc, params->args);
 }
 
-VALUE rb_protect_funcall(VALUE receiver, ID function, int *state, int argc, ...) {
-  RProtected params = { receiver, function, argc };
+int rb_protect_funcall(VALUE *result, VALUE receiver, ID function, int argc, ...) {
+  RProtected params = { result, receiver, function, argc };
 
   if (argc > 0) {
     VALUE *args = params.args = ALLOCA_N(VALUE, argc);
@@ -365,10 +367,12 @@ VALUE rb_protect_funcall(VALUE receiver, ID function, int *state, int argc, ...)
     va_end(arg_list);
   }
 
-  return rb_protect((VALUE (*)(VALUE))_protect_funcall, (VALUE)&params, state);
+  rb_protect((VALUE (*)(VALUE))_protect_funcall, (VALUE)&params, &params.state);
+  return params.state;
 }
 
-VALUE rb_protect_apply(VALUE receiver, ID function, VALUE args, int *state) {
-  RProtected params = { receiver, function, RARRAY_LEN(args), RARRAY_PTR(args) };
-  return rb_protect((VALUE (*)(VALUE))_protect_funcall, (VALUE)&params, state);
+int rb_protect_apply(VALUE *result, VALUE receiver, ID function, VALUE args) {
+  RProtected params = { result, receiver, function, RARRAY_LEN(args), RARRAY_PTR(args) };
+  rb_protect((VALUE (*)(VALUE))_protect_funcall, (VALUE)&params, &params.state);
+  return params.state;
 }
