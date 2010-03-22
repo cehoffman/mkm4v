@@ -78,66 +78,54 @@ describe Mp4v2::Artwork do
       it "should set format to :jpeg for a .jpeg file" do
         File.open("artwork.jpeg", "w") { |f| f << "Data" }
 
-        art = Mp4v2::Artwork.new("artwork.jpeg")
-        @mp4.artwork << art
+        @mp4.artwork << Mp4v2::Artwork.new("artwork.jpeg")
         @mp4.save reload: true
 
-        @mp4.artwork[2].__id__.should_not == art.__id__
         @mp4.artwork[2].format.should == :jpeg
       end
 
       it "should set format to :jpeg for a .jpg file" do
         File.open("artwork.jpg", "w") { |f| f << "Data" }
 
-        art = Mp4v2::Artwork.new("artwork.jpg")
-        @mp4.artwork << art
+        @mp4.artwork << Mp4v2::Artwork.new("artwork.jpg")
         @mp4.save reload: true
 
-        @mp4.artwork[2].__id__.should_not == art.__id__
         @mp4.artwork[2].format.should == :jpeg
       end
 
       it "should set format to :bitmap for a .bmp file" do
         File.open("artwork.bmp", "w") { |f| f << "Data" }
 
-        art = Mp4v2::Artwork.new("artwork.bmp")
-        @mp4.artwork << art
+        @mp4.artwork << Mp4v2::Artwork.new("artwork.bmp")
         @mp4.save reload: true
 
-        @mp4.artwork[2].__id__.should_not == art.__id__
         @mp4.artwork[2].format.should == :bitmap
       end
 
       it "should set format to :gif for a .gif file" do
         File.open("artwork.gif", "w") { |f| f << "Data" }
 
-        art = Mp4v2::Artwork.new("artwork.gif")
-        @mp4.artwork << art
+        @mp4.artwork << Mp4v2::Artwork.new("artwork.gif")
         @mp4.save reload: true
 
-        @mp4.artwork[2].__id__.should_not == art.__id__
         @mp4.artwork[2].format.should == :gif
       end
 
       it "should set format to :png for a .png file" do
         File.open("artwork.png", "w") { |f| f << "Data" }
 
-        art = Mp4v2::Artwork.new("artwork.png")
-        @mp4.artwork << art
+        @mp4.artwork << Mp4v2::Artwork.new("artwork.png")
         @mp4.save reload: true
 
-        @mp4.artwork[2].__id__.should_not == art.__id__
         @mp4.artwork[2].format.should == :png
       end
 
       it "should set format to :unknown for an unknown extension" do
         File.open("artwork.eps", "w") { |f| f << "Data" }
 
-        art = Mp4v2::Artwork.new("artwork.eps")
-        @mp4.artwork << art
+        @mp4.artwork << Mp4v2::Artwork.new("artwork.eps")
         @mp4.save reload: true
 
-        @mp4.artwork[2].__id__.should_not == art.__id__
         @mp4.artwork[2].format.should == :unknown
       end
     end

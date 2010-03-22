@@ -48,13 +48,65 @@ describe Mp4v2 do
     @mp4.file.should =~ /\/mp4v2\.test$/
   end
 
-  it "should know how many pieces of artwork are in it" do
-    @mp4.artwork.count.should == 2
+  describe "artwork" do
+    it "should know how many pieces of artwork are in it" do
+      @mp4.artwork.count.should == 2
+    end
+
+    it "should have an array of Mp4v2::Artwork items" do
+      @mp4.artwork.should be_all { |item| item.is_a?(Mp4v2::Artwork) }
+    end
+
+    it "should remove a piece of artwork from file when saved" do
+      @mp4.artwork.shift
+      remaining = @mp4.artwork.first
+
+      @mp4.save reload: true
+
+      @mp4.artwork.count.should == 1
+      @mp4.artwork.first.should == remaining
+    end
+
+    it "should add artwork to file when added to array" do
+      FakeFS.activate!
+      File.open("artwork.png", "w") { |f| f << "Data" }
+
+      art = Mp4v2::Artwork.new("artwork.png")
+      @mp4.artwork.unshift art
+      @mp4.save reload: true
+
+      @mp4.artwork.first.__id__.should_not == art.__id__
+      @mp4.artwork.count.should == 3
+      @mp4.artwork.first.should == art
+
+      @mp4.artwork.shift
+      @mp4.artwork.push art
+      @mp4.save reload: true
+
+      @mp4.artwork.last.__id__.should_not == art.__id__
+      @mp4.artwork.count.should == 3
+      @mp4.artwork.last.should == art
+
+      FakeFS.deactivate!
+    end
+
+    it "should remove all artwork from file when nil" do
+      @mp4.artwork = nil
+      @mp4.save reload: true
+
+      @mp4.artwork.should be_empty
+    end
+
+    it "should remove all artwork from file when empty" do
+      @mp4.artwork.clear
+      @mp4.artwork.should be_empty
+
+      @mp4.save reload: true
+
+      @mp4.artwork.should be_empty
+    end
   end
 
-  it "should have an array of Mp4v2::Artwork items" do
-    @mp4.artwork.should be_all { |item| item.is_a?(Mp4v2::Artwork) }
-  end
 
   def self.metadata(type, field, *values)
     values.flatten!
