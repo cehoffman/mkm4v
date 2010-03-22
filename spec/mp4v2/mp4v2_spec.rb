@@ -1,4 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+%w(boolean date generic numeric symbol string).each do |shared|
+  require File.join(File.dirname(__FILE__), "shared", "#{shared}.rb")
+end
 
 describe Mp4v2 do
   before(:all) do
@@ -14,293 +17,155 @@ describe Mp4v2 do
     FileUtils.rm @file.extname("test")
   end
 
-  it "should have access to metadata through keys" do
-    @mp4.should have_key(:hd)
-    @mp4[:hd].should == false
-  end
+  describe "metadata access" do
+    before(:each) do
+            @mp4[:hd] = true
+      @mp4.save reload: true
+    end
 
-  it "should have methods to access keys" do
-    @mp4.should respond_to(:hd)
-    @mp4.hd.should == false
-  end
+    it "should have access to through keys" do
+      @mp4.should have_key(:hd)
+      @mp4[:hd].should == true
+    end
 
-  it "should set corresponding keys when setting properties from methods" do
-    @mp4.should_not have_key(:album_artist)
-    @mp4.album_artist = "Your Mom"
-    @mp4.should have_key(:album_artist)
-  end
+    it "should have access thorugh methods" do
+      @mp4.should respond_to(:hd)
+      @mp4.hd.should == true
+    end
 
-  it "should return nil for properties that are not set" do
-    @mp4.album_artist.should == nil
+    it "should set corresponding keys when setting properties from methods" do
+      @mp4.should_not have_key(:album_artist)
+      @mp4.album_artist = "Your Mom"
+      @mp4.should have_key(:album_artist)
+    end
+
+    it "should return nil for properties that are not set" do
+      @mp4.album_artist.should == nil
+    end
   end
 
   it "should know the file it opened" do
     @mp4.file.should =~ /\/mp4v2\.test$/
   end
 
-  def self.metadata(meta, *values, &block)
+  def self.metadata(type, field, *values)
     values.flatten!
-    values.each do |value|
-      case value
-      when Hash
-        value.each_pair do |set, get|
-          specify "#{meta} should be settable with #{set.class} and gettable as #{get.class}" do
-            @mp4[meta] = set
-            @mp4.save reload: true
-            @mp4[meta].should == get
-          end
-        end
-      else
-        specify "#{meta} should be settable with #{value.class} and gettable as #{value.class}" do
-          @mp4[meta] = value
-          @mp4.save reload: true
-          @mp4[meta].should == value
-        end
+    values.compact!
+    mappings = values.last.is_a?(Hash) ? values.pop : {}
+
+    values.each { |val| mappings[val] = val }
+
+    describe field do
+      define_method :field do
+          field
       end
+
+      mappings.each_pair do |set, get|
+        @@setter = set
+        define_method :setter do
+          set
+        end
+
+        @@getter = get
+        define_method :getter do
+          get
+        end
+
+        it_should_behave_like "generic metadata field"
+      end
+
+      it "should be clearable" do
+        @mp4[field] = setter
+        @mp4.save reload: true
+        @mp4.should have_key(field)
+        @mp4[field] = nil
+        @mp4.save reload: true
+        @mp4.should_not have_key(field)
+      end
+
+      it_should_behave_like "#{type} metadata field"
     end
-
-    specify "#{meta} should be clearable" do
-      @mp4[meta] = values.first
-      @mp4.save reload: true
-      @mp4.should have_key(meta)
-      @mp4[meta] = nil
-      @mp4.save reload: true
-      @mp4.should_not have_key(meta)
-    end
   end
 
-  metadata :name, "A Name"
-  metadata :artist, "Some Artist"
-  metadata :album_artist, "Album Artist"
-  metadata :album, "Album"
-  metadata :grouping, "Grouping"
-  metadata :composer, "Composer"
-  metadata :comments, "Comments"
-  metadata :genre, "Genre"
-  metadata :genre_type, 2**16 - 1
-  metadata :released, DateTime.civil(2004, 11, 16, 6), "2004/11/16" => DateTime.civil(2004, 11, 16)
-  metadata :track, 2**16 - 1, "1" => 1
-  metadata :tracks, 2**16 - 1, "10" => 10
+  metadata :string, :name, "A Name"
+  metadata :string, :artist, "Some Artist"
+  metadata :string, :album_artist, "Album Artist"
+  metadata :string, :album, "Album"
+  metadata :string, :grouping, "Grouping"
+  metadata :string, :composer, "Composer"
+  metadata :string, :comments, "Comments"
+  metadata :string, :genre, "Genre"
+  metadata :numeric, :genre_type, 2**16 - 1
+  metadata :date, :released, DateTime.civil(2004, 11, 16, 6), "2004/11/16" => DateTime.civil(2004, 11, 16)
+  metadata :numeric, :track, 2**16 - 1, "1" => 1
+  metadata :numeric, :tracks, 2**16 - 1, "10" => 10
 
-  specify "track should raise TypeError when it can't be converted to integer" do
-    @mp4.track = Object.new
-    -> { @mp4.save }.should raise_error(TypeError, "can't convert track to integer")
-  end
+  specify "setting only track should not set tracks after save" do
+    @mp4.track = 1
 
-  specify "tracks should raise TypeError when it can't be converted to integer" do
-    @mp4.tracks = Object.new
-    -> { @mp4.save }.should raise_error(TypeError, "can't convert tracks to integer")
-  end
-
-  metadata :disk, 2**16 - 1, "1" => 1
-  metadata :disks, 2**16 - 1, "2" => 2
-
-  specify "disk should raise TypeError when it can't be converted to integer" do
-    @mp4.disk = Object.new
-    -> { @mp4.save }.should raise_error(TypeError, "can't convert disk to integer")
-  end
-
-  specify "disks should raise TypeError when it can't be converted to integer" do
-    @mp4.disks = Object.new
-    -> { @mp4.save }.should raise_error(TypeError, "can't convert disks to integer")
-  end
-
-  metadata :tempo, 2**16 - 1, "50" => 50
-  metadata :show, "Show"
-  metadata :episode_id, "ID"
-  metadata :season, 2**32 - 1, "1" => 1
-  metadata :episode, 2**32 - 1, "1" => 1
-  metadata :network, "Network"
-  metadata :description, "A Description"
-  metadata :long_description, "A Long description"
-  metadata :lyrics, "Lyrics"
-  metadata :copyright, "Copyright"
-  metadata :encoding_tool, "HandBrake"
-  metadata :encoded_by, "Me"
-  metadata :category, "Category"
-
-  # media type is a set of possible symbols
-  metadata :kind, :music, :audiobook, :music_video, :movie, :tv, :booklet, :ringtone
-
-  specify "kind should not be sent when invalid" do
-    @mp4.kind = :invalid
     @mp4.save reload: true
-    @mp4.should_not have_key(:kind)
+
+    @mp4.should_not have_key(:tracks)
   end
 
-  # content rating is a set of possible symbols
-  metadata :advisory, :none, :clean, :explicit
+  specify "setting only tracks should not set tracks after save" do
+    @mp4.tracks = 1
 
-  specify "advisory warning should not be set when invalid" do
-    @mp4.advisory = :invalid
     @mp4.save reload: true
-    @mp4.should_not have_key(:invalid)
+
+    @mp4.should_not have_key(:track)
   end
 
-  metadata :purchased, DateTime.civil(2009, 12, 1), "2009-12-1" => DateTime.civil(2009, 12, 1)
-  metadata :account, "iTunes account"
-  metadata :account_type, 255, "1" => 1
-  metadata :country, 2*32 - 1, "1" => 1
-  metadata :cnID, 2**32 - 1, "1" => 1
-  metadata :atID, 2**32 - 1, "1" => 1
-  metadata :plID, 2**64 - 1, "1" => 1
-  metadata :geID, 2**32 - 1, "1" => 1
+  metadata :numeric, :disk, 2**16 - 1, "1" => 1
+  metadata :numeric, :disks, 2**16 - 1, "2" => 2
 
-  specify "compilation should have a boolean accessor" do
-    @mp4.should_not be_compilation
-    @mp4.compilation = true
+  specify "setting only disk should not set tracks after save" do
+    @mp4.disk = 1
+
     @mp4.save reload: true
-    @mp4.should be_compilation
+
+    @mp4.should_not have_key(:disks)
   end
 
-  specify "podcast should have a boolean accessor" do
-    @mp4.should_not be_podcast
-    @mp4.podcast = true
+  specify "setting only disks should not set tracks after save" do
+    @mp4.disks = 1
+
     @mp4.save reload: true
-    @mp4.should be_podcast
+
+    @mp4.should_not have_key(:disk)
   end
 
-  specify "hd should have a boolean accessor" do
-    @mp4.should_not be_hd
-    @mp4.hd = true
-    @mp4.save reload: true
-    @mp4.should be_hd
-  end
+  metadata :numeric, :tempo, 2**16 - 1, "50" => 50
+  metadata :string, :show, "Show"
+  metadata :string, :episode_id, "ID"
+  metadata :numeric, :season, 2**32 - 1, "1" => 1
+  metadata :numeric, :episode, 2**32 - 1, "1" => 1
+  metadata :string, :network, "Network"
+  metadata :string, :description, "A Description"
+  metadata :string, :long_description, "A Long description"
+  metadata :string, :lyrics, "Lyrics"
+  metadata :string, :copyright, "Copyright"
+  metadata :string, :encoding_tool, "HandBrake"
+  metadata :string, :encoded_by, "Me"
+  metadata :string, :category, "Category"
 
-  specify "gapless should have a boolen accessor" do
-    @mp4.should_not be_gapless
-    @mp4.gapless = true
-    @mp4.save reload: true
-    @mp4.should be_gapless
-  end
+  metadata :symbol, :kind, :music, :audiobook, :music_video, :movie, :tv, :booklet, :ringtone
 
-  describe "string fields" do
-    it "should coerce to string when given non string value" do
-      @mp4.name = 2010
+  metadata :symbol, :advisory, :none, :clean, :explicit
 
-      -> { @mp4.save reload: true }.should_not raise_error
+  metadata :date, :purchased, DateTime.civil(2009, 12, 1), "2009-12-1" => DateTime.civil(2009, 12, 1)
+  metadata :string, :account, "iTunes account"
+  metadata :numeric, :account_type, 255, "1" => 1
+  metadata :numeric, :country, 2*32 - 1, "1" => 1
+  metadata :numeric, :cnID, 2**32 - 1, "1" => 1
+  metadata :numeric, :atID, 2**32 - 1, "1" => 1
+  metadata :numeric, :plID, 2**64 - 1, "1" => 1
+  metadata :numeric, :geID, 2**32 - 1, "1" => 1
 
-      @mp4.name.should == "2010"
-    end
-
-    it "should call to_str before to_s to coerce to string" do
-      class NonString
-        def to_str
-          "My Value"
-        end
-
-        def to_s
-        end
-      end
-
-      field = NonString.new
-      field.should_not_receive(:to_s)
-
-      @mp4.name = field
-      -> { @mp4.save reload: true }.should_not raise_error
-      @mp4.name.should == "My Value"
-    end
-
-    it "should raise a helpful TypeError when it can't be coerced" do
-      class Unconvertable
-        def to_str
-          234 # Not a string is the important part
-        end
-      end
-
-      @mp4.name = Unconvertable.new
-      -> { @mp4.save }.should raise_error(TypeError, "can't convert name to string")
-
-      class Unconvertable
-        undef to_str, to_s
-      end
-
-      @mp4.name = nil
-      @mp4.comments = Unconvertable.new
-      -> { @mp4.save }.should raise_error(TypeError, "can't convert comments to string")
-    end
-  end
-
-  describe "numeric fields" do
-    it "should coerce to integer when given non integer" do
-      @mp4.cnID = "10001"
-
-      -> { @mp4.save reload: true }.should_not raise_error
-
-      @mp4.cnID.should == 10001
-    end
-
-    it "should raise error when setting number above max range of field" do
-      @mp4.cnID = 2**32
-
-      -> { @mp4.save }.should raise_error(RangeError, "cnID max value is #{2**32 - 1}")
-    end
-
-    it "should call to_int before to_i to coerce to integer" do
-      class NonFixnum
-        def to_int
-          2300
-        end
-
-        def to_i; end
-      end
-
-      field = NonFixnum.new
-      field.should_not_receive(:to_i)
-      @mp4.cnID = field
-
-      -> { @mp4.save reload: true }.should_not raise_error
-
-      @mp4.cnID.should == 2300
-    end
-
-    it "should raise a helpful TypeError when it can't be coerced" do
-      class Unconvertable
-        def to_int
-          "Not an integer"
-        end
-      end
-
-      @mp4.cnID = Unconvertable.new
-
-      -> { @mp4.save }.should raise_error(TypeError, "can't convert cnID to integer")
-
-      class Unconvertable
-        undef to_int
-      end
-
-      @mp4.cnID = Unconvertable.new
-
-      -> { @mp4.save }.should raise_error(TypeError, "can't convert cnID to integer")
-    end
-  end
-
-  describe "boolean fields" do
-    it "should use ruby's truth system" do
-      @mp4.gapless = "Will be true"
-      @mp4.should be_gapless
-
-      -> { @mp4.save reload: true }.should_not raise_error
-
-      @mp4.gapless.should == true
-    end
-  end
-
-  describe "date fields" do
-    it "should coerce strings to datetime" do
-      @mp4.released = "2004-11-27T04:00:01Z"
-
-      -> { @mp4.save reload: true }.should_not raise_error
-
-      @mp4.released.should == DateTime.civil(2004, 11, 27, 4, 0, 1)
-    end
-
-    it "should raise an error when unable to parse string" do
-      @mp4.released = "Some garbage"
-
-      -> { @mp4.save }.should raise_error(TypeError, "can't convert released to DateTime")
-    end
-  end
+  metadata :boolean, :compilation, true, false, "Truth Value" => true
+  metadata :boolean, :podcast, true, false, "Truth Value" => true
+  metadata :boolean, :hd, true, false, "Truth Value" => true
+  metadata :boolean, :gapless, true, false, "Truth Value" => true
 
   describe "#save" do
     it "should accept a hash of options" do
