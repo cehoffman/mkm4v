@@ -44,4 +44,8 @@ describe Pathname do
     @path.should respond_to(:=~)
     @path.should =~ /pathname_spec\.rb$/
   end
+
+  it "should have a [regex, item] accessor" do
+    @path[/(pathname_spec\.rb)$/, 1].should == "pathname_spec.rb"
+  end
 end

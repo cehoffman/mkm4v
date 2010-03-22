@@ -7,6 +7,10 @@ class Pathname
     self.to_s =~ other
   end
 
+  def [](regex, index)
+    self.to_s[regex, index]
+  end
+
   alias_method :extname_read, :extname
   def extname(ext = nil)
     ext && Pathname.new(self.to_s.gsub(/\.[^\.]*$/, ".#{ext}")) || extname_read
