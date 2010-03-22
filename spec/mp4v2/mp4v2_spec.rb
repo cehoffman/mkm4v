@@ -23,7 +23,7 @@ describe Mp4v2 do
       @mp4.save reload: true
     end
 
-    it "should have access to through keys" do
+    it "should have access through keys" do
       @mp4.should have_key(:hd)
       @mp4[:hd].should == true
     end
@@ -334,14 +334,16 @@ describe Mp4v2 do
       @mp4.optimize!.should == true
     end
 
+    # A little bit of a hack to test that it just makes a different file
+    # but the whole optimize part is out of my hands anyway so should
+    # be sufficient
+    require "digest/md5"
     it "should replace file with optimized version" do
-      pending # It does optimize but there is a little difference every time
+      digest = Digest::MD5.hexdigest File.read(@mp4.file)
+
       @mp4.optimize!
-      File.open(@mp4.file, "rb") do |modified|
-        File.open(fixtures + "mp4v2.optimized.m4v", "rb") do |optimized|
-          modified.read.should == optimized.read
-        end
-      end
+
+      digest.should_not == Digest::MD5.hexdigest(File.read(@mp4.file))
     end
   end
 end
