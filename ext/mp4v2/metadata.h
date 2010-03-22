@@ -113,10 +113,11 @@ int rb_protect_apply(VALUE *result, VALUE receiver, ID function, VALUE args);
     if (data == Qnil) { \
       MODIFY(func, NULL); \
     } else if (TYPE(data) == T_FIXNUM || TYPE(data) == T_BIGNUM) { \
-      uint64_t num = (uint64_t)NUM2ULL(data); \
+      int state = 0; \
+      uint64_t num = (uint64_t)rb_protect((VALUE (*)(VALUE))rb_num2ull, data, &state); \
       uint ## bits ## _t casted = (uint ## bits ## _t)num; \
       \
-      if (num > (uint64_t)MAXU ## bits) { \
+      if (state || num > (uint64_t)MAXU ## bits) { \
         rb_raise(rb_eRangeError, #accessor " max value is %llu", (uint64_t)MAXU ## bits); \
       } else { \
         MODIFY(func, &casted); \
