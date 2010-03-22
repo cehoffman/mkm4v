@@ -300,7 +300,7 @@ void _mp4v2_write_metadata(MP4V2Handles *handle) {
           art.type = MP4_ART_JPEG;
         } else if (kind == rb_intern("png")) {
           art.type = MP4_ART_PNG;
-        } else if (kind == rb_intern("bmp")) {
+        } else if (kind == rb_intern("bitmap")) {
           art.type = MP4_ART_BMP;
         } else if (kind == rb_intern("gif")) {
           art.type = MP4_ART_GIF;

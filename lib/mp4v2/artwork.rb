@@ -1,9 +1,9 @@
 class Mp4v2::Artwork
-  attr_reader :format, :data
+  attr_reader :file, :format, :data
 
   def initialize(filename, data = nil)
     @file = Pathname.new(filename).cleanpath
-    @data = data || @file.read
+    @data = data || File.open(@file, "rb").read
     @format = {"jpg" => :jpeg, "jpeg" => :jpeg, "bmp" => :bitmap, "png" => :png, "gif" => :gif}[filename[/\.([^\.]+)$/, 1]] || :unknown
   end
 
@@ -12,10 +12,10 @@ class Mp4v2::Artwork
   end
 
   def ==(other)
-    @data == other.data && @file == other.instance_variable_get(:@file)
+    @data == other.data
   end
 
   def inspect
-    "#<#{self.class} file=#{@file.basename.inspect} format=#{@format}>"
+    "#<#{self.class} file=#{@file.basename.to_s} format=#{@format}>"
   end
 end
