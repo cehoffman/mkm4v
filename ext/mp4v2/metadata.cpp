@@ -198,6 +198,16 @@ void _mp4v2_write_metadata(MP4V2Handles *handle) {
   MODIFY_BOOL(HDVideo, hd);
 
   VALUE index = GET(kind);
+  if (index != Qnil && TYPE(index) != T_SYMBOL) {
+    if (rb_respond_to(index, rb_intern("to_sym"))) {
+      index = rb_funcall(index, rb_intern("to_sym"), 0);
+    }
+
+    if (TYPE(index) != T_SYMBOL) {
+      rb_raise(rb_eTypeError, "can't convert kind to symbol");
+    }
+  }
+
   uint8_t type = NULL;
   if (index == SYM("music")) {
     type = 1;
@@ -222,6 +232,16 @@ void _mp4v2_write_metadata(MP4V2Handles *handle) {
   }
 
   index = GET(advisory);
+  if (index != Qnil && TYPE(index) != T_SYMBOL) {
+    if (rb_respond_to(index, rb_intern("to_sym"))) {
+      index = rb_funcall(index, rb_intern("to_sym"), 0);
+    }
+
+    if (TYPE(index) != T_SYMBOL) {
+      rb_raise(rb_eTypeError, "can't convert advisory to symbol");
+    }
+  }
+
   type = NULL;
   if (index == SYM("none")) {
     type = 0;

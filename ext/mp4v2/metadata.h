@@ -23,8 +23,6 @@ int rb_protect_apply(VALUE *result, VALUE receiver, ID function, VALUE args);
 #define TAG_BOOL(tag, accessor, truth) \
   if (tags->tag) { \
     SET(accessor, *tags->tag == truth ? Qtrue : Qfalse); \
-  } else { \
-    SET(accessor, Qfalse); \
   } \
   rb_funcall(self, rb_intern("instance_eval"), 1, rb_utf8_str("def " #accessor "?; !!self." #accessor " end"));
 
@@ -151,8 +149,18 @@ int rb_protect_apply(VALUE *result, VALUE receiver, ID function, VALUE args);
       rb_raise(rb_eTypeError, "can't convert " #max " to integer"); \
     } \
     \
-    track.index = (index != Qnil) ? FIX2INT(index) : 0; \
-    track.total = (total != Qnil) ? FIX2INT(total) : 0; \
+    uint32_t tmp = (index != Qnil) ? FIX2INT(index) : 0; \
+    \
+    if (tmp > MAXU16) { \
+      rb_raise(rb_eRangeError, #idx " max value is %u", MAXU16); \
+    } \
+    track.index = (uint16_t)tmp; \
+    \
+    tmp = (total != Qnil) ? FIX2INT(total) : 0; \
+    if (tmp > MAXU16) { \
+      rb_raise(rb_eRangeError, #max " max value is %u", MAXU16); \
+    } \
+    track.total = (uint16_t)tmp; \
     \
     if (track.index == 0 && track.total == 0) { \
       MODIFY(func, NULL); \
@@ -162,11 +170,11 @@ int rb_protect_apply(VALUE *result, VALUE receiver, ID function, VALUE args);
   }
 
 #define MODIFY_BOOL(func, accessor) \
-  if (rb_funcall(self, rb_intern(#accessor "?"), 0) == Qtrue) { \
-    uint8_t truth = 1; \
-    MODIFY(func, &truth); \
-  } else { \
+  if (GET(accessor) == Qnil) { \
     MODIFY(func, NULL); \
+  } else { \
+    uint8_t truth = rb_funcall(self, rb_intern(#accessor "?"), 0) == Qtrue ? 1 : 0; \
+    MODIFY(func, &truth); \
   }
 #define MODIFY_DATE(func, accessor) \
   { \
