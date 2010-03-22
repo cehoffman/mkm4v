@@ -48,6 +48,14 @@ describe Mp4v2 do
     @mp4.file.should =~ /\/mp4v2\.test$/
   end
 
+  it "should know how many pieces of artwork are in it" do
+    @mp4.artwork.count.should == 2
+  end
+
+  it "should have an array of Mp4v2::Artwork items" do
+    @mp4.artwork.should be_all { |item| item.is_a?(Mp4v2::Artwork) }
+  end
+
   def self.metadata(type, field, *values)
     values.flatten!
     values.compact!
