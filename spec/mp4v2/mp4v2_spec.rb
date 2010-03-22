@@ -56,20 +56,18 @@ describe Mp4v2 do
     values.each { |val| mappings[val] = val }
 
     describe field do
+      @@setters, @@getters, @@current = {}, {}, {} unless class_variable_defined?(:@@setters)
+      @@setters[field] = mappings.keys
+      @@getters[field] = mappings.values
+      @@current[field] = 0
+
       define_method :field do
           field
       end
 
       mappings.each_pair do |set, get|
         @@setter = set
-        define_method :setter do
-          set
-        end
-
         @@getter = get
-        define_method :getter do
-          get
-        end
 
         it_should_behave_like "generic metadata field"
       end
