@@ -107,7 +107,6 @@ describe Mp4v2 do
     end
   end
 
-
   def self.metadata(type, field, *values)
     values.flatten!
     values.compact!

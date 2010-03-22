@@ -92,10 +92,10 @@ void _mp4v2_read_metadata(MP4V2Handles *handle) {
   TAG_NUM(geID, geID);
 
   // Artwork, need to think on this one
+  VALUE artworks = rb_ary_new();
   if (tags->artwork) {
-    VALUE regex = rb_funcall(rb_cRegexp, rb_intern("new"), 1, rb_utf8_str("\\.[^\\.]+$"));
+    VALUE regex = rb_funcall(rb_cRegexp, rb_intern("new"), 1, rb_utf8_str("\\.[^\\.]+$")), art;
     char ext[12];
-    VALUE artworks = rb_ary_new(), art;
 
     for (int i = tags->artworkCount - 1; i >= 0; i--) {
       switch(tags->artwork[i].type) {
@@ -118,9 +118,9 @@ void _mp4v2_read_metadata(MP4V2Handles *handle) {
       art = rb_funcall(handle->filename, rb_intern("sub"), 2, regex, rb_utf8_str(ext));
       rb_ary_unshift(artworks, art = rb_funcall(rb_cArtwork, rb_intern("new"), 2, art, rb_str_new((const char*)tags->artwork[i].data, tags->artwork[i].size)));
     }
-
-    SET(artwork, artworks);
   }
+
+  SET(artwork, artworks);
 
   MP4TagsFree(tags);
   handle->tags = NULL;
@@ -287,7 +287,6 @@ void _mp4v2_write_metadata(MP4V2Handles *handle) {
         if (tags->artworkCount > i &&
             RSTRING_LEN(data) == tags->artwork[i].size &&
             memcmp(tags->artwork[i].data, RSTRING_PTR(data), tags->artwork[i].size) == 0) {
-          printf("Not modifying artwork %d\n", i);
           continue;
         }
 
@@ -309,18 +308,15 @@ void _mp4v2_write_metadata(MP4V2Handles *handle) {
         }
 
         if (tags->artworkCount > i) {
-          printf("Setting artwork at position %d\n", i);
           MP4TagsSetArtwork(tags, i, &art);
         } else {
-          printf("Adding a new piece of artwork %d\n", i);
           MP4TagsAddArtwork(tags, &art);
         }
       }
     case T_NIL:
       // Delete any artwork that is left in file but not in list
-      for (uint32_t i = count; i < tags->artworkCount; i++) {
-        printf("Removing artwork at %d\n", i);
-        MP4TagsRemoveArtwork(tags, i);
+      for (int64_t i = tags->artworkCount - 1; i >= count; i--) {
+        MP4TagsRemoveArtwork(tags, (uint32_t)i);
       }
       break;
     default:;
