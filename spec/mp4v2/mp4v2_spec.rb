@@ -1,6 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 %w(boolean date generic numeric symbol string).each do |shared|
-  require File.join(File.dirname(__FILE__), "shared", "#{shared}.rb")
+  require File.expand_path("../shared/#{shared}.rb", __FILE__)
 end
 
 describe Mp4v2 do

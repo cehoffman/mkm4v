@@ -1,12 +1,14 @@
 shared_examples_for "symbol metadata field" do
   it "should coerce to symbol" do
-    convertable = Class.new do
-                      define_method :to_sym do
-                        setter
-                      end
-                    end
+    class Convertable
+      def to_sym
+        @@symbol
+      end
+    end
 
-    @mp4[field] = convertable.new
+    Convertable.class_variable_set(:@@symbol, setter)
+
+    @mp4[field] = Convertable.new
 
     -> { @mp4.save reload: true }.should_not raise_error
 
