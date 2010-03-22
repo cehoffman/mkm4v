@@ -19,7 +19,7 @@ describe Mp4v2 do
 
   describe "metadata access" do
     before(:each) do
-            @mp4[:hd] = true
+      @mp4[:hd] = true
       @mp4.save reload: true
     end
 
@@ -108,7 +108,7 @@ describe Mp4v2 do
     @mp4.should_not have_key(:tracks)
   end
 
-  specify "setting only tracks should not set tracks after save" do
+  specify "setting only tracks should not set track after save" do
     @mp4.tracks = 1
 
     @mp4.save reload: true
@@ -119,7 +119,7 @@ describe Mp4v2 do
   metadata :numeric, :disk, 2**16 - 1, "1" => 1
   metadata :numeric, :disks, 2**16 - 1, "2" => 2
 
-  specify "setting only disk should not set tracks after save" do
+  specify "setting only disk should not set disks after save" do
     @mp4.disk = 1
 
     @mp4.save reload: true
@@ -127,7 +127,7 @@ describe Mp4v2 do
     @mp4.should_not have_key(:disks)
   end
 
-  specify "setting only disks should not set tracks after save" do
+  specify "setting only disks should not set disk after save" do
     @mp4.disks = 1
 
     @mp4.save reload: true
