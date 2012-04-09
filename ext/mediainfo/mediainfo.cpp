@@ -276,7 +276,7 @@ void Init_mediainfo() {
 
   // Tell MediaInfo about us, this will let us know of incompatibilities in
   // future versions when upgrading
-  if (strlen(MediaInfo_Option(NULL, "Info_Version", "0.7.29;RubyBinding;0.1.0")) == 0) {
+  if (strlen(MediaInfo_Option(NULL, "Info_Version", "0.7.55;RubyBinding;0.1.0")) == 0) {
     rb_fatal("The compiled versions of MediaInfo is not compatible with the ruby bindings");
   }
 
