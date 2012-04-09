@@ -4,7 +4,7 @@ require "pathname"
 root = Pathname.new(__FILE__).dirname.realpath
 
 processors = case RUBY_PLATFORM
-             when /darwin/ then `hwprefs cpu_count`.strip
+             when /darwin/ then `sysctl -n hw.ncpu`.strip
              when /linux/ then File.read("/proc/cpuinfo").strip
              else 2
              end

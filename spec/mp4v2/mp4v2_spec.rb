@@ -107,7 +107,7 @@ describe Mp4v2 do
     end
   end
 
-  def self.metadata(type, field, *values)
+  def self.metadata_test(type, field, *values)
     values.flatten!
     values.compact!
     mappings = values.last.is_a?(Hash) ? values.pop : {}
@@ -144,18 +144,18 @@ describe Mp4v2 do
     end
   end
 
-  metadata :string, :name, "A Name"
-  metadata :string, :artist, "Some Artist"
-  metadata :string, :album_artist, "Album Artist"
-  metadata :string, :album, "Album"
-  metadata :string, :grouping, "Grouping"
-  metadata :string, :composer, "Composer"
-  metadata :string, :comments, "Comments"
-  metadata :string, :genre, "Genre"
-  metadata :numeric, :genre_type, 2**16 - 1
-  metadata :date, :released, DateTime.civil(2004, 11, 16, 6), "2004/11/16" => DateTime.civil(2004, 11, 16)
-  metadata :numeric, :track, 2**16 - 1, "1" => 1
-  metadata :numeric, :tracks, 2**16 - 1, "10" => 10
+  metadata_test :string, :name, "A Name"
+  metadata_test :string, :artist, "Some Artist"
+  metadata_test :string, :album_artist, "Album Artist"
+  metadata_test :string, :album, "Album"
+  metadata_test :string, :grouping, "Grouping"
+  metadata_test :string, :composer, "Composer"
+  metadata_test :string, :comments, "Comments"
+  metadata_test :string, :genre, "Genre"
+  metadata_test :numeric, :genre_type, 2**16 - 1
+  metadata_test :date, :released, DateTime.civil(2004, 11, 16, 6), "2004/11/16" => DateTime.civil(2004, 11, 16)
+  metadata_test :numeric, :track, 2**16 - 1, "1" => 1
+  metadata_test :numeric, :tracks, 2**16 - 1, "10" => 10
 
   specify "setting only track should not set tracks after save" do
     @mp4.track = 1
@@ -173,8 +173,8 @@ describe Mp4v2 do
     @mp4.should_not have_key(:track)
   end
 
-  metadata :numeric, :disk, 2**16 - 1, "1" => 1
-  metadata :numeric, :disks, 2**16 - 1, "2" => 2
+  metadata_test :numeric, :disk, 2**16 - 1, "1" => 1
+  metadata_test :numeric, :disks, 2**16 - 1, "2" => 2
 
   specify "setting only disk should not set disks after save" do
     @mp4.disk = 1
@@ -192,37 +192,37 @@ describe Mp4v2 do
     @mp4.should_not have_key(:disk)
   end
 
-  metadata :numeric, :tempo, 2**16 - 1, "50" => 50
-  metadata :string, :show, "Show"
-  metadata :string, :episode_id, "ID"
-  metadata :numeric, :season, 2**32 - 1, "1" => 1
-  metadata :numeric, :episode, 2**32 - 1, "1" => 1
-  metadata :string, :network, "Network"
-  metadata :string, :description, "A Description"
-  metadata :string, :long_description, "A Long description"
-  metadata :string, :lyrics, "Lyrics"
-  metadata :string, :copyright, "Copyright"
-  metadata :string, :encoding_tool, "HandBrake"
-  metadata :string, :encoded_by, "Me"
-  metadata :string, :category, "Category"
+  metadata_test :numeric, :tempo, 2**16 - 1, "50" => 50
+  metadata_test :string, :show, "Show"
+  metadata_test :string, :episode_id, "ID"
+  metadata_test :numeric, :season, 2**32 - 1, "1" => 1
+  metadata_test :numeric, :episode, 2**32 - 1, "1" => 1
+  metadata_test :string, :network, "Network"
+  metadata_test :string, :description, "A Description"
+  metadata_test :string, :long_description, "A Long description"
+  metadata_test :string, :lyrics, "Lyrics"
+  metadata_test :string, :copyright, "Copyright"
+  metadata_test :string, :encoding_tool, "HandBrake"
+  metadata_test :string, :encoded_by, "Me"
+  metadata_test :string, :category, "Category"
 
-  metadata :symbol, :kind, :music, :audiobook, :music_video, :movie, :tv, :booklet, :ringtone
+  metadata_test :symbol, :kind, :music, :audiobook, :music_video, :movie, :tv, :booklet, :ringtone
 
-  metadata :symbol, :advisory, :none, :clean, :explicit
+  metadata_test :symbol, :advisory, :none, :clean, :explicit
 
-  metadata :date, :purchased, DateTime.civil(2009, 12, 1), "2009-12-1" => DateTime.civil(2009, 12, 1)
-  metadata :string, :account, "iTunes account"
-  metadata :numeric, :account_type, 255, "1" => 1
-  metadata :numeric, :country, 2*32 - 1, "1" => 1
-  metadata :numeric, :cnID, 2**32 - 1, "1" => 1
-  metadata :numeric, :atID, 2**32 - 1, "1" => 1
-  metadata :numeric, :plID, 2**64 - 1, "1" => 1
-  metadata :numeric, :geID, 2**32 - 1, "1" => 1
+  metadata_test :date, :purchased, DateTime.civil(2009, 12, 1), "2009-12-1" => DateTime.civil(2009, 12, 1)
+  metadata_test :string, :account, "iTunes account"
+  metadata_test :numeric, :account_type, 255, "1" => 1
+  metadata_test :numeric, :country, 2*32 - 1, "1" => 1
+  metadata_test :numeric, :cnID, 2**32 - 1, "1" => 1
+  metadata_test :numeric, :atID, 2**32 - 1, "1" => 1
+  metadata_test :numeric, :plID, 2**64 - 1, "1" => 1
+  metadata_test :numeric, :geID, 2**32 - 1, "1" => 1
 
-  metadata :boolean, :compilation, true, false, "Truth Value" => true
-  metadata :boolean, :podcast, true, false, "Truth Value" => true
-  metadata :boolean, :hd, true, false, "Truth Value" => true
-  metadata :boolean, :gapless, true, false, "Truth Value" => true
+  metadata_test :boolean, :compilation, true, false, "Truth Value" => true
+  metadata_test :boolean, :podcast, true, false, "Truth Value" => true
+  metadata_test :boolean, :hd, true, false, "Truth Value" => true
+  metadata_test :boolean, :gapless, true, false, "Truth Value" => true
 
   describe "#save" do
     it "should accept a hash of options" do

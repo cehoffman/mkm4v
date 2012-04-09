@@ -1,107 +1,46 @@
---- 
-hash: 3888fb05e01d2e23b684f8266704515af1a4c964
-sources: 
-- Rubygems: 
-    uri: http://gemcutter.org
-specs: 
-- rake: 
-    version: 0.8.7
-- archive-tar-minitar: 
-    version: 0.5.2
-- columnize: 
-    version: 0.3.1
-- diff-lcs: 
-    version: 1.1.2
-- fakefs: 
-    version: 0.2.1
-- fraction: 
-    version: "0.1"
-- json_pure: 
-    version: 1.2.3
-- gemcutter: 
-    version: 0.5.0
-- rubyforge: 
-    version: 2.0.4
-- hoe: 
-    version: 2.5.0
-- hoe-git: 
-    version: 1.3.0
-- hpricot: 
-    version: 0.8.2
-- iso-639: 
-    version: 0.0.2
-- ruby_core_source: 
-    version: 0.1.4
-- linecache19: 
-    version: 0.5.11
-- plist: 
-    version: 3.1.0
-- rake-compiler: 
-    version: 0.7.0
-- rdiscount: 
-    version: 1.5.8.1
-- ronn: 
-    version: 0.4.1
-- rspec: 
-    version: 1.3.0
-- ruby-debug-base19: 
-    version: 0.11.23
-- ruby-debug19: 
-    version: 0.11.6
-- syntax: 
-    version: 1.0.0
-- trollop: 
-    version: "1.15"
-dependencies: 
-  fraction: 
-    version: ~> 0.1
-    group: 
-    - :default
-  trollop: 
-    version: ~> 1.15
-    group: 
-    - :default
-  plist: 
-    version: ~> 3.1.0
-    group: 
-    - :default
-  iso-639: 
-    version: ~> 0.0.2
-    group: 
-    - :default
-  ronn: 
-    version: ~> 0.4.1
-    group: 
-    - :dev
-  rspec: 
-    version: ~> 1.3.0
-    group: 
-    - :dev
-  diff-lcs: 
-    version: ~> 1.1.2
-    group: 
-    - :dev
-  syntax: 
-    version: ~> 1.0.0
-    group: 
-    - :dev
-  hoe: 
-    version: ~> 2.5.0
-    group: 
-    - :dev
-  hoe-git: 
-    version: ~> 1.3.0
-    group: 
-    - :dev
-  rake-compiler: 
-    version: ~> 0.7.0
-    group: 
-    - :dev
-  fakefs: 
-    version: ">= 0.2.1"
-    group: 
-    - :dev
-  ruby-debug19: 
-    version: ~> 0.11.6
-    group: 
-    - :dev
+PATH
+  remote: .
+  specs:
+    mkm4v (0.0.1)
+      fraction (~> 0.1)
+      iso-639 (~> 0.0.2)
+      plist (~> 3.1.0)
+      trollop (~> 1.15)
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    diff-lcs (1.1.3)
+    fakefs (0.4.0)
+    fraction (0.3.2)
+    hpricot (0.8.6)
+    iso-639 (0.0.3)
+    mustache (0.99.4)
+    plist (3.1.0)
+    rake (0.9.2.2)
+    rake-compiler (0.8.0)
+      rake
+    rdiscount (1.6.8)
+    ronn (0.7.3)
+      hpricot (>= 0.8.2)
+      mustache (>= 0.7.0)
+      rdiscount (>= 1.5.8)
+    rspec (2.9.0)
+      rspec-core (~> 2.9.0)
+      rspec-expectations (~> 2.9.0)
+      rspec-mocks (~> 2.9.0)
+    rspec-core (2.9.0)
+    rspec-expectations (2.9.1)
+      diff-lcs (~> 1.1.3)
+    rspec-mocks (2.9.0)
+    trollop (1.16.2)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  fakefs (~> 0.4.0)
+  mkm4v!
+  rake-compiler (~> 0.8.0)
+  ronn (~> 0.7.3)
+  rspec (~> 2.9.0)
