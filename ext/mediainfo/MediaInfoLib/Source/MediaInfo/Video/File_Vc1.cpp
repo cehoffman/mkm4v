@@ -1,5 +1,5 @@
 // File_Vc1 - Info for VC-1 files
-// Copyright (C) 2007-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2007-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -18,11 +18,15 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //---------------------------------------------------------------------------
-// Compilation conditions
-#include "MediaInfo/Setup.h"
+// Pre-compilation
+#include "MediaInfo/PreComp.h"
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+#include "MediaInfo/Setup.h"
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
@@ -41,6 +45,10 @@
     else if (Element_IsOK()) \
     {
 #include <cmath>
+#if MEDIAINFO_EVENTS
+    #include "MediaInfo/MediaInfo_Config_MediaInfo.h"
+    #include "MediaInfo/MediaInfo_Events.h"
+#endif //MEDIAINFO_EVENTS
 using namespace std;
 using namespace ZenLib;
 //---------------------------------------------------------------------------
@@ -152,37 +160,15 @@ const int8u Vc1_FieldTypeTable[][2]=
 };
 
 //---------------------------------------------------------------------------
-int32u Vc1_ptype(int8u Size, int32u Value)
+const File__Analyze::vlc Vc1_ptype[]=
 {
-    switch (Size)
-    {
-        case 1 :
-                    switch (Value)
-                    {
-                        case 0x0 : return 1;
-                        default  : return (int32u)-1;
-                    }
-        case 2 :
-                    switch (Value)
-                    {
-                        case 0x2 : return 2;
-                        default  : return (int32u)-1;
-                    }
-        case 3 :
-                    switch (Value)
-                    {
-                        case 0x6 : return 0;
-                        default  : return (int32u)-1;
-                    }
-        case 4 :
-                    switch (Value)
-                    {
-                        case 0xE : return 3;
-                        case 0xF : return 4;
-                        default  : return (int32u)-1;
-                    }
-        default: return (int32u)-1;
-    }
+    //                                  macroblock_address_increment
+    { 	0	,	1	,	0	,	0	,	1	},
+    { 	2	,	1	,	0	,	0	,	2	},
+    { 	6	,	1	,	0	,	0	,	0	},
+    { 	14	,	1	,	0	,	0	,	3	},
+    { 	15	,	0	,	0	,	0	,	4	},
+    VLC_END
 };
 
 //---------------------------------------------------------------------------
@@ -236,8 +222,15 @@ File_Vc1::File_Vc1()
 :File__Analyze()
 {
     //Config
+    #if MEDIAINFO_EVENTS
+        ParserIDs[0]=MediaInfo_Parser_Vc1;
+        StreamIDs_Width[0]=0;
+    #endif //MEDIAINFO_EVENTS
     MustSynchronize=true;
     Buffer_TotalBytes_FirstSynched_Max=64*1024;
+    PTS_DTS_Needed=true;
+    IsRawStream=true;
+    Frame_Count_NotParsedIncluded=0;
 
     //In
     Frame_Count_Valid=30;
@@ -247,6 +240,8 @@ File_Vc1::File_Vc1()
 
     //Temp
     EntryPoint_Parsed=false;
+    FrameRate=0;
+    RefFramesCount=0;
 }
 
 //***************************************************************************
@@ -265,21 +260,11 @@ void File_Vc1::Streams_Fill()
     else
         PixelAspectRatio=1; //Unknown
 
-    //Calculating - FrameRate
-    float32 FrameRate=0;
-    if (framerate_present)
-    {
-        if (framerate_form)
-            FrameRate=((float32)(framerateexp+1))/(float32)32;
-        else if (Vc1_FrameRate_dr(frameratecode_dr))
-            FrameRate=Vc1_FrameRate_enr(frameratecode_enr)/Vc1_FrameRate_dr(frameratecode_dr);
-    }
-
     //Filling
     Stream_Prepare(Stream_Video);
     Fill(Stream_Video, 0, Video_Format, "VC-1");
     Fill(Stream_Video, 0, Video_Codec, From_WMV3?"WMV3":"VC-1"); //For compatibility with the old reaction
-    Fill(Stream_Video, 0, Video_Resolution, 8);
+    Fill(Stream_Video, 0, Video_BitDepth, 8);
 
     Ztring Profile=Vc1_Profile[profile];
     if (profile==3)
@@ -349,9 +334,27 @@ void File_Vc1::Streams_Fill()
 //---------------------------------------------------------------------------
 void File_Vc1::Streams_Finish()
 {
-    //Purge what is not needed anymore
-    if (!File_Name.empty()) //Only if this is not a buffer, with buffer we can have more data
-        Streams.clear();
+    if (PTS_End>PTS_Begin)
+        Fill(Stream_Video, 0, Video_Duration, float64_int64s(((float64)(PTS_End-PTS_Begin))/1000000));
+
+    #if MEDIAINFO_IBI
+        int64u Numerator=0, Denominator=0;
+        if (framerate_present)
+        {
+            if (framerate_form)
+            {
+                Numerator=framerateexp+1;
+                Denominator=32;
+            }
+            else if (Vc1_FrameRate_dr(frameratecode_dr))
+            {
+                Numerator=(int64u)Vc1_FrameRate_enr(frameratecode_enr);
+                Denominator=(int64u)Vc1_FrameRate_dr(frameratecode_dr);
+            }
+        }
+        if (Numerator)
+            Ibi_Stream_Finish(Numerator, Denominator);
+    #endif //MEDIAINFO_IBI
 }
 
 //***************************************************************************
@@ -394,7 +397,13 @@ bool File_Vc1::Synched_Test()
     if (Synched && !Header_Parser_QuickSearch())
         return false;
 
-    //We continue
+    #if MEDIAINFO_IBI
+        bool RandomAccess=Buffer[Buffer_Offset+3]==0x0F; //SequenceHeader
+        if (RandomAccess)
+            Ibi_Add();
+    #endif //MEDIAINFO_IBI
+
+        //We continue
     return true;
 }
 
@@ -402,10 +411,11 @@ bool File_Vc1::Synched_Test()
 void File_Vc1::Synched_Init()
 {
     //Count
-    Frame_Count=0;
     Interlaced_Top=0;
     Interlaced_Bottom=0;
     PictureFormat_Count.resize(4);
+    if (Frame_Count_NotParsedIncluded==(int64u)-1)
+        Frame_Count_NotParsedIncluded=0; //No Frame_Count_NotParsedIncluded in the container
 
     //Temp
     coded_width=0;
@@ -431,8 +441,14 @@ void File_Vc1::Synched_Init()
     psf=false;
     pulldown=false;
     panscan_flag=false;
+    #if MEDIAINFO_DEMUX
+        Demux_IntermediateItemFound=true;
+    #endif //MEDIAINFO_DEMUX
 
     TemporalReference_Offset=0;
+
+    if (!IsSub)
+        FrameInfo.DTS=0;
 
     //Default stream values
     Streams.resize(0x100);
@@ -440,7 +456,89 @@ void File_Vc1::Synched_Init()
 }
 
 //***************************************************************************
-// Buffer
+// Buffer - Demux
+//***************************************************************************
+
+//---------------------------------------------------------------------------
+#if MEDIAINFO_DEMUX
+bool File_Vc1::Demux_UnpacketizeContainer_Test()
+{
+    if ((Demux_IntermediateItemFound && Buffer[Buffer_Offset+3]==0x0D) || Buffer[Buffer_Offset+3]==0x0F)
+    {
+        if (Demux_Offset==0)
+        {
+            Demux_Offset=Buffer_Offset;
+            Demux_IntermediateItemFound=false;
+        }
+        while (Demux_Offset+4<=Buffer_Size)
+        {
+            //Synchronizing
+            while(Demux_Offset+3<=Buffer_Size && (Buffer[Demux_Offset  ]!=0x00
+                                                || Buffer[Demux_Offset+1]!=0x00
+                                                || Buffer[Demux_Offset+2]!=0x01))
+            {
+                Demux_Offset+=2;
+                while(Demux_Offset<Buffer_Size && Buffer[Buffer_Offset]!=0x00)
+                    Demux_Offset+=2;
+                if (Demux_Offset>=Buffer_Size || Buffer[Demux_Offset-1]==0x00)
+                    Demux_Offset--;
+            }
+
+            if (Demux_Offset+4<=Buffer_Size)
+            {
+                if (Demux_IntermediateItemFound)
+                {
+                    bool MustBreak;
+                    switch (Buffer[Demux_Offset+3])
+                    {
+                        case 0x0D :
+                        case 0x0F :
+                                    MustBreak=true; break;
+                        default   : MustBreak=false;
+                    }
+                    if (MustBreak)
+                        break; //while() loop
+                }
+                else
+                {
+                    if (Buffer[Demux_Offset+3]==0x0D)
+                        Demux_IntermediateItemFound=true;
+                }
+            }
+            Demux_Offset++;
+        }
+
+        if (Demux_Offset+4>Buffer_Size && File_Offset+Buffer_Size!=File_Size)
+            return false; //No complete frame
+
+        if (!Status[IsAccepted])
+        {
+            Accept("VC-1");
+            if (Config->Demux_EventWasSent)
+                return false;
+        }
+        Demux_UnpacketizeContainer_Demux(Buffer[Buffer_Offset+3]==0x0F);
+    }
+
+    return true;
+}
+#endif //MEDIAINFO_DEMUX
+
+//***************************************************************************
+// Buffer - Global
+//***************************************************************************
+
+//---------------------------------------------------------------------------
+void File_Vc1::Read_Buffer_Unsynched()
+{
+    RefFramesCount=0;
+    #if MEDIAINFO_DEMUX
+        Demux_IntermediateItemFound=true;
+    #endif //MEDIAINFO_DEMUX
+}
+
+//***************************************************************************
+// Buffer - Per element
 //***************************************************************************
 
 //---------------------------------------------------------------------------
@@ -455,7 +553,6 @@ void File_Vc1::Header_Parse()
     }
 
     //Parsing
-    int8u start_code;
     Skip_B3(                                                    "synchro");
     Get_B1 (start_code,                                         "start_code");
     if (!Header_Parser_Fill_Size())
@@ -502,8 +599,19 @@ bool File_Vc1::Header_Parser_Fill_Size()
         Buffer_Offset_Temp+=2;
         while(Buffer_Offset_Temp<Buffer_Size && Buffer[Buffer_Offset_Temp]!=0x00)
             Buffer_Offset_Temp+=2;
-        if (Buffer_Offset_Temp<Buffer_Size && Buffer[Buffer_Offset_Temp-1]==0x00 || Buffer_Offset_Temp>=Buffer_Size)
+        if (Buffer_Offset_Temp>=Buffer_Size || Buffer[Buffer_Offset_Temp-1]==0x00)
             Buffer_Offset_Temp--;
+
+        if (start_code==0x0D) //FrameHeader, we need only few bytes
+        {
+            if (Buffer_Offset_Temp-Buffer_Offset>20)
+            {
+                //OK, we continue, we have enough for a slice
+                Header_Fill_Size(16);
+                Buffer_Offset_Temp=0;
+                return true;
+            }
+        }
     }
 
     //Must wait more data?
@@ -539,7 +647,17 @@ bool File_Vc1::Header_Parser_QuickSearch()
         //Synchronizing
         Buffer_Offset+=4;
         Synched=false;
-        if (!Synchronize_0x000001())
+        if (!Synchronize())
+        {
+            if (File_Offset+Buffer_Size==File_Size)
+            {
+                Synched=true;
+                return true;
+            }
+            return false;
+        }
+
+        if (Buffer_Offset+4>Buffer_Size)
             return false;
     }
 
@@ -578,19 +696,26 @@ void File_Vc1::Field()
 // Packet "0D"
 void File_Vc1::FrameHeader()
 {
+    //Name
+    Element_Name("FrameHeader");
+    Element_Info1(Ztring(_T("Frame ")+Ztring::ToZtring(Frame_Count)));
+    if (FrameRate)
+    {
+        Element_Info1C((FrameInfo.PTS!=(int64u)-1), _T("PTS ")+Ztring().Duration_From_Milliseconds(float64_int64s(((float64)FrameInfo.PTS)/1000000+Frame_Count_InThisBlock*1000/FrameRate)));
+        Element_Info1C((FrameInfo.DTS!=(int64u)-1), _T("DTS ")+Ztring().Duration_From_Milliseconds(float64_int64s(((float64)FrameInfo.DTS)/1000000)));
+    }
+
     //Counting
     if (File_Offset+Buffer_Offset+Element_Size==File_Size)
         Frame_Count_Valid=Frame_Count; //Finish frames in case of there are less than Frame_Count_Valid frames
     Frame_Count++;
     Frame_Count_InThisBlock++;
-
-    //Name
-    Element_Name("FrameHeader");
-    Element_Info(Ztring(_T("Frame ")+Ztring::ToZtring(Frame_Count)));
+    if (Frame_Count_NotParsedIncluded!=(int64u)-1)
+        Frame_Count_NotParsedIncluded++;
 
     //Parsing
     BS_Begin();
-    int8u ptype;
+    int8u ptype=(int8u)-1;
     if (profile==3) //Advanced
     {
         int8u PictureFormat=0; //Default=Progressive frame
@@ -605,7 +730,7 @@ void File_Vc1::FrameHeader()
                 PictureFormat=fcm_2?2:1; //Interlaced Field : Interlaced Frame
             }
         }
-        Param_Info(Vc1_PictureFormat[PictureFormat]);
+        Param_Info1(Vc1_PictureFormat[PictureFormat]);
         PictureFormat_Count[PictureFormat]++;
 
         if (PictureFormat==2) //Interlaced Field
@@ -614,8 +739,8 @@ void File_Vc1::FrameHeader()
             Get_S1 ( 3, ptype_,                                 "ptype");
             if (ptype_<5)
             {
-                Param_Info(Vc1_Type[Vc1_FieldTypeTable[ptype_][0]]); Element_Info(Vc1_Type[Vc1_FieldTypeTable[ptype_][0]]); //First field
-                Param_Info(Vc1_Type[Vc1_FieldTypeTable[ptype_][1]]); Element_Info(Vc1_Type[Vc1_FieldTypeTable[ptype_][1]]); //Second field
+                Param_Info1(Vc1_Type[Vc1_FieldTypeTable[ptype_][0]]); Element_Info1(Vc1_Type[Vc1_FieldTypeTable[ptype_][0]]); //First field
+                Param_Info1(Vc1_Type[Vc1_FieldTypeTable[ptype_][1]]); Element_Info1(Vc1_Type[Vc1_FieldTypeTable[ptype_][1]]); //Second field
                 ptype=Vc1_FieldTypeTable[ptype_][0]; //Saving the ptype from the first field
             }
             else
@@ -626,9 +751,28 @@ void File_Vc1::FrameHeader()
         }
         else
         {
-            int32u ptype_;
-            Get_VL (Vc1_ptype, ptype_,                          "ptype"); if (ptype_<5) {Param_Info(Vc1_Type[(size_t)ptype_]); Element_Info(Vc1_Type[(size_t)ptype_]);}
-            ptype=(int8u)ptype_;
+            size_t ptype_;
+            Get_VL (Vc1_ptype, ptype_,                          "ptype"); if (ptype_<5) {Param_Info1(Vc1_Type[Vc1_ptype[ptype_].mapped_to3]); Element_Info1(Vc1_Type[Vc1_ptype[ptype_].mapped_to3]);}
+            ptype=(int8u)Vc1_ptype[ptype_].mapped_to3;
+        }
+        if (RefFramesCount<2 && (ptype==0 || ptype==1))
+            RefFramesCount++;
+        if (FrameInfo.DTS!=(int64u)-1)
+        {
+            if (framerate_present)
+                FrameInfo.DTS+=float64_int64s(((float64)1000000000)/FrameRate);
+        }
+        if (FrameInfo.PTS!=(int64u)-1)
+        {
+            if (PTS_Begin==(int64u)-1 && ptype==0) //IFrame
+                PTS_Begin=FrameInfo.PTS;
+            if ((ptype==0 || ptype==1) && Frame_Count_InThisBlock<=1) //IFrame or PFrame
+                PTS_End=FrameInfo.PTS;
+            if ((ptype==0 || ptype==1) || (Frame_Count_InThisBlock>=2 && RefFramesCount>=2)) //IFrame or PFrame or more than 2 RefFrame for BFrames
+            {
+                if (framerate_present)
+                    PTS_End+=float64_int64s(((float64)1000000000)/FrameRate);
+            }
         }
 
         if (ptype!=4) //!=Skipping
@@ -673,7 +817,6 @@ void File_Vc1::FrameHeader()
                     Temp.repeat_first_field=rff;
                     TemporalReference_Waiting.push_back(Temp);
                 }
-
             }
         }
         else
@@ -730,8 +873,50 @@ void File_Vc1::FrameHeader()
 
         //Filling only if not already done
         if (!Status[IsFilled] && Frame_Count>=Frame_Count_Valid)
-            Finish("VC-1");
+        {
+            Fill("VC-1");
+
+            if (!IsSub && MediaInfoLib::Config.ParseSpeed_Get()<1)
+                Finish("VC-1");
+        }
+
+        #if MEDIAINFO_EVENTS
+            {
+                struct MediaInfo_Event_Video_SliceInfo_0 Event;
+                Event.EventCode=MediaInfo_EventCode_Create(MediaInfo_Parser_None, MediaInfo_Event_Video_SliceInfo, 0);
+                Event.Stream_Offset=File_Offset+Buffer_Offset;
+                Event.PCR=FrameInfo.PCR;
+                Event.PTS=FrameInfo.PTS;
+                Event.DTS=FrameInfo.DTS;
+                Event.DUR=FrameInfo.DUR;
+                Event.StreamIDs_Size=StreamIDs_Size;
+                Event.StreamIDs=(MediaInfo_int64u*)StreamIDs;
+                Event.StreamIDs_Width=(MediaInfo_int8u*)StreamIDs_Width;
+                Event.ParserIDs=(MediaInfo_int8u* )ParserIDs;
+                Event.FramePosition=Frame_Count;
+                Event.FieldPosition=Field_Count;
+                Event.SlicePosition=0;
+                switch (ptype)
+                {
+                    case 0 :
+                                Event.SliceType=0; break;
+                    case 1 :
+                                Event.SliceType=1; break;
+                    case 2 :
+                    case 3 :
+                                Event.SliceType=2; break;
+                    case 4 :
+                                Event.SliceType=3; break;
+                    default:
+                                Event.SliceType=(int8u)-1;
+                }
+                Event.Flags=0;
+                Config->Event_Send((const int8u*)&Event, sizeof(MediaInfo_Event_Video_SliceInfo_0));
+            }
+        #endif //MEDIAINFO_EVENTS
     FILLING_END();
+
+    Synched=false; //We do not have the complete FrameHeader
 }
 
 //---------------------------------------------------------------------------
@@ -757,13 +942,13 @@ void File_Vc1::EntryPointHeader()
     if (hrd_param_flag)
         for (int8u Pos=0; Pos<hrd_num_leaky_buckets; Pos++)
         {
-            Element_Begin("leaky_bucket");
+            Element_Begin1("leaky_bucket");
             Skip_S1( 8,                                         "hrd_full");
-            Element_End();
+            Element_End0();
         }
     TEST_SB_SKIP(                                               "coded_size_flag");
-        Info_S2(12, coded_width,                                "coded_width"); Param_Info((coded_width+1)*2, " pixels");
-        Info_S2(12, coded_height,                               "coded_height"); Param_Info((coded_height+1)*2, " pixels");
+        Info_S2(12, coded_width,                                "coded_width"); Param_Info2((coded_width+1)*2, " pixels");
+        Info_S2(12, coded_height,                               "coded_height"); Param_Info2((coded_height+1)*2, " pixels");
     TEST_SB_END();
     if (extended_mv)
         Skip_SB(                                                "extended_dmv");
@@ -799,7 +984,7 @@ void File_Vc1::SequenceHeader()
 
     //Parsing
     BS_Begin();
-    Get_S1 ( 2, profile,                                        "profile"); Param_Info(Vc1_Profile[profile]);
+    Get_S1 ( 2, profile,                                        "profile"); Param_Info1(Vc1_Profile[profile]);
     if (profile==0 || profile==1) //Simple or Main
     {
         Skip_S1( 2,                                             "res_sm");
@@ -825,12 +1010,12 @@ void File_Vc1::SequenceHeader()
     else if (profile==3) //Advanced
     {
         Get_S1 ( 3, level,                                      "level");
-        Get_S1 ( 2, colordiff_format,                           "colordiff_format"); Param_Info(Vc1_ColorimetryFormat[colordiff_format]);
+        Get_S1 ( 2, colordiff_format,                           "colordiff_format"); Param_Info1(Vc1_ColorimetryFormat[colordiff_format]);
         Skip_S1( 3,                                             "frmrtq_postproc");
         Skip_S1( 5,                                             "bitrtq_postproc");
         Skip_SB(                                                "postprocflag");
-        Get_S2 (12, coded_width,                                "max_coded_width"); Param_Info((coded_width+1)*2, " pixels");
-        Get_S2 (12, coded_height,                               "max_coded_height"); Param_Info((coded_height+1)*2, " pixels");
+        Get_S2 (12, coded_width,                                "max_coded_width"); Param_Info2((coded_width+1)*2, " pixels");
+        Get_S2 (12, coded_height,                               "max_coded_height"); Param_Info2((coded_height+1)*2, " pixels");
         Get_SB (    pulldown,                                   "pulldown");
         Get_SB (    interlace,                                  "interlace");
         Get_SB (    tfcntrflag,                                 "tfcntrflag - frame counter");
@@ -838,10 +1023,10 @@ void File_Vc1::SequenceHeader()
         Skip_SB(                                                "reserved");
         Get_SB (    psf,                                        "psf - progressive segmented frame");
         TEST_SB_SKIP(                                           "display_ext");
-            Info_S2(14, display_x,                              "display_horiz_size"); Param_Info(display_x+1, " pixels");
-            Info_S2(14, display_y,                              "display_vert_size"); Param_Info(display_y+1, " pixels");
+            Info_S2(14, display_x,                              "display_horiz_size"); Param_Info2(display_x+1, " pixels");
+            Info_S2(14, display_y,                              "display_vert_size"); Param_Info2(display_y+1, " pixels");
             TEST_SB_SKIP(                                       "aspectratio_flag");
-                Get_S1 ( 4, AspectRatio,                        "aspect_ratio"); Param_Info(Vc1_PixelAspectRatio[AspectRatio]);
+                Get_S1 ( 4, AspectRatio,                        "aspect_ratio"); Param_Info1(Vc1_PixelAspectRatio[AspectRatio]);
                 if (AspectRatio==0x0F)
                 {
                     Get_S1 ( 8, AspectRatioX,                   "aspect_horiz_size");
@@ -850,10 +1035,10 @@ void File_Vc1::SequenceHeader()
             TEST_SB_END();
             TEST_SB_GET(framerate_present,                      "framerate_flag");
                 TESTELSE_SB_GET(framerate_form,                 "framerateind");
-                    Get_S2 (16, framerateexp,                   "framerateexp"); Param_Info((float32)((framerateexp+1)/32.0), 3, " fps");
+                    Get_S2 (16, framerateexp,                   "framerateexp"); Param_Info3((float32)((framerateexp+1)/32.0), 3, " fps");
                 TESTELSE_SB_ELSE(                               "framerateind");
-                    Get_S1 ( 8, frameratecode_enr,              "frameratenr"); Param_Info(Vc1_FrameRate_enr(frameratecode_enr));
-                    Get_S1 ( 4, frameratecode_dr,               "frameratedr"); Param_Info(Vc1_FrameRate_dr(frameratecode_dr));
+                    Get_S1 ( 8, frameratecode_enr,              "frameratenr"); Param_Info1(Vc1_FrameRate_enr(frameratecode_enr));
+                    Get_S1 ( 4, frameratecode_dr,               "frameratedr"); Param_Info1(Vc1_FrameRate_dr(frameratecode_dr));
                 TESTELSE_SB_END();
             TEST_SB_END();
             TEST_SB_SKIP(                                       "color_format_flag");
@@ -870,12 +1055,12 @@ void File_Vc1::SequenceHeader()
             hrd_buffers.clear();
             for (int8u Pos=0; Pos<hrd_num_leaky_buckets; Pos++)
             {
-                Element_Begin("leaky_bucket");
+                Element_Begin1("leaky_bucket");
                 int16u hrd_buffer;
                 Skip_S2(16,                                     "hrd_rate");
                 Get_S2(16, hrd_buffer,                         "hrd_buffer");
-                int32u hrd_buffer_value=(int32u)((hrd_buffer+1)*pow(2.0, 1+buffer_size_exponent)); Param_Info(hrd_buffer_value, " bytes");
-                Element_End();
+                int32u hrd_buffer_value=(int32u)((hrd_buffer+1)*pow(2.0, 1+buffer_size_exponent)); Param_Info2(hrd_buffer_value, " bytes");
+                Element_End0();
 
                 //Filling
                 hrd_buffers.push_back(hrd_buffer_value);
@@ -898,6 +1083,15 @@ void File_Vc1::SequenceHeader()
         //Autorisation of other streams
         Streams[0x0D].Searching_Payload=true;
         Streams[0x0E].Searching_Payload=true;
+
+        //Frame rate
+        if (framerate_present)
+        {
+            if (framerate_form)
+                FrameRate=((float32)(framerateexp+1))/(float32)32;
+            else if (Vc1_FrameRate_dr(frameratecode_dr))
+                FrameRate=Vc1_FrameRate_enr(frameratecode_enr)/Vc1_FrameRate_dr(frameratecode_dr);
+        }
 
         if (From_WMV3)
         {

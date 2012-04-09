@@ -1,5 +1,5 @@
 // File_Wvpk - Info for WavePack files
-// Copyright (C) 2007-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2007-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -42,7 +42,7 @@ class File_Wvpk : public File__Analyze, public File__Tags_Helper
 {
 public :
     //In
-    size_t Frame_Count_Valid;
+    int64u Frame_Count_Valid;
     bool   FromMKV;
     bool   FromMKV_CodecPrivateParsed;
 
@@ -69,11 +69,9 @@ private :
     void Data_Parse_Fill();
 
     //Elements
+    void id_07();
     void id_0D();
     void id_25();
-
-    //Temp - Global
-    size_t Frame_Count;
 
     //Temp - Technical info
     int32u total_samples_FirstFrame;

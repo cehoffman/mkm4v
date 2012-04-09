@@ -1,5 +1,5 @@
 // File_Mpega - Info for MPEG Audio files
-// Copyright (C) 2002-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2002-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -22,11 +22,15 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //---------------------------------------------------------------------------
-// Compilation conditions
-#include "MediaInfo/Setup.h"
+// Pre-compilation
+#include "MediaInfo/PreComp.h"
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+#include "MediaInfo/Setup.h"
 //---------------------------------------------------------------------------
 
 //***************************************************************************
@@ -304,10 +308,12 @@ File_Mpega::File_Mpega()
     MustSynchronize=true;
     Buffer_TotalBytes_FirstSynched_Max=64*1024;
     PTS_DTS_Needed=true;
+    IsRawStream=true;
 
     //In
-    Frame_Count_Valid=128;
+    Frame_Count_Valid=MediaInfoLib::Config.ParseSpeed_Get()>=0.5?128:(MediaInfoLib::Config.ParseSpeed_Get()>=0.3?32:4);
     FrameIsAlwaysComplete=false;
+    CalculateDelay=false;
 
     //Temp - BitStream info
     Surround_Frames=0;
@@ -326,8 +332,6 @@ File_Mpega::File_Mpega()
     Emphasis_Count[1]=0;
     Emphasis_Count[2]=0;
     Emphasis_Count[3]=0;
-    Frame_Count=0;
-    Frame_Count_Consecutive=0;
     Scfsi=0;
     Scalefac=0;
     Reservoir=0;
@@ -337,6 +341,7 @@ File_Mpega::File_Mpega()
     Reservoir_Max=0;
     Xing_Scale=0;
     BitRate=0;
+    MpegPsPattern_Count=0;
 }
 
 //***************************************************************************
@@ -358,20 +363,29 @@ void File_Mpega::Streams_Fill()
     Fill(Stream_Audio, 0, Audio_Format, "MPEG Audio");
     Fill(Stream_Audio, 0, Audio_Format_Version, Mpega_Format_Profile_Version[ID]);
     Fill(Stream_Audio, 0, Audio_Format_Profile, Mpega_Format_Profile_Layer[layer]);
-    if (mode)
+    if (mode && mode<4)
+    {
         Fill(Stream_Audio, 0, Audio_Format_Settings, Mpega_Codec_Profile[mode]);
-    Fill(Stream_Audio, 0, Audio_Format_Settings_Mode, Mpega_Codec_Profile[mode]);
-    if (mode_extension)
+        Fill(Stream_Audio, 0, Audio_Format_Settings_Mode, Mpega_Codec_Profile[mode]);
+    }
+    if (mode_extension && mode_extension<4)
+    {
         Fill(Stream_Audio, 0, Audio_Format_Settings, Mpega_Codec_Profile_Extension[mode_extension]);
-    Fill(Stream_Audio, 0, Audio_Format_Settings_ModeExtension, Mpega_Codec_Profile_Extension[mode_extension]);
-    if (emphasis)
+        Fill(Stream_Audio, 0, Audio_Format_Settings_ModeExtension, Mpega_Codec_Profile_Extension[mode_extension]);
+    }
+    if (emphasis && emphasis<4)
+    {
         Fill(Stream_Audio, 0, Audio_Format_Settings, Mpega_Emphasis[emphasis]);
-    Fill(Stream_Audio, 0, Audio_Format_Settings_Emphasis, Mpega_Emphasis[emphasis]);
+        Fill(Stream_Audio, 0, Audio_Format_Settings_Emphasis, Mpega_Emphasis[emphasis]);
+    }
     Fill(Stream_Audio, 0, Audio_Codec, Ztring(Mpega_Version[ID])+Ztring(Mpega_Layer[layer]));
     Fill(Stream_Audio, 0, Audio_Codec_String, Ztring(Mpega_Version_String[ID])+Ztring(Mpega_Layer_String[layer]), true);
     Fill(Stream_Audio, 0, Audio_SamplingRate, Mpega_SamplingRate[ID][sampling_frequency]);
-    Fill(Stream_Audio, 0, Audio_Channel_s_, Mpega_Channels[mode]);
-    Fill(Stream_Audio, 0, Audio_Codec_Profile, Mpega_Codec_Profile[mode]);
+    if (mode<4)
+    {
+        Fill(Stream_Audio, 0, Audio_Channel_s_, Mpega_Channels[mode]);
+        Fill(Stream_Audio, 0, Audio_Codec_Profile, Mpega_Codec_Profile[mode]);
+    }
 
     //Bitrate, if CBR
     if (VBR_Frames==0 && BitRate_Mode!=_T("VBR"))
@@ -380,8 +394,11 @@ void File_Mpega::Streams_Fill()
         BitRate=Mpega_BitRate[ID][layer][bitrate_index]*1000;
         Fill(Stream_General, 0, General_OverallBitRate, BitRate);
         Fill(Stream_Audio, 0, Audio_BitRate, BitRate);
-        if (Buffer_TotalBytes_FirstSynched>10 && BitRate>0)
+        if (CalculateDelay && Buffer_TotalBytes_FirstSynched>10 && BitRate>0)
+        {
             Fill(Stream_Audio, 0, Audio_Delay, Buffer_TotalBytes_FirstSynched*8*1000/BitRate, 0);
+            Fill(Stream_Audio, 0, Audio_Delay_Source, "Stream");
+        }
     }
 
     //Bitrate mode
@@ -421,12 +438,16 @@ void File_Mpega::Streams_Finish()
     }
 
     //Bitrate calculation if VBR
+    int64u FrameCount=0;
     if (VBR_Frames>0)
     {
+        FrameCount=VBR_Frames;
         float32 FrameLength=((float32)(VBR_FileSize?VBR_FileSize:File_Size-File_EndTagSize-File_BeginTagSize))/VBR_Frames;
         size_t Divider;
         if (ID==3 && layer==3) //MPEG 1 layer 1
              Divider=384/8;
+        else if ((ID==2 || ID==0) && layer==3) ///MPEG 2 or 2.5 layer 1
+             Divider=192/8;
         else if ((ID==2 || ID==0) && layer==1) //MPEG 2 or 2.5 layer 3
             Divider=576/8;
         else
@@ -452,26 +473,66 @@ void File_Mpega::Streams_Finish()
             Fill(Stream_General, 0, General_Duration, VBR_FileSize*8*1000/BitRate, 10, true);
             Fill(Stream_General, 0, General_OverallBitRate, BitRate, 10, true);
             Fill(Stream_Audio, 0, Audio_BitRate, BitRate, 10, true);
-            if (Buffer_TotalBytes_FirstSynched>10 && BitRate>0)
+            if (CalculateDelay && Buffer_TotalBytes_FirstSynched>10 && BitRate>0)
+            {
                 Fill(Stream_Audio, 0, Audio_Delay, Buffer_TotalBytes_FirstSynched*8*1000/BitRate, 0, true);
+                Fill(Stream_Audio, 0, Audio_Delay_Source, "Stream", Unlimited, true, true);
+            }
         }
         Fill(Stream_Audio, 0, Audio_StreamSize, VBR_FileSize);
     }
-
     Fill(Stream_Audio, 0, Audio_BitRate_Mode, BitRate_Mode, true);
 
     //Encoding library
     if (!Encoded_Library.empty())
-        Fill(Stream_General, 0, General_Encoded_Library, Encoded_Library);
+        Fill(Stream_General, 0, General_Encoded_Library, Encoded_Library, true);
     if (Encoded_Library.empty())
         Encoded_Library_Guess();
-    Fill(Stream_Audio, 0, Audio_Encoded_Library, Encoded_Library);
-    Fill(Stream_Audio, 0, Audio_Encoded_Library_Settings, Encoded_Library_Settings);
+    Fill(Stream_Audio, 0, Audio_Encoded_Library, Encoded_Library, true);
+    Fill(Stream_Audio, 0, Audio_Encoded_Library_Settings, Encoded_Library_Settings, true);
 
     //Surround
     if (Surround_Frames>=Frame_Count*0.9)
     {
         //Fill(Stream_Audio, 0, Audio_Channel_s_, 6);
+    }
+
+    if (FrameInfo.PTS!=(int64u)-1 && FrameInfo.PTS>PTS_Begin)
+    {
+        Fill(Stream_Audio, 0, Audio_Duration, float64_int64s(((float64)(FrameInfo.PTS-PTS_Begin))/1000000));
+        if (Retrieve(Stream_Audio, 0, Audio_BitRate_Mode)==_T("CBR"))
+        {
+            int16u Samples;
+            if (ID==3 && layer==3) //MPEG 1 layer 1
+                 Samples=384;
+            else if ((ID==2 || ID==0) && layer==1) //MPEG 2 or 2.5 layer 3
+                Samples=576;
+            else
+                Samples=1152;
+
+            float64 Frame_Duration=((float64)1)/Mpega_SamplingRate[ID][sampling_frequency]*Samples;
+            FrameCount=float64_int64s(((float64)(FrameInfo.PTS-PTS_Begin))/1000000000/Frame_Duration);
+        }
+    }
+
+    if (FrameCount==0 && VBR_FileSize && Retrieve(Stream_Audio, 0, Audio_BitRate_Mode)==_T("CBR") && Mpega_SamplingRate[ID][sampling_frequency])
+    {
+        size_t Size=(Mpega_Coefficient[ID][layer]*Mpega_BitRate[ID][layer][bitrate_index]*1000/Mpega_SamplingRate[ID][sampling_frequency])*Mpega_SlotSize[layer];
+        if (Size)
+            FrameCount=float64_int64s(((float64)VBR_FileSize)/Size);
+    }
+
+    if (FrameCount)
+    {
+        int16u Samples;
+        if (ID==3 && layer==3) //MPEG 1 layer 1
+             Samples=384;
+        else if ((ID==2 || ID==0) && layer==1) //MPEG 2 or 2.5 layer 3
+            Samples=576;
+        else
+            Samples=1152;
+        Fill(Stream_Audio, 0, Audio_FrameCount, FrameCount, 10, true);
+        Fill(Stream_Audio, 0, Audio_SamplingCount, FrameCount*Samples, 10, true);
     }
 
     File__Tags_Helper::Streams_Finish();
@@ -485,14 +546,14 @@ void File_Mpega::Streams_Finish()
 bool File_Mpega::FileHeader_Begin()
 {
     //Buffer size
-    if (Buffer_Size<4)
-        return File_Size<4; //Must wait for more data
+    if (Buffer_Size<8)
+        return File_Size<8; //Must wait for more data
 
-    //Detecting WAV/SWF/FLV/ELF/DPG/WM/MZ files
+    //Detecting WAV/SWF/FLV/ELF/DPG/WM/MZ/DLG files
     int32u Magic4=CC4(Buffer);
     int32u Magic3=Magic4>>8;
     int16u Magic2=Magic4>>16;
-    if (Magic4==0x52494646 || Magic3==0x465753 || Magic3==0x464C56 || Magic4==0x7F454C46 || Magic4==0x44504730 || Magic4==0x3026B275 || Magic2==0x4D5A)
+    if (Magic4==0x52494646 || Magic3==0x465753 || Magic3==0x464C56 || Magic4==0x7F454C46 || Magic4==0x44504730 || Magic4==0x3026B275 || Magic2==0x4D5A || Magic4==0x000001BA || Magic4==0x000001B3 || Magic4==0x00000100 || CC8(Buffer+Buffer_Offset)==0x444C472056312E30LL)
     {
         File__Tags_Helper::Reject("MPEG Audio");
         return false;
@@ -521,7 +582,10 @@ bool File_Mpega::Synchronize()
     {
         while (Buffer_Offset+4<=Buffer_Size)
         {
-            if ((CC2(Buffer+Buffer_Offset+0)&0xFFE0)==0xFFE0 && (CC1(Buffer+Buffer_Offset+2)&0xF0)!=0xF0 && (CC1(Buffer+Buffer_Offset+2)&0x0C)!=0x0C)
+            if (Buffer[Buffer_Offset  ]==0xFF
+             && (Buffer[Buffer_Offset+1]&0xE0)==0xE0
+             && (Buffer[Buffer_Offset+2]&0xF0)!=0xF0
+             && (Buffer[Buffer_Offset+2]&0x0C)!=0x0C)
                 break; //while()
 
             //Tags
@@ -530,6 +594,21 @@ bool File_Mpega::Synchronize()
                 return false;
             if (Tag_Found_Synchro)
                 return true;
+
+            //Better detect MPEG-PS
+            if (Frame_Count==0
+             && Buffer[Buffer_Offset  ]==0x00
+             && Buffer[Buffer_Offset+1]==0x00
+             && Buffer[Buffer_Offset+2]==0x01
+             && Buffer[Buffer_Offset+3]==0xBA)
+            {
+                MpegPsPattern_Count++;
+                if (MpegPsPattern_Count>=2)
+                {
+                    File__Tags_Helper::Reject("MPEG Audio");
+                    return false;
+                }
+            }
 
             Buffer_Offset++;
         }
@@ -567,7 +646,26 @@ bool File_Mpega::Synchronize()
 
                     //Testing
                     if ((CC2(Buffer+Buffer_Offset+Size0)&0xFFE0)!=0xFFE0 || (CC1(Buffer+Buffer_Offset+Size0+2)&0xF0)==0xF0 || (CC1(Buffer+Buffer_Offset+Size0+2)&0x0C)==0x0C)
+                    {
+                        //Testing VBRI in a malformed frame
+                        bool VbriFound=false;
+                        for (size_t Pos=Buffer_Offset+3; Pos+4<Buffer_Offset+Size0; Pos++)
+                        {
+                            if (Buffer[Pos  ]==0x56
+                             && Buffer[Pos+1]==0x42
+                             && Buffer[Pos+2]==0x52
+                             && Buffer[Pos+3]==0x49)
+                            {
+                                VbriFound=true;
+                                break;
+                            }
+                            if (Buffer[Pos])
+                                break; //Only NULL bytes are authorized before VBRI header
+                        }
+                        if (VbriFound)
+                            break;
                         Buffer_Offset++;
+                    }
                     else
                     {
                         //Retrieving some info
@@ -603,7 +701,50 @@ bool File_Mpega::Synchronize()
                                 if ((CC2(Buffer+Buffer_Offset+Size0+Size1)&0xFFE0)!=0xFFE0 || (CC1(Buffer+Buffer_Offset+Size0+Size1+2)&0xF0)==0xF0 || (CC1(Buffer+Buffer_Offset+Size0+Size1+2)&0x0C)==0x0C)
                                     Buffer_Offset++;
                                 else
-                                    break; //while()
+                                {
+                                    //Retrieving some info
+                                    int8u ID2                =(CC1(Buffer+Buffer_Offset+Size0+Size1+1)>>3)&0x03;
+                                    int8u layer2             =(CC1(Buffer+Buffer_Offset+Size0+Size1+1)>>1)&0x03;
+                                    int8u bitrate_index2     =(CC1(Buffer+Buffer_Offset+Size0+Size1+2)>>4)&0x0F;
+                                    int8u sampling_frequency2=(CC1(Buffer+Buffer_Offset+Size0+Size1+2)>>2)&0x03;
+                                    int8u padding_bit2       =(CC1(Buffer+Buffer_Offset+Size0+Size1+2)>>1)&0x01;
+                                    //Coherancy
+                                    if (Mpega_SamplingRate[ID2][sampling_frequency2]==0 || Mpega_Coefficient[ID2][layer2]==0 || Mpega_BitRate[ID2][layer2][bitrate_index2]==0 || Mpega_SlotSize[layer2]==0)
+                                        Buffer_Offset++; //False start
+                                    else
+                                    {
+                                        //Testing next start, to be sure
+                                        size_t Size2=(Mpega_Coefficient[ID2][layer2]*Mpega_BitRate[ID2][layer2][bitrate_index2]*1000/Mpega_SamplingRate[ID2][sampling_frequency2]+(padding_bit2?1:0))*Mpega_SlotSize[layer2];
+                                        if (IsSub && Buffer_Offset+Size0+Size1+Size2==Buffer_Size)
+                                            break;
+                                        if (File_Offset+Buffer_Offset+Size0+Size1+Size2!=File_Size-File_EndTagSize)
+                                        {
+                                            if (Buffer_Offset+Size0+Size1+Size2+4>Buffer_Size)
+                                            {
+                                                if (IsSub || File_Offset+Buffer_Offset+Size0+Size1+Size2<File_Size)
+                                                    break;
+                                                return false; //Need more data
+                                            }
+
+                                            //Tags
+                                            bool Tag_Found2;
+                                            if (!File__Tags_Helper::Synchronize(Tag_Found2, Size0+Size1+Size2))
+                                                return false;
+                                            if (Tag_Found2)
+                                                return true;
+                                            if (File_Offset+Buffer_Offset+Size0+Size1+Size2==File_Size-File_EndTagSize)
+                                                break;
+
+                                            //Testing
+                                            if ((CC2(Buffer+Buffer_Offset+Size0+Size1+Size2)&0xFFE0)!=0xFFE0 || (CC1(Buffer+Buffer_Offset+Size0+Size1+Size2+2)&0xF0)==0xF0 || (CC1(Buffer+Buffer_Offset+Size0+Size1+Size2+2)&0x0C)==0x0C)
+                                                Buffer_Offset++;
+                                            else
+                                                break; //while()
+                                        }
+                                        else
+                                            break; //while()
+                                    }
+                                }
                             }
                             else
                                 break; //while()
@@ -629,6 +770,8 @@ bool File_Mpega::Synchronize()
     }
 
     //Synched is OK
+    if (!Status[IsAccepted])
+        File__Tags_Helper::Accept("MPEG Audio");
     return true;
 }
 
@@ -644,15 +787,54 @@ bool File_Mpega::Synched_Test()
         return false;
 
     //Quick test of synchro
-    if ((CC2(Buffer+Buffer_Offset)&0xFFE0)!=0xFFE0 || (CC1(Buffer+Buffer_Offset+2)&0xF0)==0xF0 || (CC1(Buffer+Buffer_Offset+2)&0x0C)==0x0C)
+    if (Buffer[Buffer_Offset  ]!=0xFF
+     || (Buffer[Buffer_Offset+1]&0xE0)!=0xE0
+     || (Buffer[Buffer_Offset+2]&0xF0)==0xF0
+     || (Buffer[Buffer_Offset+2]&0x0C)==0x0C)
     {
-        Frame_Count_Consecutive=0; //Reset the frame count, we try to find x consecutive frames
         Synched=false;
+        return true;
+    }
+
+    //Retrieving some info
+    int8u ID0                =(CC1(Buffer+Buffer_Offset+1)>>3)&0x03;
+    int8u layer0             =(CC1(Buffer+Buffer_Offset+1)>>1)&0x03;
+    int8u bitrate_index0     =(CC1(Buffer+Buffer_Offset+2)>>4)&0x0F;
+    int8u sampling_frequency0=(CC1(Buffer+Buffer_Offset+2)>>2)&0x03;
+    if (Mpega_SamplingRate[ID0][sampling_frequency0]==0 || Mpega_Coefficient[ID0][layer0]==0 || Mpega_BitRate[ID0][layer0][bitrate_index0]==0 || Mpega_SlotSize[layer0]==0)
+    {
+        Synched=false;
+        return true;
     }
 
     //We continue
     return true;
 }
+
+//***************************************************************************
+// Buffer - Demux
+//***************************************************************************
+
+//---------------------------------------------------------------------------
+#if MEDIAINFO_DEMUX
+bool File_Mpega::Demux_UnpacketizeContainer_Test()
+{
+    //Retrieving some info
+    int8u ID0                =(CC1(Buffer+Buffer_Offset+1)>>3)&0x03;
+    int8u layer0             =(CC1(Buffer+Buffer_Offset+1)>>1)&0x03;
+    int8u bitrate_index0     =(CC1(Buffer+Buffer_Offset+2)>>4)&0x0F;
+    int8u sampling_frequency0=(CC1(Buffer+Buffer_Offset+2)>>2)&0x03;
+    int8u padding_bit0       =(CC1(Buffer+Buffer_Offset+2)>>1)&0x01;
+    Demux_Offset=Buffer_Offset+(Mpega_Coefficient[ID0][layer0]*Mpega_BitRate[ID0][layer0][bitrate_index0]*1000/Mpega_SamplingRate[ID0][sampling_frequency0]+(padding_bit0?1:0))*Mpega_SlotSize[layer0];
+
+    if (Demux_Offset>Buffer_Size)
+        return false;
+
+    Demux_UnpacketizeContainer_Demux();
+
+    return true;
+}
+#endif //MEDIAINFO_DEMUX
 
 //***************************************************************************
 // Buffer - Per element
@@ -664,18 +846,18 @@ void File_Mpega::Header_Parse()
     //Parsing
     BS_Begin();
     Skip_S2(11,                                                 "syncword");
-    Get_S1 (2, ID,                                              "ID"); Param_Info(Mpega_Version[ID]);
-    Get_S1 (2, layer,                                           "layer"); Param_Info(Mpega_Layer[layer]);
+    Get_S1 (2, ID,                                              "ID"); Param_Info1(Mpega_Version[ID]);
+    Get_S1 (2, layer,                                           "layer"); Param_Info1(Mpega_Layer[layer]);
     Get_SB (   protection_bit,                                  "protection_bit");
-    Get_S1 (4, bitrate_index,                                   "bitrate_index"); Param_Info(Mpega_BitRate[ID][layer][bitrate_index], " Kbps");
-    Get_S1 (2, sampling_frequency,                              "sampling_frequency"); Param_Info(Mpega_SamplingRate[ID][sampling_frequency], " Hz");
+    Get_S1 (4, bitrate_index,                                   "bitrate_index"); Param_Info2(Mpega_BitRate[ID][layer][bitrate_index], " Kbps");
+    Get_S1 (2, sampling_frequency,                              "sampling_frequency"); Param_Info2(Mpega_SamplingRate[ID][sampling_frequency], " Hz");
     Get_SB (   padding_bit,                                     "padding_bit");
     Skip_SB(                                                    "private_bit");
-    Get_S1 (2, mode,                                            "mode"); Param_Info(Mpega_Channels[mode], " channels"); Param_Info(Mpega_Codec_Profile[mode]);
-    Get_S1 (2, mode_extension,                                  "mode_extension"); Param_Info(Mpega_Codec_Profile_Extension[mode_extension]);
+    Get_S1 (2, mode,                                            "mode"); Param_Info2(Mpega_Channels[mode], " channels"); Param_Info1(Mpega_Codec_Profile[mode]);
+    Get_S1 (2, mode_extension,                                  "mode_extension"); Param_Info1(Mpega_Codec_Profile_Extension[mode_extension]);
     Get_SB (   copyright,                                       "copyright");
     Get_SB (   original_home,                                   "original_home");
-    Get_S1 (2, emphasis,                                        "emphasis"); Param_Info(Mpega_Emphasis[emphasis]);
+    Get_S1 (2, emphasis,                                        "emphasis"); Param_Info1(Mpega_Emphasis[emphasis]);
     BS_End();
 
     //Coherancy
@@ -715,18 +897,19 @@ void File_Mpega::Data_Parse()
         return;
     }
 
-    //PTS
-    if (PTS!=(int64u)-1)
+    //Partial frame
+    if (Header_Size+Element_Size<(int64u)((Mpega_Coefficient[ID][layer]*Mpega_BitRate[ID][layer][bitrate_index]*1000/Mpega_SamplingRate[ID][sampling_frequency]+(padding_bit?1:0))*Mpega_SlotSize[layer]))
     {
-        Element_Info(_T("PTS ")+Ztring().Duration_From_Milliseconds(float64_int64s(((float64)PTS+PTS_DTS_Offset_InThisBlock)/1000000)));
-        int64u BitRate=Mpega_BitRate[ID][layer][bitrate_index]*1000;
-        int64u Bits=Element_Size*8;
-        float64 Frame_Duration=((float64)Bits)/BitRate;
-        PTS_DTS_Offset_InThisBlock+=float64_int64s(Frame_Duration*1000000000);
+        Element_Name("Partial frame");
+        Skip_XX(Element_Size,                                   "Data");
+        return;
     }
 
+    //PTS
+    Element_Info1C((FrameInfo.PTS!=(int64u)-1), _T("PTS ")+Ztring().Duration_From_Milliseconds(float64_int64s(((float64)FrameInfo.PTS)/1000000)));
+
     //Name
-    Element_Info(_T("Frame ")+Ztring::ToZtring(Frame_Count));
+    Element_Info1(_T("Frame ")+Ztring::ToZtring(Frame_Count));
 
     //VBR and library headers
     if (Frame_Count<3) //No need to do it too much
@@ -737,12 +920,29 @@ void File_Mpega::Data_Parse()
 
     //Counting
     if (File_Offset+Buffer_Offset+Element_Size==File_Size-File_EndTagSize)
-        Frame_Count_Valid=Frame_Count_Consecutive; //Finish MPEG Audio frames in case of there are less than Frame_Count_Valid frames
+        Frame_Count_Valid=Frame_Count; //Finish MPEG Audio frames in case of there are less than Frame_Count_Valid frames
+    if (Frame_Count==0)
+        PTS_Begin=FrameInfo.PTS;
     Frame_Count++;
-    Frame_Count_Consecutive++;
-    
+    Frame_Count_InThisBlock++;
+    LastSync_Offset=File_Offset+Buffer_Offset+Element_Size;
+    {
+        int16u Samples;
+        if (ID==3 && layer==3) //MPEG 1 layer 1
+             Samples=384;
+        else if ((ID==2 || ID==0) && layer==1) //MPEG 2 or 2.5 layer 3
+            Samples=576;
+        else
+            Samples=1152;
+        FrameInfo.DUR=float64_int64s(((float64)1)/Mpega_SamplingRate[ID][sampling_frequency]*Samples*1000000000);
+        if (FrameInfo.DTS!=(int64u)-1)
+            FrameInfo.DTS+=FrameInfo.DUR;
+        if (FrameInfo.PTS!=(int64u)-1)
+            FrameInfo.PTS=FrameInfo.DTS;
+    }
+
     //LAME
-    if (Encoded_Library.empty() && (Frame_Count_Consecutive<Frame_Count_Valid || File_Offset+Buffer_Offset+Element_Size==File_Size-File_EndTagSize)) //Can be elsewhere... At the start, or end frame
+    if (Encoded_Library.empty() && (Frame_Count<Frame_Count_Valid || File_Offset+Buffer_Offset+Element_Size==File_Size-File_EndTagSize)) //Can be elsewhere... At the start, or end frame
         Header_Encoders();
 
     //Filling
@@ -750,6 +950,12 @@ void File_Mpega::Data_Parse()
     Channels_Count[mode]++;
     Extension_Count[mode_extension]++;
     Emphasis_Count[emphasis]++;
+
+    if (Status[IsFilled])
+    {
+        Skip_XX(Element_Size,                                   "Data");
+        return;
+    }
 
     //Parsing
     int16u main_data_end;
@@ -779,7 +985,7 @@ void File_Mpega::Data_Parse()
     }
     if (ID==3) //MPEG-1
     {
-    Element_Begin("scfsi");
+    Element_Begin1("scfsi");
         for(int8u ch=0; ch<Mpega_Channels[mode]; ch++)
             for(int8u scfsi_band=0; scfsi_band<4; scfsi_band++)
             {
@@ -788,16 +994,16 @@ void File_Mpega::Data_Parse()
                 if (scfsi)
                     Scfsi++;
             }
-        Element_End();
+        Element_End0();
     }
     for(int8u gr=0; gr<(ID==3?2:1); gr++)
     {
-        Element_Begin("granule");
+        Element_Begin1("granule");
         if (mode>=4)
             return;
         for(int8u ch=0; ch<Mpega_Channels[mode]; ch++)
         {
-            Element_Begin("channel");
+            Element_Begin1("channel");
             Skip_S2(12,                                         "part2_3_length");
             Skip_S2(9,                                          "big_values");
             Skip_S1(8,                                          "global_gain");
@@ -821,18 +1027,18 @@ void File_Mpega::Data_Parse()
                 {
                     if (mixed_block_flag==1)
                     {
-                        Param_Info("Mixed");
+                        Param_Info1("Mixed");
                         Block_Count[2]++; //Mixed
                     }
                     else
                     {
-                        Param_Info("Short");
+                        Param_Info1("Short");
                         Block_Count[1]++; //Short
                     }
                 }
                 else
                 {
-                    Param_Info("Long");
+                    Param_Info1("Long");
                     Block_Count[0]++; //Long
                 }
             }
@@ -842,7 +1048,7 @@ void File_Mpega::Data_Parse()
                     Skip_S1(5,                                  "table_select");
                 Skip_S1(4,                                      "region0_count");
                 Skip_S1(3,                                      "region1_count");
-                Param_Info("Long");
+                Param_Info1("Long");
                 Block_Count[0]++; //Long
             }
             if (ID==3) //MPEG-1
@@ -852,9 +1058,9 @@ void File_Mpega::Data_Parse()
             if (scalefac)
                 Scalefac++;
             Skip_SB(                                            "count1table_select");
-            Element_End();
+            Element_End0();
         } //channels
-        Element_End();
+        Element_End0();
     } //granules
     BS_End();
 
@@ -874,6 +1080,8 @@ void File_Mpega::Data_Parse()
             //CRC
             int16u CRC12_Calculated=0x0FFF;
             int8u* Data=(int8u*)Buffer+(size_t)(Buffer_Offset+Element_Offset_S+4);
+            if (Element_Offset_S+Surround_Size+4>=Element_Size)
+                break;
             for (int8u Surround_Pos=0; Surround_Pos<Surround_Size-4; Surround_Pos++)
                 CRC12_Calculated=0x0FFF & (((CRC12_Calculated<<8)&0xff00)^Mpega_CRC12_Table[((CRC12_Calculated>>4) ^ *Data++) & 0xff]);
             if (CRC12_Calculated!=CRC12)
@@ -882,13 +1090,13 @@ void File_Mpega::Data_Parse()
             //Parsing
             Skip_XX(Element_Offset_S-Element_Offset,            "data");
             BS_Begin();
-            Element_Begin("Surround");
+            Element_Begin1("Surround");
             Skip_S2(12,                                         "Sync");
             Skip_S1( 8,                                         "Size");
             Skip_S2(12,                                         "CRC12");
             BS_End();
             Skip_XX(Surround_Size-4,                            "data");
-            Element_End();
+            Element_End0();
 
             //Filling
             Surround_Frames++;
@@ -901,23 +1109,26 @@ void File_Mpega::Data_Parse()
 
     FILLING_BEGIN();
         //Filling
-        LastSync_Offset=File_Offset+Buffer_Offset+Element_Size;
         if (IsSub && BitRate_Count.size()>1 && !Encoded_Library.empty())
-            Frame_Count_Valid=Frame_Count_Consecutive;
-        if (!Status[IsAccepted] && Frame_Count_Consecutive>=Frame_Count_Valid/4)
-            File__Tags_Helper::Accept("MPEG Audio");
-        if (!Status[IsFilled] && Frame_Count_Consecutive>=Frame_Count_Valid)
+            Frame_Count_Valid=Frame_Count;
+        if (!Status[IsFilled] && Frame_Count>=Frame_Count_Valid)
         {
             Fill("MPEG Audio");
 
             //Jumping
-            File__Tags_Helper::GoToFromEnd(16*1024, "MPEG-A");
-            LastSync_Offset=(int64u)-1;
+            if (!IsSub && MediaInfoLib::Config.ParseSpeed_Get()<1.0)
+            {
+                File__Tags_Helper::GoToFromEnd(16*1024, "MPEG-A");
+                LastSync_Offset=(int64u)-1;
+            }
         }
 
         //Detect Id3v1 tags inside a frame
         if (!IsSub && File_Offset+Buffer_Offset+(size_t)Element_Size>File_Size-File_EndTagSize)
+        {
+            Open_Buffer_Unsynch();
             File__Analyze::Data_GoTo(File_Size-File_EndTagSize, "Tags inside a frame, parsing the tags");
+        }
     FILLING_END();
 }
 
@@ -946,11 +1157,11 @@ bool File_Mpega::Header_Xing()
         if (CC4(Xing_Header)==CC4("Xing") || CC4(Xing_Header)==CC4("Info"))
         {
             //This is a "tag"
-            Element_Info("Tag (Xing)");
+            Element_Info1("Tag (Xing)");
 
             //Parsing
-            Element_Begin("Xing");
-            Element_Begin("Xing header");
+            Element_Begin1("Xing");
+            Element_Begin1("Xing header");
             Skip_XX(Xing_Header_Offset,                         "Junk");
             int32u Flags;
             bool FrameCount, FileSize, TOC, Scale, Lame;
@@ -967,7 +1178,7 @@ bool File_Mpega::Header_Xing()
                                    +(TOC?       100:0)    //TOC
                                    +(Scale?       4:0)    //Scale
                                    +(Lame?      348:0);   //Lame
-            Element_End();
+            Element_End0();
             //Element size
             if (Xing_Header_Size>Element_Size-Xing_Header_Offset)
                 return false; //Error tag size
@@ -987,9 +1198,9 @@ bool File_Mpega::Header_Xing()
             if (Scale)
                 Get_B4 (Xing_Scale,                             "Scale");
             Ztring Lib;
-            Element_End();
+            Element_End0();
             Peek_Local(4, Lib);
-            if (Lame || Lib==_T("LAME") || Lib==_T("GOGO"))
+            if (Lame || Lib==_T("LAME") || Lib==_T("GOGO") || Lib==_T("L3.9"))
                 Header_Encoders_Lame();
 
             if (CC4(Xing_Header)==CC4("Info"))
@@ -1016,13 +1227,13 @@ bool File_Mpega::Header_VBRI()
         {
             //This is a "tag"
 
-            Element_Info("Tag (VBRI)");
+            Element_Info1("Tag (VBRI)");
 
             //Parsing
             int32u VBR_FileSize_Temp;
             int16u TableSize, TableScale, EntryBytes;
             Skip_XX(Fraunhofer_Header_Offset,                   "Junk");
-            Element_Begin("VBRI");
+            Element_Begin1("VBRI");
             Skip_C4(                                            "Sync");
             Skip_B2(                                            "Version");
             Skip_B2(                                            "Delay");
@@ -1033,19 +1244,19 @@ bool File_Mpega::Header_VBRI()
             Get_B2 (TableScale,                                 "TableScale");
             Get_B2 (EntryBytes,                                 "EntryBytes");
             Skip_B2(                                            "EntryFrames"); //Count of frames per entry
-            Element_Begin("Table");
+            Element_Begin1("Table");
                 for (int16u Pos=0; Pos<TableSize; Pos++)
                 {
                     switch (EntryBytes)
                     {
-                        case 1 : {Info_B1(Entry,                "Entry"); Param_Info (Entry*TableScale, " bytes");} break;
-                        case 2 : {Info_B2(Entry,                "Entry"); Param_Info (Entry*TableScale, " bytes");} break;
-                        case 4 : {Info_B4(Entry,                "Entry"); Param_Info (Entry*TableScale, " bytes");} break;
+                        case 1 : {Info_B1(Entry,                "Entry"); Param_Info2 (Entry*TableScale, " bytes");} break;
+                        case 2 : {Info_B2(Entry,                "Entry"); Param_Info2 (Entry*TableScale, " bytes");} break;
+                        case 4 : {Info_B4(Entry,                "Entry"); Param_Info2 (Entry*TableScale, " bytes");} break;
                         default: Skip_XX(EntryBytes,            "Entry");
                     }
                 }
-            Element_End();
-            Element_End();
+            Element_End0();
+            Element_End0();
             VBR_FileSize=VBR_FileSize_Temp;
 
             //Clearing Error detection
@@ -1068,7 +1279,7 @@ bool File_Mpega::Header_Encoders()
     Buffer_Pos=BufferS.find("LAME");
     if (Buffer_Pos!=std::string::npos && Buffer_Pos<=Element_Size-8)
     {
-        Element_Info("With tag (Lame)");
+        Element_Info1("With tag (Lame)");
         Element_Offset=Buffer_Pos;
         if (Element_Offset+20<=Element_Size)
             Get_Local(20, Encoded_Library,                      "Encoded_Library");
@@ -1085,7 +1296,7 @@ bool File_Mpega::Header_Encoders()
     Buffer_Pos=BufferS.find("RCA mp3PRO Encoder");
     if (Buffer_Pos!=std::string::npos && Buffer_Pos<Element_Size-23)
     {
-        Element_Info("With tag (RCA)");
+        Element_Info1("With tag (RCA)");
         Encoded_Library="RCA ";
         Encoded_Library+=Ztring((const char*)(Buffer+Buffer_Offset+18), 5);
         return true;
@@ -1095,7 +1306,7 @@ bool File_Mpega::Header_Encoders()
     Buffer_Pos=BufferS.find("THOMSON mp3PRO Encoder");
     if (Buffer_Pos!=std::string::npos && Buffer_Pos<Element_Size-29)
     {
-        Element_Info("With tag (Thomson)");
+        Element_Info1("With tag (Thomson)");
         Encoded_Library="Thomson ";
         Encoded_Library+=Ztring((const char*)(Buffer+Buffer_Offset+22), 6);
         return true;
@@ -1105,7 +1316,7 @@ bool File_Mpega::Header_Encoders()
     Buffer_Pos=BufferS.find("MPGE");
     if (Buffer_Pos!=std::string::npos)
     {
-        Element_Info("With tag (Gogo)");
+        Element_Info1("With tag (Gogo)");
         Encoded_Library="Gogo <3.0";
         return true;
     }
@@ -1114,7 +1325,7 @@ bool File_Mpega::Header_Encoders()
     Buffer_Pos=BufferS.find("GOGO");
     if (Buffer_Pos!=std::string::npos)
     {
-        Element_Info("With tag (Gogo)");
+        Element_Info1("With tag (Gogo)");
         Encoded_Library="Gogo >=3.0";
         return true;
     }
@@ -1125,25 +1336,27 @@ bool File_Mpega::Header_Encoders()
 void File_Mpega::Header_Encoders_Lame()
 {
     Peek_Local(8, Encoded_Library);
-    if (Encoded_Library>=_T("LAME3.90") && Element_IsNotFinished())
+    if (Encoded_Library.find(_T("L3.99"))==0)
+        Encoded_Library.insert(1, _T("AME")); //Ugly version string in Lame 3.99.1 "L3.99r1\0"
+    if ((Encoded_Library>=_T("LAME3.90")) && Element_IsNotFinished())
     {
-        int8u Flags, EncodingFlags, BitRate, StereoMode;
-        Param_Info(Ztring(_T("V "))+Ztring::ToZtring((100-Xing_Scale)/10));
-        Param_Info(Ztring(_T("q "))+Ztring::ToZtring((100-Xing_Scale)%10));
+        int8u Flags, lowpass, EncodingFlags, BitRate, StereoMode;
+        Param_Info1(Ztring(_T("V "))+Ztring::ToZtring((100-Xing_Scale)/10));
+        Param_Info1(Ztring(_T("q "))+Ztring::ToZtring((100-Xing_Scale)%10));
         Get_Local(9, Encoded_Library,                           "Encoded_Library");
         Get_B1 (Flags,                                          "Flags");
         if ((Flags&0xF0)<=0x20) //Rev. 0 or 1, http://gabriel.mp3-tech.org/mp3infotag.html and Rev. 2 was seen.
         {
-            Param_Info(Lame_Method[Flags&0x0F]);
+            Param_Info1(Lame_Method[Flags&0x0F]);
             BitRate_Mode=Lame_BitRate_Mode[Flags&0x0F];
             if ((Flags&0x0F)==1 || (Flags&0x0F)==8) //2 possible values for CBR
                 VBR_Frames=0;
         }
-        Info_B1(lowpass,                                        "Lowpass filter value"); Param_Info(lowpass*100, " Hz");
+        Get_B1 (lowpass,                                        "Lowpass filter value"); Param_Info2(lowpass*100, " Hz");
         Skip_B4(                                                "Peak signal amplitude");
         Skip_B2(                                                "Radio Replay Gain");
         Skip_B2(                                                "Audiophile Replay Gain");
-        Get_B1 (EncodingFlags,                                  "Encoding Flags"); Param_Info(Ztring(_T("ATH Type="))+Ztring::ToZtring(Flags&0x0F));
+        Get_B1 (EncodingFlags,                                  "Encoding Flags"); Param_Info1(Ztring(_T("ATH Type="))+Ztring::ToZtring(Flags&0x0F));
             Skip_Flags(EncodingFlags, 4,                        "nspsytune");
             Skip_Flags(EncodingFlags, 5,                        "nssafejoint");
             Skip_Flags(EncodingFlags, 6,                        "nogap (after)");

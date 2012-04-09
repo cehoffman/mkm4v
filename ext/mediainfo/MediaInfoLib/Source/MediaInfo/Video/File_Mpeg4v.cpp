@@ -1,5 +1,5 @@
 // File_Mpeg4v - Info for MPEG-4 Visual files
-// Copyright (C) 2006-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2006-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -18,11 +18,15 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //---------------------------------------------------------------------------
-// Compilation conditions
-#include "MediaInfo/Setup.h"
+// Pre-compilation
+#include "MediaInfo/PreComp.h"
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+#include "MediaInfo/Setup.h"
 //---------------------------------------------------------------------------
 
 //***************************************************************************
@@ -97,7 +101,7 @@ const char* Mpeg4v_Profile_Level(int32u Profile_Level)
         case B8(11100110) : return "Core Studio@L2";
         case B8(11100111) : return "Core Studio@L3";
         case B8(11101000) : return "Core Studio@L4";
-        case B8(11110000) : return "Advanced Simple@L1";
+        case B8(11110000) : return "Advanced Simple@L0";
         case B8(11110001) : return "Advanced Simple@L1";
         case B8(11110010) : return "Advanced Simple@L2";
         case B8(11110011) : return "Advanced Simple@L3";
@@ -236,9 +240,11 @@ File_Mpeg4v::File_Mpeg4v()
     Trusted_Multiplier=2;
     MustSynchronize=true;
     Buffer_TotalBytes_FirstSynched_Max=64*1024;
+    PTS_DTS_Needed=true;
+    IsRawStream=true;
 
     //In
-    Frame_Count_Valid=30;
+    Frame_Count_Valid=MediaInfoLib::Config.ParseSpeed_Get()>=0.3?30:2;
     FrameIsAlwaysComplete=false;
 
     //Temp
@@ -250,6 +256,7 @@ void File_Mpeg4v::OnlyVOP()
 {
     //Default stream values
     Synched_Init();
+    Streams[0xB3].Searching_Payload=true; //group_of_vop_start
     Streams[0xB6].Searching_Payload=true; //vop_start
 }
 
@@ -272,6 +279,12 @@ bool File_Mpeg4v::Synched_Test()
     if (Synched && !Header_Parser_QuickSearch())
         return false;
 
+    #if MEDIAINFO_IBI
+        bool RandomAccess=Buffer[Buffer_Offset+3]==0xB0; //SequenceHeader
+        if (RandomAccess)
+            Ibi_Add();
+    #endif //MEDIAINFO_IBI
+
     //We continue
     return true;
 }
@@ -280,14 +293,17 @@ bool File_Mpeg4v::Synched_Test()
 void File_Mpeg4v::Synched_Init()
 {
     //Count of a Packets
-    Frame_Count=0;
     IVOP_Count=0;
     PVOP_Count=0;
     BVOP_Count=0;
+    BVOP_Count_Max=0;
     SVOP_Count=0;
     NVOP_Count=0;
     Interlaced_Top=0;
     Interlaced_Bottom=0;
+    Frame_Count_InThisBlock_Max=0;
+    if (Frame_Count_NotParsedIncluded==(int64u)-1)
+        Frame_Count_NotParsedIncluded=0; //No Frame_Count_NotParsedIncluded in the container
 
     //From VOL, needed in VOP
     fixed_vop_time_increment=0;
@@ -319,12 +335,9 @@ void File_Mpeg4v::Synched_Init()
     newpred_enable=0;
     time_size=0;
     reduced_resolution_vop_enable=0;
-    shape=(int8u)-1;
-    sprite_enable=0;
     scalability=0;
     enhancement_type=0;
-    complexity_estimation_disable=0;
-    vop_time_increment_resolution=0;
+    complexity_estimation_disable=false;
     opaque=false;
     transparent=false;
     intra_cae=false;
@@ -348,6 +361,9 @@ void File_Mpeg4v::Synched_Init()
     sadct=false;
     quarterpel=false;
     quant_type=false;
+
+    if (!IsSub)
+        FrameInfo.DTS=0;
 
     //Default stream values
     Streams.resize(0x100);
@@ -394,7 +410,8 @@ void File_Mpeg4v::Streams_Fill()
         Fill(Stream_Video, 0, Video_PixelAspectRatio, PixelAspectRatio_Value, 3, true);
         Fill(Stream_Video, StreamPos_Last, Video_DisplayAspectRatio, ((float)object_layer_width)/object_layer_height*PixelAspectRatio_Value, 3, true);
     }
-    Fill(Stream_Video, 0, Video_Resolution, bits_per_pixel);
+    Fill(Stream_Video, 0, Video_ColorSpace, "YUV");
+    Fill(Stream_Video, 0, Video_BitDepth, bits_per_pixel);
     if (chroma_format<4)
         Fill(Stream_Video, 0, Video_Colorimetry, Mpeg4v_Colorimetry[chroma_format]);
     if (low_delay)
@@ -489,7 +506,10 @@ void File_Mpeg4v::Streams_Fill()
         if (user_data_start_SNC_Data[Pos][0]==_T("FrmRate"))
             Fill(Stream_Video, 0, Video_FrameRate, user_data_start_SNC_Data[Pos][1].To_float32(), 3);
         if (user_data_start_SNC_Data[Pos][0]==_T("TimStamp"))
+        {
             Fill(Stream_Video, 0, Video_Delay, user_data_start_SNC_Data[Pos][1].To_int64u());
+            Fill(Stream_Video, 0, Video_Delay_Source, "Stream");
+        }
         if (user_data_start_SNC_Data[Pos][0]==_T("CamPos") && user_data_start_SNC_Data[Pos][1].size()==16)
         {
             Fill(Stream_Video, 0, "Pan / Tilt / Zoom / Status", Ztring(user_data_start_SNC_Data[Pos][1].substr( 3, 4)).To_int8u(16));
@@ -500,12 +520,12 @@ void File_Mpeg4v::Streams_Fill()
             else if (user_data_start_SNC_Data[Pos][1][15]==_T('S'))
                 Fill(Stream_Video, 0, "Pan / Tilt / Zoom / Status", _T("Stop"));
             else
-                Fill(Stream_Video, 0, "Pan / Tilt / Zoom / Status", Ztring(1, user_data_start_SNC_Data[Pos][1][15]));
+                Fill(Stream_Video, 0, "Pan / Tilt / Zoom / Status", user_data_start_SNC_Data[Pos][1][15]);
         }
         if (user_data_start_SNC_Data[Pos][0]==_T("AlmEvent") && user_data_start_SNC_Data[Pos][1].size()==16)
             Fill(Stream_Video, 0, "Alarm event", user_data_start_SNC_Data[Pos][1]);
     }
-    if (shape!=2)
+    if (video_object_layer_start_IsParsed && shape!=2 && !complexity_estimation_disable)
     {
         Fill(Stream_Video, 0, "data_partitioned", data_partitioned?"Yes":"No");
         (*Stream_More)[Stream_Video][0](Ztring().From_Local("data_partitioned"), Info_Options)=_T("N NT");
@@ -516,7 +536,26 @@ void File_Mpeg4v::Streams_Fill()
         }
     }
 
+    //BVOPs
+    if (BVOP_Count_Max)
+    {
+        Ztring Format_Settings=Retrieve(Stream_Video, 0, Video_Format_Settings);
+        Format_Settings.FindAndReplace(_T("BVOP"), _T("BVOP")+Ztring::ToZtring(BVOP_Count_Max));
+        Fill(Stream_Video, 0, Video_Format_Settings, Format_Settings, true);
+        Fill(Stream_Video, 0, Video_Format_Settings_BVOP, BVOP_Count_Max, 10, true);
+    }
 
+    //Packed Bitstream
+    if (Frame_Count_InThisBlock_Max==2)
+    {
+        Fill(Stream_Video, 0, Video_MuxingMode, MediaInfoLib::Config.Language_Get("MuxingMode_PackedBitstream"));
+        Fill(Stream_Video, 0, Video_Codec_Settings, "Packed Bitstream");
+        Fill(Stream_Video, 0, Video_Codec_Settings_PacketBitStream, "Yes");
+    }
+    else
+    {
+        Fill(Stream_Video, 0, Video_Codec_Settings_PacketBitStream, "No");
+    }
 }
 
 //---------------------------------------------------------------------------
@@ -531,10 +570,81 @@ void File_Mpeg4v::Streams_Finish()
         Fill(Stream_Video, 0, Video_Duration, Duration);
     }
 
-    //Purge what is not needed anymore
-    if (!File_Name.empty()) //Only if this is not a buffer, with buffer we can have more data
-        Streams.clear();
+    #if MEDIAINFO_IBI
+        if (fixed_vop_time_increment)
+            Ibi_Stream_Finish(vop_time_increment_resolution, fixed_vop_time_increment);
+    #endif //MEDIAINFO_IBI
 }
+//***************************************************************************
+// Buffer - Demux
+//***************************************************************************
+
+//---------------------------------------------------------------------------
+#if MEDIAINFO_DEMUX
+bool File_Mpeg4v::Demux_UnpacketizeContainer_Test()
+{
+    if ((Demux_IntermediateItemFound && Buffer[Buffer_Offset+3]==0xB0) || Buffer[Buffer_Offset+3]==0xB3 || Buffer[Buffer_Offset+3]==0xB6)
+    {
+        if (Demux_Offset==0)
+        {
+            Demux_Offset=Buffer_Offset;
+            Demux_IntermediateItemFound=false;
+        }
+        while (Demux_Offset+4<=Buffer_Size)
+        {
+            //Synchronizing
+            while(Demux_Offset+3<=Buffer_Size && (Buffer[Demux_Offset  ]!=0x00
+                                                || Buffer[Demux_Offset+1]!=0x00
+                                                || Buffer[Demux_Offset+2]!=0x01))
+            {
+                Demux_Offset+=2;
+                while(Demux_Offset<Buffer_Size && Buffer[Buffer_Offset]!=0x00)
+                    Demux_Offset+=2;
+                if (Demux_Offset>=Buffer_Size || Buffer[Demux_Offset-1]==0x00)
+                    Demux_Offset--;
+            }
+
+            if (Demux_Offset+4<=Buffer_Size)
+            {
+                if (Demux_IntermediateItemFound)
+                {
+                    bool MustBreak;
+                    switch (Buffer[Demux_Offset+3])
+                    {
+                        case 0xB0 :
+                        case 0xB3 :
+                        case 0xB6 :
+                                    MustBreak=true; break;
+                        default   : MustBreak=false;
+                    }
+                    if (MustBreak)
+                        break; //while() loop
+                }
+                else
+                {
+                    if (Buffer[Demux_Offset+3]==0xB6)
+                        Demux_IntermediateItemFound=true;
+                }
+            }
+            Demux_Offset++;
+        }
+
+        if (Demux_Offset+4>Buffer_Size && File_Offset+Buffer_Size!=File_Size)
+            return false; //No complete frame
+
+        if (!Status[IsAccepted])
+        {
+            Accept("MPEG-4 Visual");
+            if (Config->Demux_EventWasSent)
+                return false;
+        }
+
+        Demux_UnpacketizeContainer_Demux(Buffer[Buffer_Offset+3]==0xB0);
+    }
+
+    return true;
+}
+#endif //MEDIAINFO_DEMUX
 
 //***************************************************************************
 // Buffer - Global
@@ -580,7 +690,7 @@ bool File_Mpeg4v::Header_Parser_Fill_Size()
         Buffer_Offset_Temp+=2;
         while(Buffer_Offset_Temp<Buffer_Size && Buffer[Buffer_Offset_Temp]!=0x00)
             Buffer_Offset_Temp+=2;
-        if (Buffer_Offset_Temp<Buffer_Size && Buffer[Buffer_Offset_Temp-1]==0x00 || Buffer_Offset_Temp>=Buffer_Size)
+        if (Buffer_Offset_Temp>=Buffer_Size || Buffer[Buffer_Offset_Temp-1]==0x00)
             Buffer_Offset_Temp--;
     }
 
@@ -617,7 +727,17 @@ bool File_Mpeg4v::Header_Parser_QuickSearch()
         //Synchronizing
         Buffer_Offset+=4;
         Synched=false;
-        if (!Synchronize_0x000001())
+        if (!Synchronize())
+        {
+            if (File_Offset+Buffer_Size==File_Size)
+            {
+                Synched=true;
+                return true;
+            }
+            return false;
+        }
+
+        if (Buffer_Offset+4>Buffer_Size)
             return false;
     }
 
@@ -661,7 +781,11 @@ void File_Mpeg4v::Data_Parse()
                   && Element_Code<=0x4F) fgs_bp_start();
             else if (Element_Code<=0xC5) reserved();
             else
+            {
+                if (Frame_Count==0 && Buffer_TotalBytes>Buffer_TotalBytes_FirstSynched_Max)
+                    Trusted=0;
                 Trusted_IsNot("Unattended element!");
+            }
     }
 }
 
@@ -701,7 +825,7 @@ void File_Mpeg4v::video_object_layer_start()
     Skip_SB(                                                    "random_accessible_vol");
     Skip_S1(8,                                                  "video_object_type_indication");
     TEST_SB_SKIP(                                               "is_object_layer_identifier");
-        Get_S1 (4, video_object_layer_verid,                    "video_object_layer_verid"); Param_Info(Mpeg4v_video_object_layer_verid[video_object_layer_verid]);
+        Get_S1 (4, video_object_layer_verid,                    "video_object_layer_verid"); Param_Info1(Mpeg4v_video_object_layer_verid[video_object_layer_verid]);
         Skip_S1(3,                                              "video_object_layer_priority");
     TEST_SB_END();
     Get_S1 (4, aspect_ratio_info,                               "aspect_ratio_info");
@@ -761,7 +885,7 @@ void File_Mpeg4v::video_object_layer_start()
     }
     Mark_1 ();
     TEST_SB_SKIP(                                               "fixed_vop_rate");
-        Get_BS (time_size, fixed_vop_time_increment,            "fixed_vop_time_increment"); if (vop_time_increment_resolution>0) Param_Info(fixed_vop_time_increment*1000/vop_time_increment_resolution, " ms");
+        Get_BS (time_size, fixed_vop_time_increment,            "fixed_vop_time_increment"); Param_Info2C((vop_time_increment_resolution), fixed_vop_time_increment*1000/vop_time_increment_resolution, " ms");
     TEST_SB_END();
     if (shape!=2) //Shape!=BinaryOnly
     {
@@ -1027,7 +1151,7 @@ void File_Mpeg4v::visual_object_sequence_start()
     Element_Name("visual_object_sequence_start");
 
     //Parsing
-    Get_B1 (profile_and_level_indication,                       "profile_and_level_indication"); Param_Info(Mpeg4v_Profile_Level(profile_and_level_indication));
+    Get_B1 (profile_and_level_indication,                       "profile_and_level_indication"); Param_Info1(Mpeg4v_Profile_Level(profile_and_level_indication));
 
     //Integrity
     if (Element_Size>1)
@@ -1087,15 +1211,13 @@ void File_Mpeg4v::user_data_start()
         bool OK=true;
         for (size_t Pos=0; Pos<4; Pos++)
         {
-            if (!(Buffer[Buffer_Offset+Library_Start_Offset+Pos]==0x20 && Pos
+            if (!((Buffer[Buffer_Offset+Library_Start_Offset+Pos]==0x20 && Pos)
                || Buffer[Buffer_Offset+Library_Start_Offset+Pos]==0x22
                || Buffer[Buffer_Offset+Library_Start_Offset+Pos]==0x27
                || Buffer[Buffer_Offset+Library_Start_Offset+Pos]==0x28
-               || Buffer[Buffer_Offset+Library_Start_Offset+Pos]==0x29 && Pos
-               || Buffer[Buffer_Offset+Library_Start_Offset+Pos]>=0x30
-               && Buffer[Buffer_Offset+Library_Start_Offset+Pos]<=0x3F
-               || Buffer[Buffer_Offset+Library_Start_Offset+Pos]>=0x41
-               && Buffer[Buffer_Offset+Library_Start_Offset+Pos]<=0x7D))
+               || (Buffer[Buffer_Offset+Library_Start_Offset+Pos]==0x29 && Pos)
+               || (Buffer[Buffer_Offset+Library_Start_Offset+Pos]>=0x30 && Buffer[Buffer_Offset+Library_Start_Offset+Pos]<=0x3F)
+               || (Buffer[Buffer_Offset+Library_Start_Offset+Pos]>=0x41 && Buffer[Buffer_Offset+Library_Start_Offset+Pos]<=0x7D)))
             {
                 OK=false;
                 break;
@@ -1116,10 +1238,8 @@ void File_Mpeg4v::user_data_start()
     while (Library_End_Offset<Element_Size
         && (Buffer[Buffer_Offset+Library_End_Offset]==0x0D
          || Buffer[Buffer_Offset+Library_End_Offset]==0x0A
-         || Buffer[Buffer_Offset+Library_End_Offset]>=0x20
-         && Buffer[Buffer_Offset+Library_End_Offset]<=0x3F
-         || Buffer[Buffer_Offset+Library_End_Offset]>=0x41
-         && Buffer[Buffer_Offset+Library_End_Offset]<=0x7D))
+         || (Buffer[Buffer_Offset+Library_End_Offset]>=0x20 && Buffer[Buffer_Offset+Library_End_Offset]<=0x3F)
+         || (Buffer[Buffer_Offset+Library_End_Offset]>=0x41 && Buffer[Buffer_Offset+Library_End_Offset]<=0x7D)))
         Library_End_Offset++;
 
     //Parsing
@@ -1192,7 +1312,7 @@ void File_Mpeg4v::user_data_start()
 // Packet "B2", SNC (From Sony SNC surveillance video)
 void File_Mpeg4v::user_data_start_SNC()
 {
-    Element_Info("Sony SNC");
+    Element_Info1("Sony SNC");
 
     if (!user_data_start_SNC_Data.empty())
     {
@@ -1238,7 +1358,7 @@ void File_Mpeg4v::group_of_vop_start()
     Time+=_T(':');
     Time+=Ztring::ToZtring(Seconds);
     Time+=_T(".000");
-    Element_Info(Time);
+    Element_Info1(Time);
 
     FILLING_BEGIN();
         //Calculating
@@ -1272,10 +1392,10 @@ void File_Mpeg4v::visual_object_start()
     int8u visual_object_type;
     BS_Begin();
     TEST_SB_SKIP(                                               "is_visual_object_identifier");
-        Get_S1 ( 4, visual_object_verid,                        "visual_object_verid");  Param_Info(Mpeg4v_visual_object_verid[visual_object_verid]);
+        Get_S1 ( 4, visual_object_verid,                        "visual_object_verid");  Param_Info1(Mpeg4v_visual_object_verid[visual_object_verid]);
         Skip_BS( 3,                                             "visual_object_priority");
     TEST_SB_END();
-    Get_S1 ( 4, visual_object_type,                             "visual_object_type"); Param_Info(Mpeg4v_visual_object_type[visual_object_type]);
+    Get_S1 ( 4, visual_object_type,                             "visual_object_type"); Param_Info1(Mpeg4v_visual_object_type[visual_object_type]);
     if (visual_object_type==1 || visual_object_type==2)
     {
         TEST_SB_SKIP(                                           "video_signal_type");
@@ -1312,23 +1432,29 @@ void File_Mpeg4v::visual_object_start()
 // Packet "B6"
 void File_Mpeg4v::vop_start()
 {
+    Element_Info1C( (FrameInfo.DTS!=(int64u)-1), _T("DTS ")+Ztring().Duration_From_Milliseconds(float64_int64s(((float64)FrameInfo.DTS)/1000000)));
+
     //Counting
     if (File_Offset+Buffer_Offset+Element_Size==File_Size)
         Frame_Count_Valid=Frame_Count; //Finish frames in case of there are less than Frame_Count_Valid frames
     Frame_Count++;
     Frame_Count_InThisBlock++;
+    if (Frame_Count_InThisBlock>Frame_Count_InThisBlock_Max)
+        Frame_Count_InThisBlock_Max=Frame_Count_InThisBlock;
+    if (Frame_Count_NotParsedIncluded!=(int64u)-1)
+        Frame_Count_NotParsedIncluded++;
 
     //Name
     Element_Name("vop_start");
-    Element_Info(Ztring(_T("Frame ")+Ztring::ToZtring(Frame_Count)));
+    Element_Info1(Ztring(_T("Frame ")+Ztring::ToZtring(Frame_Count)));
 
     //Parsing
     int32u vop_time_increment;
     int8u vop_coding_type;
     bool  vop_coded;
     BS_Begin();
-    Get_S1 (2, vop_coding_type,                                 "vop_coding_type"); Param_Info(Mpeg4v_vop_coding_type[vop_coding_type]);
-    Element_Info(Mpeg4v_vop_coding_type[vop_coding_type]);
+    Get_S1 (2, vop_coding_type,                                 "vop_coding_type"); Param_Info1(Mpeg4v_vop_coding_type[vop_coding_type]);
+    Element_Info1(Mpeg4v_vop_coding_type[vop_coding_type]);
     bool modulo_time_base_Continue;
     int8u modulo_time_base=0;
     do
@@ -1353,14 +1479,14 @@ void File_Mpeg4v::vop_start()
         }
     FILLING_END();
 
-    Get_S4 (time_size, vop_time_increment,                      "vop_time_increment"); if (vop_time_increment_resolution) Param_Info(vop_time_increment*1000/vop_time_increment_resolution, " ms");
+    Get_S4 (time_size, vop_time_increment,                      "vop_time_increment"); Param_Info2C((vop_time_increment_resolution), vop_time_increment*1000/vop_time_increment_resolution, " ms");
     Mark_1 ();
     Get_SB (vop_coded,                                          "vop_coded");
     if (vop_coded)
     {
         if (newpred_enable)
         {
-            Skip_S4(time_size+3<15?time_size+3:15,              "vop_id");
+            Skip_S3(time_size+3<15?time_size+3:15,              "vop_id");
             TEST_SB_SKIP(                                       "vop_id_for_prediction_indication");
                 Skip_BS(time_size+3<15?time_size+3:15,          "vop_id_for_prediction");
             TEST_SB_END();
@@ -1509,12 +1635,30 @@ void File_Mpeg4v::vop_start()
         //...
     }
 
-    if (!vop_coded)              NVOP_Count++; //VOP with no data
-    else if (vop_coding_type==0) IVOP_Count++; //Type I
-    else if (vop_coding_type==1) PVOP_Count++; //Type P
-    else if (vop_coding_type==2) BVOP_Count++; //Type B
-    else if (vop_coding_type==3) SVOP_Count++; //Type S
-
+    if (!vop_coded)              //VOP with no data
+        NVOP_Count++;
+    else if (vop_coding_type==0) //Type I
+    {
+        IVOP_Count++;
+        PVOP_Count=0;
+        BVOP_Count=0;
+    }
+    else if (vop_coding_type==1) //Type P
+    {
+        PVOP_Count++;
+        BVOP_Count=0;
+    }
+    else if (vop_coding_type==2) //Type B
+    {
+        BVOP_Count++;
+        if (BVOP_Count>BVOP_Count_Max)
+            BVOP_Count_Max=BVOP_Count;
+    }
+    else if (vop_coding_type==3)
+    {
+        SVOP_Count++; //Type S
+        BVOP_Count=0;
+    }
 
     FILLING_BEGIN();
         //Duration
@@ -1527,8 +1671,15 @@ void File_Mpeg4v::vop_start()
             if (Time_Begin_MilliSeconds==(int16u)-1)
                 Time_Begin_MilliSeconds=Time_End_MilliSeconds;
 
-            if (Time_End_Seconds!=(int32u)-1)
-                Element_Info(Ztring().Duration_From_Milliseconds((int64u)(Time_End_Seconds*1000+Time_End_MilliSeconds)));
+            Element_Info1C((Time_End_Seconds!=(int32u)-1), Ztring().Duration_From_Milliseconds((int64u)(Time_End_Seconds*1000+Time_End_MilliSeconds)));
+
+            if (FrameInfo.DTS!=(int64u)-1)
+            {
+                if (fixed_vop_time_increment && vop_time_increment_resolution)
+                    FrameInfo.DTS+=((int64u)fixed_vop_time_increment)*1000000000/vop_time_increment_resolution;
+                else
+                    FrameInfo.DTS=(int64u)-1;
+            }
         }
 
         //NextCode
@@ -1552,9 +1703,48 @@ void File_Mpeg4v::vop_start()
             else
             {
                 Fill("MPEG-4 Visual");
-                GoToFromEnd(1024*1024, "MPEG-4 Visual");
+                if (Config_ParseSpeed<1.0)
+                {
+                    if (!IsSub)
+                        Open_Buffer_Unsynch();
+                    GoToFromEnd(1024*1024, "MPEG-4 Visual");
+                }
             }
         }
+
+        #if MEDIAINFO_EVENTS
+            {
+                struct MediaInfo_Event_Video_SliceInfo_0 Event;
+                Event.EventCode=MediaInfo_EventCode_Create(MediaInfo_Parser_None, MediaInfo_Event_Video_SliceInfo, 0);
+                Event.Stream_Offset=File_Offset+Buffer_Offset;
+                Event.PCR=FrameInfo.PCR;
+                Event.PTS=FrameInfo.PTS;
+                Event.DTS=FrameInfo.DTS;
+                Event.DUR=FrameInfo.DUR;
+                Event.StreamIDs_Size=StreamIDs_Size;
+                Event.StreamIDs=(MediaInfo_int64u*)StreamIDs;
+                Event.StreamIDs_Width=(MediaInfo_int8u*)StreamIDs_Width;
+                Event.ParserIDs=(MediaInfo_int8u* )ParserIDs;
+                Event.FramePosition=Frame_Count;
+                Event.FieldPosition=Field_Count;
+                Event.SlicePosition=0;
+                switch (vop_coding_type)
+                {
+                    case 0 :
+                                Event.SliceType=0; break;
+                    case 1 :
+                                Event.SliceType=1; break;
+                    case 2 :
+                                Event.SliceType=2; break;
+                    case 3 :
+                                Event.SliceType=3; break;
+                    default:
+                                Event.SliceType=(int8u)-1;
+                }
+                Event.Flags=0;
+                Config->Event_Send((const int8u*)&Event, sizeof(MediaInfo_Event_Video_SliceInfo_0));
+            }
+        #endif //MEDIAINFO_EVENTS
     FILLING_END();
 }
 
@@ -1664,3 +1854,4 @@ void File_Mpeg4v::reserved()
 } //NameSpace
 
 #endif //MEDIAINFO_MPEG4V_YES
+

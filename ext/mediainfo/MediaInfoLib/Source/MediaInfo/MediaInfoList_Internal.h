@@ -1,5 +1,5 @@
 // MediaInfoList_Internal - A list of MediaInfo
-// Copyright (C) 2002-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2002-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -30,6 +30,7 @@
 
 //---------------------------------------------------------------------------
 #include "MediaInfo/MediaInfo.h"
+#include "MediaInfo/MediaInfo_Internal.h"
 #include "MediaInfo/MediaInfo_Config_MediaInfo.h"
 #include "ZenLib/Thread.h"
 #include "ZenLib/CriticalSection.h"
@@ -76,7 +77,7 @@ public :
     size_t                  Count_Get ();
 
 private :
-    std::vector<MediaInfo*> Info;
+    std::vector<MediaInfo_Internal*> Info;
     std::queue<String> ToParse;
     std::map<String, String> Config_MediaInfo_Items; //Config per file
     size_t  ToParse_AlreadyDone;

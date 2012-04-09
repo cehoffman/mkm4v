@@ -1,5 +1,5 @@
 // File_Mpegv - Info for MPEG Video files
-// Copyright (C) 2004-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2004-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -28,6 +28,9 @@
 
 //---------------------------------------------------------------------------
 #include "MediaInfo/File__Analyze.h"
+#if defined(MEDIAINFO_ANCILLARY_YES)
+    #include <MediaInfo/Multiple/File_Ancillary.h>
+#endif //defined(MEDIAINFO_ANCILLARY_YES)
 //---------------------------------------------------------------------------
 
 namespace MediaInfoLib
@@ -42,9 +45,12 @@ class File_Mpegv : public File__Analyze
 public :
     //In
     int8u  MPEG_Version;
-    size_t Frame_Count_Valid;
+    int64u Frame_Count_Valid;
     bool   FrameIsAlwaysComplete;
     bool   TimeCodeIsNotTrustable;
+    #if defined(MEDIAINFO_ANCILLARY_YES)
+        File_Ancillary** Ancillary;
+    #endif //defined(MEDIAINFO_ANCILLARY_YES)
 
     //Constructor/Destructor
     File_Mpegv();
@@ -52,18 +58,27 @@ public :
 
 private :
     //Streams management
+    void Streams_Accept();
+    void Streams_Update();
     void Streams_Fill();
     void Streams_Finish();
 
     //Buffer - File header
-    void Read_Buffer_Unsynched();
     bool FileHeader_Begin() {return FileHeader_Begin_0x000001();}
 
     //Buffer - Synchro
     bool Synchronize() {return Synchronize_0x000001();}
     bool Synched_Test();
     void Synched_Init();
-    
+
+    //Buffer - Demux
+    #if MEDIAINFO_DEMUX
+    bool Demux_UnpacketizeContainer_Test();
+    #endif //MEDIAINFO_DEMUX
+
+    //Buffer - Global
+    void Read_Buffer_Unsynched();
+
     //Buffer - Per element
     void Header_Parse();
     bool Header_Parser_QuickSearch();
@@ -76,7 +91,15 @@ private :
     //Elements
     void picture_start();
     void slice_start();
+    #if MEDIAINFO_MACROBLOCKS
+    void slice_start_macroblock();
+    void slice_start_macroblock_motion_vectors(bool s);
+    void slice_start_macroblock_motion_vectors_motion_vector(bool r, bool s);
+    void slice_start_macroblock_coded_block_pattern();
+    void slice_start_macroblock_block(int8u i);
+    #endif //MEDIAINFO_MACROBLOCKS
     void user_data_start();
+    void user_data_start_3();
     void user_data_start_CC();
     void user_data_start_DTG1();
     void user_data_start_GA94();
@@ -107,20 +130,32 @@ private :
     //Temporal reference
     struct temporalreference
     {
-        struct cc_data_
+        struct buffer_data
         {
-            int8u cc_type;
-            int8u cc_data[2];
-            bool  cc_valid;
+            size_t Size;
+            int8u* Data;
 
-            cc_data_()
+            buffer_data()
             {
-                cc_valid=false;
+                Size=0;
+                Data=NULL;
+            }
+
+            ~buffer_data()
+            {
+                delete[] Data; //Data=NULL;
             }
         };
-        std::vector<cc_data_> GA94_03_CC; //Per cc offset
+        #if defined(MEDIAINFO_DTVCCTRANSPORT_YES)
+            buffer_data* GA94_03;
+        #endif //MEDIAINFO_DTVCCTRANSPORT_YES
+        #if defined(MEDIAINFO_SCTE20_YES)
+            std::vector<buffer_data*> Scte;
+            std::vector<bool> Scte_Parsed;
+        #endif //MEDIAINFO_SCTE20_YES
 
         int8u  picture_coding_type;
+        int8u  picture_structure;
 
         bool   IsValid;
         bool   HasPictureCoding;
@@ -131,29 +166,81 @@ private :
 
         temporalreference()
         {
+            #if defined(MEDIAINFO_DTVCCTRANSPORT_YES)
+                GA94_03=NULL;
+            #endif //MEDIAINFO_DTVCCTRANSPORT_YES
             picture_coding_type=(int8u)-1;
+            picture_structure=(int8u)-1;
             IsValid=false;
             HasPictureCoding=false;
         }
+
+        ~temporalreference()
+        {
+            #if defined(MEDIAINFO_DTVCCTRANSPORT_YES)
+                delete GA94_03; //GA94_03=NULL;
+            #endif //MEDIAINFO_DTVCCTRANSPORT_YES
+            #if defined(MEDIAINFO_SCTE20_YES)
+                for (size_t Pos=0; Pos<Scte.size(); Pos++)
+                    delete Scte[Pos]; //Scte[Pos]=NULL;
+            #endif //MEDIAINFO_SCTE20_YES
+        }
     };
-    std::vector<temporalreference> TemporalReference; //per temporal_reference
-    size_t                         TemporalReference_Offset;
-    size_t                         TemporalReference_GA94_03_CC_Offset;
+    std::vector<temporalreference*> TemporalReference; //per temporal_reference
+    size_t                          TemporalReference_Offset;
+    struct text_position
+    {
+        File__Analyze**  Parser;
+        size_t          StreamPos;
+        
+        text_position()
+        {
+            Parser=NULL;
+            StreamPos=(size_t)-1;
+        }
+        
+        text_position(File__Analyze* &Parser_)
+        {
+            Parser=&Parser_;
+            StreamPos=0;
+        }
+    };
+    std::vector<text_position> Text_Positions;
+    #if defined(MEDIAINFO_DTVCCTRANSPORT_YES)
+        File__Analyze*              GA94_03_Parser;
+        size_t                      GA94_03_TemporalReference_Offset;
+        bool                        GA94_03_IsPresent;
+        File__Analyze*              CC___Parser;
+        bool                        CC___IsPresent;
+    #endif //defined(MEDIAINFO_DTVCCTRANSPORT_YES)
+    #if defined(MEDIAINFO_SCTE20_YES)
+        File__Analyze*              Scte_Parser;
+        size_t                      Scte_TemporalReference_Offset;
+        bool                        Scte_IsPresent;
+    #endif //defined(MEDIAINFO_SCTE20_YES)
+    #if defined(MEDIAINFO_AFDBARDATA_YES)
+        File__Analyze*              DTG1_Parser;
+        File__Analyze*              GA94_06_Parser;
+    #endif //defined(MEDIAINFO_AFDBARDATA_YES)
+    #if defined(MEDIAINFO_GXF_YES) && defined(MEDIAINFO_CDP_YES)
+        File__Analyze*              Cdp_Parser;
+        bool                        Cdp_IsPresent;
+    #endif //defined(MEDIAINFO_GXF_YES) && defined(MEDIAINFO_CDP_YES)
+    #if defined(MEDIAINFO_GXF_YES) && defined(MEDIAINFO_AFDBARDATA_YES)
+        File__Analyze*              AfdBarData_Parser;
+    #endif //defined(MEDIAINFO_GXF_YES) && defined(MEDIAINFO_AFDBARDATA_YES)
 
     //Temp
-    std::vector<File__Analyze*> DVD_CC_Parsers;
-    std::vector<File__Analyze*> GA94_03_CC_Parsers;
-    std::vector<size_t> GA94_03_CC_Parsers_StreamPos;
     Ztring Library;
     Ztring Library_Name;
     Ztring Library_Version;
     Ztring Matrix_intra;
     Ztring Matrix_nonintra;
-    size_t Frame_Count;
     size_t BVOP_Count;
     size_t progressive_frame_Count;
     size_t Interlaced_Top;
     size_t Interlaced_Bottom;
+    size_t Time_Current_Seconds;
     size_t Time_Begin_Seconds;
     size_t Time_End_Seconds;
     int64u SizeToAnalyse_Begin; //Total size of a chunk to analyse, it may be changed by the parser
@@ -164,10 +251,12 @@ private :
     int16u vertical_size_value;
     int16u bit_rate_extension;
     int16u temporal_reference;
+    int16u temporal_reference_Old;
     int16u display_horizontal_size;
     int16u display_vertical_size;
     int16u vbv_delay;
     int16u vbv_buffer_size_value;
+    int8u  Time_Current_Frames;
     int8u  Time_Begin_Frames;
     int8u  Time_End_Frames;
     int8u  picture_coding_type;
@@ -182,19 +271,22 @@ private :
     int8u  frame_rate_extension_n;
     int8u  frame_rate_extension_d;
     int8u  video_format;
+    int8u  colour_primaries;
+    int8u  transfer_characteristics;
+    int8u  matrix_coefficients;
     int8u  picture_structure;
     int8u  vbv_buffer_size_extension;
-    bool   Time_End_NeedComplete;
-    bool   DVD_CC_IsPresent;
-    bool   GA94_03_CC_IsPresent;
+    int8u  intra_dc_precision;
     bool   load_intra_quantiser_matrix;
     bool   load_non_intra_quantiser_matrix;
     bool   progressive_sequence;
+    bool   progressive_frame;
     bool   top_field_first;
     bool   repeat_first_field;
     bool   FirstFieldFound;
     bool   sequence_header_IsParsed;
     bool   group_start_IsParsed;
+    bool   group_start_FirstPass;
     bool   group_start_drop_frame_flag;
     bool   group_start_closed_gop;
     bool   group_start_broken_link;
@@ -202,9 +294,48 @@ private :
     bool   Parsing_End_ForDTS;
     bool   bit_rate_value_IsValid;
     bool   profile_and_level_indication_escape;
+    int8u  RefFramesCount;
+    int8u  BVOPsSinceLastRefFrames;
+    int16u temporal_reference_LastIFrame;
+    int64u PTS_LastIFrame;
+    int64u tc;
+    bool    IFrame_IsParsed;
+
+    #if MEDIAINFO_MACROBLOCKS
+        int64u  macroblock_x;
+        int64u  macroblock_x_PerFrame;
+        int64u  macroblock_y_PerFrame;
+        int16u  cbp;
+        int8u   frame_motion_type;
+        int8u   field_motion_type;
+        int8u   spatial_temporal_weight_code;
+        int8u   block_count; //Computed from chroma_format
+        int8u   macroblock_type; //Temp
+        int8u   spatial_temporal_weight_code_table_index;
+        int8u   f_code[2][2];
+        bool    Macroblocks_Parse;
+        bool    sequence_scalable_extension_Present;
+        bool    frame_pred_frame_dct;
+        bool    concealment_motion_vectors;
+        bool    intra_vlc_format;
+        vlc_fast macroblock_address_increment_Vlc;
+        vlc_fast dct_dc_size_luminance;
+        vlc_fast dct_dc_size_chrominance;
+        vlc_fast dct_coefficients_0;
+        vlc_fast dct_coefficients_1;
+        vlc_fast macroblock_type_I;
+        vlc_fast macroblock_type_P;
+        vlc_fast macroblock_type_B;
+        vlc_fast motion_code;
+        vlc_fast dmvector;
+        vlc_fast coded_block_pattern;
+    #endif //MEDIAINFO_MACROBLOCKS
+
+    #if MEDIAINFO_IBI
+        bool    Ibi_SliceParsed;
+    #endif //MEDIAINFO_IBI
 };
 
 } //NameSpace
 
 #endif
-

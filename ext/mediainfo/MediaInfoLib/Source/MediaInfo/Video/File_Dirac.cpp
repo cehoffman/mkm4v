@@ -1,5 +1,5 @@
 // File_Dirac - Info for DIRAC  files
-// Copyright (C) 2007-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2007-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -18,11 +18,15 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //---------------------------------------------------------------------------
-// Compilation conditions
-#include "MediaInfo/Setup.h"
+// Pre-compilation
+#include "MediaInfo/PreComp.h"
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+#include "MediaInfo/Setup.h"
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
@@ -467,15 +471,21 @@ void File_Dirac::Streams_Finish()
 bool File_Dirac::Synchronize()
 {
     //Synchronizing
-    while (Buffer_Offset+5<=Buffer_Size
-        && CC4(Buffer+Buffer_Offset)!=0x42424344)  //"BBCD"
-        Buffer_Offset++;
+    while(Buffer_Offset+4<=Buffer_Size && (Buffer[Buffer_Offset  ]!=0x42
+                                        || Buffer[Buffer_Offset+1]!=0x42
+                                        || Buffer[Buffer_Offset+2]!=0x43
+                                        || Buffer[Buffer_Offset+3]!=0x44)) //"BBCD"
+    {
+        Buffer_Offset+=2;
+        while(Buffer_Offset<Buffer_Size && Buffer[Buffer_Offset]!=0x42)
+            Buffer_Offset+=2;
+        if (Buffer_Offset>=Buffer_Size || Buffer[Buffer_Offset-1]==0x42)
+            Buffer_Offset--;
+    }
 
     //Parsing last bytes if needed
-    if (Buffer_Offset+5>Buffer_Size)
+    if (Buffer_Offset+4>Buffer_Size)
     {
-        if (Buffer_Offset+4==Buffer_Size && CC4(Buffer+Buffer_Offset)!=0x42424344) //"BBCD"
-            Buffer_Offset++;
         if (Buffer_Offset+3==Buffer_Size && CC3(Buffer+Buffer_Offset)!=0x424243)    //"BBC"
             Buffer_Offset++;
         if (Buffer_Offset+2==Buffer_Size && CC2(Buffer+Buffer_Offset)!=0x4242)      //"BB"
@@ -511,9 +521,6 @@ bool File_Dirac::Synched_Test()
 //---------------------------------------------------------------------------
 void File_Dirac::Synched_Init()
 {
-    //Count of a Packets
-    Frame_Count=0;
-
     //Temp
     Dirac_base_video_format((int32u)-1, frame_width, frame_height, chroma_format, source_sampling,
                             clean_width, clean_height, clean_left_offset, clean_top_offset,
@@ -616,7 +623,7 @@ void File_Dirac::Sequence_header()
 
     if (version_major<=2)
     {
-        Get_UI(base_video_format,                               "base video format"); //Param_Info(Dirac_base_video_format(base_video_format));
+        Get_UI(base_video_format,                               "base video format"); //Param_Info1(Dirac_base_video_format(base_video_format));
         Dirac_base_video_format(base_video_format, frame_width, frame_height, chroma_format, source_sampling,
                                 clean_width, clean_height, clean_left_offset, clean_top_offset,
                                 frame_rate, pixel_aspect_ratio);
@@ -625,14 +632,14 @@ void File_Dirac::Sequence_header()
             Get_UI (frame_height,                               "frame height");
         TEST_SB_END();
         TEST_SB_SKIP(                                           "custom chroma format flag");
-            Get_UI (chroma_format,                              "chroma format"); Param_Info(Dirac_chroma_format(chroma_format));
+            Get_UI (chroma_format,                              "chroma format"); Param_Info1(Dirac_chroma_format(chroma_format));
         TEST_SB_END();
         TEST_SB_SKIP(                                           "custom scan format flag");
-            Get_UI (source_sampling,                            "source sampling"); Param_Info(Dirac_source_sampling(source_sampling));
+            Get_UI (source_sampling,                            "source sampling"); Param_Info1(Dirac_source_sampling(source_sampling));
         TEST_SB_END();
         TEST_SB_SKIP(                                           "frame rate flag");
             int32u frame_rate_index;
-            Get_UI (frame_rate_index,                           "index"); Param_Info(Dirac_frame_rate(frame_rate_index));
+            Get_UI (frame_rate_index,                           "index"); Param_Info1(Dirac_frame_rate(frame_rate_index));
             if (frame_rate_index==0)
             {
                 int32u frame_rate_numer, frame_rate_denom;
@@ -645,7 +652,7 @@ void File_Dirac::Sequence_header()
         TEST_SB_END();
         TEST_SB_SKIP(                                           "pixel aspect ratio flag");
             int32u pixel_aspect_ratio_index;
-            Get_UI (pixel_aspect_ratio_index,                   "index"); Param_Info(Dirac_pixel_aspect_ratio(pixel_aspect_ratio_index));
+            Get_UI (pixel_aspect_ratio_index,                   "index"); Param_Info1(Dirac_pixel_aspect_ratio(pixel_aspect_ratio_index));
             if (pixel_aspect_ratio_index==0)
             {
                 int32u pixel_aspect_ratio_numer, pixel_aspect_ratio_denom;
@@ -692,7 +699,7 @@ void File_Dirac::Sequence_header()
                 TEST_SB_END();
             }
         TEST_SB_END();
-        Info_UI(picture_coding_mode,                            "picture coding mode"); Param_Info(Dirac_picture_coding_mode(picture_coding_mode));
+        Info_UI(picture_coding_mode,                            "picture coding mode"); Param_Info1(Dirac_picture_coding_mode(picture_coding_mode));
     }
     else
     {
@@ -872,7 +879,7 @@ void File_Dirac::picture()
             Frame_Count_Valid=Frame_Count; //Finalize frames in case of there are less than Frame_Count_Valid frames
 
         //Name
-        Element_Info(Ztring::ToZtring(Frame_Count));
+        Element_Info1(Ztring::ToZtring(Frame_Count));
 
         //Filling only if not already done
         Frame_Count++;

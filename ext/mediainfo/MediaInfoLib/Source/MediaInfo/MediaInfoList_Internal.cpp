@@ -1,5 +1,5 @@
 // MediaInfoList_Internal - A list of MediaInfo
-// Copyright (C) 2002-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2002-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -18,11 +18,15 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //---------------------------------------------------------------------------
-// Compilation conditions
-#include "MediaInfo/Setup.h"
+// Pre-compilation
+#include "MediaInfo/PreComp.h"
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+#include "MediaInfo/Setup.h"
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
@@ -90,43 +94,17 @@ size_t MediaInfoList_Internal::Open(const String &File_Name, const fileoptions_t
 
     //Get all filenames
     ZtringList List;
-    if ((File_Name.size()>=7
-      && File_Name[0]==_T('h')
-      && File_Name[1]==_T('t')
-      && File_Name[2]==_T('t')
-      && File_Name[3]==_T('p')
-      && File_Name[4]==_T(':')
-      && File_Name[5]==_T('/')
-      && File_Name[6]==_T('/'))
-     || (File_Name.size()>=6
-      && File_Name[0]==_T('f')
-      && File_Name[1]==_T('t')
-      && File_Name[2]==_T('p')
-      && File_Name[3]==_T(':')
-      && File_Name[4]==_T('/')
-      && File_Name[5]==_T('/'))
-     || (File_Name.size()>=6
-      && File_Name[0]==_T('m')
-      && File_Name[1]==_T('m')
-      && File_Name[2]==_T('s')
-      && File_Name[3]==_T(':')
-      && File_Name[4]==_T('/')
-      && File_Name[5]==_T('/'))
-     || (File_Name.size()>=7
-      && File_Name[0]==_T('m')
-      && File_Name[1]==_T('m')
-      && File_Name[2]==_T('s')
-      && File_Name[3]==_T('h')
-      && File_Name[4]==_T(':')
-      && File_Name[5]==_T('/')
-      && File_Name[6]==_T('/')))
+    size_t Pos=File_Name.find(_T(':'));
+    if (Pos!=string::npos && Pos!=1)
         List.push_back(File_Name);
     else if (File::Exists(File_Name))
         List.push_back(File_Name);
     else
         List=Dir::GetAllFileNames(File_Name, (Options&FileOption_NoRecursive)?Dir::Nothing:Dir::Parse_SubDirs);
 
-    Reader_Directory::Directory_Cleanup(List);
+    #if defined(MEDIAINFO_DIRECTORY_YES)
+        Reader_Directory().Directory_Cleanup(List);
+    #endif //defined(MEDIAINFO_DIRECTORY_YES)
 
     //Registering files
     CS.Enter();
@@ -165,12 +143,12 @@ void MediaInfoList_Internal::Entry()
     if (ToParse_Total==0)
         return;
 
-    while (1)
+    for (;;)
     {
         CS.Enter();
         if (!ToParse.empty())
         {
-            MediaInfo* MI=new MediaInfo();
+            MediaInfo_Internal* MI=new MediaInfo_Internal();
             for (std::map<String, String>::iterator Config_MediaInfo_Item=Config_MediaInfo_Items.begin(); Config_MediaInfo_Item!=Config_MediaInfo_Items.end(); Config_MediaInfo_Item++)
                 MI->Option(Config_MediaInfo_Item->first, Config_MediaInfo_Item->second);
             if (BlockMethod==1)
@@ -211,7 +189,7 @@ void MediaInfoList_Internal::Entry()
 //---------------------------------------------------------------------------
 size_t MediaInfoList_Internal::Open_Buffer_Init (int64u File_Size_, int64u File_Offset_)
 {
-    MediaInfo* MI=new MediaInfo();
+    MediaInfo_Internal* MI=new MediaInfo_Internal();
     MI->Open_Buffer_Init(File_Size_, File_Offset_);
 
     CriticalSectionLocker CSL(CS);
@@ -227,7 +205,7 @@ size_t MediaInfoList_Internal::Open_Buffer_Continue (size_t FilePos, const int8u
     if (FilePos>=Info.size() || Info[FilePos]==NULL)
         return 0;
 
-    return Info[FilePos]->Open_Buffer_Continue(ToAdd, ToAdd_Size);
+    return Info[FilePos]->Open_Buffer_Continue(ToAdd, ToAdd_Size).to_ulong();
 }
 
 //---------------------------------------------------------------------------
@@ -301,20 +279,20 @@ String MediaInfoList_Internal::Inform(size_t FilePos, size_t)
         bool XML=false;
         if (MediaInfoLib::Config.Inform_Get()==_T("XML"))
             XML=true;
-        if (XML) Retour+=_T("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Mediainfo>\n");
-        else Retour+=MediaInfo_Custom_View(Stream_Max+2, 1);//Page_Begin
+        if (XML) Retour+=_T("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")+MediaInfoLib::Config.LineSeparator_Get()+_T("<Mediainfo version=\"")+MediaInfoLib::Config.Info_Version_Get().SubString(_T(" v"), Ztring())+_T("\">")+MediaInfoLib::Config.LineSeparator_Get();
+        else
+        Retour+=MediaInfo_Custom_View("Page_Begin");
         while (FilePos<Info.size())
         {
             Retour+=Inform(FilePos);
             if (FilePos<Info.size()-1)
             {
-                Retour+=MediaInfo_Custom_View(Stream_Max+3, 1);//Page_Middle
+                Retour+=MediaInfo_Custom_View("Page_Middle");
             }
             FilePos++;
         }
-        if (XML) Retour+=_T("</Mediainfo>\n");
-        else Retour+=MediaInfo_Custom_View(Stream_Max+4, 1);//Page_End
-        //Retour.FindAndReplace(_T("\\n"),_T( "\n"), 0, Ztring_Recursive);
+        if (XML) Retour+=_T("</Mediainfo>")+MediaInfoLib::Config.LineSeparator_Get();
+        else Retour+=MediaInfo_Custom_View("Page_End");//
         return Retour.c_str();
     }
 
@@ -323,6 +301,8 @@ String MediaInfoList_Internal::Inform(size_t FilePos, size_t)
     if (FilePos>=Info.size() || Info[FilePos]==NULL || Info[FilePos]->Count_Get(Stream_General)==0)
         return MediaInfoLib::Config.EmptyString_Get();
 
+    Info[FilePos]->IsFirst=FilePos==0;
+    Info[FilePos]->IsLast=(FilePos+1)==Info.size();
     return Info[FilePos]->Inform();
 }
 
@@ -417,7 +397,7 @@ String MediaInfoList_Internal::Option (const String &Option, const String &Value
     else if (OptionLower==_T("create_dummy"))
     {
         Info.resize(Info.size()+1);
-        Info[Info.size()-1]=new MediaInfo();
+        Info[Info.size()-1]=new MediaInfo_Internal();
         Info[Info.size()-1]->Option(Option, Value);
         return _T("");
     }

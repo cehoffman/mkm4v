@@ -1,5 +1,5 @@
 // File_Mpeg4_TimeCode - Info for MPEG-4 TimeCode  files
-// Copyright (C) 2009-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2009-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -18,11 +18,15 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //---------------------------------------------------------------------------
-// Compilation conditions
-#include "MediaInfo/Setup.h"
+// Pre-compilation
+#include "MediaInfo/PreComp.h"
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+#include "MediaInfo/Setup.h"
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
@@ -37,47 +41,57 @@ namespace MediaInfoLib
 {
 
 //***************************************************************************
-// Format
+// Constructor/Destructor
 //***************************************************************************
 
 //---------------------------------------------------------------------------
-void File_Mpeg4_TimeCode::FileHeader_Parse()
+File_Mpeg4_TimeCode::File_Mpeg4_TimeCode()
+:File__Analyze()
 {
-    if (Buffer_Size!=4)
-    {
-        Reject("TimeCode");
-        return;
-    }
+    //Out
+    Pos=(int32u)-1;
+}
 
+//***************************************************************************
+// Streams management
+//***************************************************************************
+
+//---------------------------------------------------------------------------
+void File_Mpeg4_TimeCode::Streams_Fill()
+{
+    if (Pos!=(int32u)-1 && FrameRate)
+    {
+        Fill(Stream_General, 0, "Delay", Pos*1000/FrameRate, 0);
+    }
+}
+
+//***************************************************************************
+// Buffer - Global
+//***************************************************************************
+
+//---------------------------------------------------------------------------
+void File_Mpeg4_TimeCode::Read_Buffer_Continue()
+{
     //Parsing
-    int32u Position;
-    Get_B4 (Position,                                           "Position");
-
-    //Filling
-    Accept("TimeCode");
-
-    if (FrameRate)
+    int32u Position=0;
+    while (Element_Offset<Element_Size)
     {
-        int64s Pos=Position;
-        if (NegativeTimes)
-            Pos=(int32s)Position;
-        if (StreamKind==Stream_General)
+        Get_B4 (Position,                                       "Position");
+        if (Pos==(int32u)-1) //First time code
         {
-            //No link with a track, we do all
-            Stream_Prepare(Stream_Video);
-            Fill(Stream_Video, 0, Video_Delay, Pos*1000/FrameRate, 0);
-
-            Stream_Prepare(Stream_Audio);
-            Fill(Stream_Audio, 0, Audio_Delay, Pos*1000/FrameRate, 0);
-        }
-        else
-        {
-            Stream_Prepare(StreamKind);
-            Fill(StreamKind, 0, "Delay", Pos*1000/FrameRate, 0);
+            Pos=Position;
+            if (NegativeTimes)
+                Pos=(int32s)Position;
         }
     }
 
-    Finish("TimeCode");
+    FILLING_BEGIN();
+        if (!Status[IsAccepted])
+        {
+            Accept("TimeCode");
+            Fill("TimeCode");
+        }
+    FILLING_END();
 }
 
 }

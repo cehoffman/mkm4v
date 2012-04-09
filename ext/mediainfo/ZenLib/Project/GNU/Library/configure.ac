@@ -3,37 +3,30 @@ dnl ### Init
 dnl #########################################################################
 
 dnl -------------------------------------------------------------------------
+dnl Name and version
+dnl
+AC_INIT([libzen], [0.4.25])
+dnl -------------------------------------------------------------------------
 dnl Test if we are at the good place
 dnl
-AC_INIT(../../../Source/ZenLib/Ztring.cpp)
+AC_CONFIG_SRCDIR([../../../Source/ZenLib/Ztring.cpp])
 
 dnl -------------------------------------------------------------------------
 dnl sets build, host, target variables and the same with _alias
 dnl
 AC_CANONICAL_BUILD
-
-dnl -------------------------------------------------------------------------
-dnl Name and version
-dnl
-AM_INIT_AUTOMAKE(ZenLib,0)
+AM_INIT_AUTOMAKE([foreign -Wall])
 
 dnl -------------------------------------------------------------------------
 dnl Autotools init
 dnl
-CFLAGS="$CFLAGS"
-CXXFLAGS="$CXXFLAGS"
 AC_PROG_CC
 AC_PROG_CXX
+AC_PROG_CPP
 AC_DISABLE_SHARED
 AC_LIBTOOL_WIN32_DLL
 AC_PROG_LIBTOOL
 AC_PROG_INSTALL
-
-dnl #########################################################################
-dnl Configure
-dnl #########################################################################
-
-Home=`pwd`
 
 dnl #########################################################################
 dnl ### Options
@@ -42,124 +35,24 @@ dnl #########################################################################
 dnl -------------------------------------------------------------------------
 dnl Enable
 dnl
-AC_ARG_ENABLE(debug,            AC_HELP_STRING([--enable-debug],            [Enable full debug]),                         , enable_debug=no)
-AC_ARG_ENABLE(gprof,            AC_HELP_STRING([--enable-gprof],            [Enable gprof log]),                          , enable_gprof=no)
-AC_ARG_ENABLE(universal_binary, AC_HELP_STRING([--enable-universal_binary], [Create Mac PPC/i386 Universal binary]),      , enable_universal_binary=no)
-AC_ARG_ENABLE(arch-ppc,         AC_HELP_STRING([--enable-arch-ppc],         [Create Mac PPC architecture]),               , enable_arch_ppc=no)
-AC_ARG_ENABLE(arch-ppc64,       AC_HELP_STRING([--enable-arch-ppc64],       [Create Mac PPC64 architecture]),             , enable_arch_ppc64=no)
-AC_ARG_ENABLE(arch-i386,        AC_HELP_STRING([--enable-arch-i386],        [Create Mac i386 architecture]),              , enable_arch_i386=no)
-AC_ARG_ENABLE(arch-x86_64,      AC_HELP_STRING([--enable-arch-x86_64],      [Create Mac x86_64 architecture]),            , enable_arch_x86_64=no)
-AC_ARG_ENABLE(unicode,          AC_HELP_STRING([--disable-unicode],         [Disable unicode]),                           , enable_unicode=yes)
-AC_ARG_ENABLE(wstringmissing,   AC_HELP_STRING([--enable-wstringmissing],   [Disable wstring support (old compilers)]),   , enable_wstringmissing=no)
-AC_ARG_ENABLE(large_files,      AC_HELP_STRING([--disable-large-files],     [Disable large files support]),               , enable_large_files=yes)
-dnl AC_ARG_ENABLE(threads,          AC_HELP_STRING([--disable-threads],         [Disable threads support]),                   , enable_threads=yes)
+AC_ARG_ENABLE([debug],            [AS_HELP_STRING([--enable-debug],             [Enable full debug])],                          , [enable_debug=no])
+AC_ARG_ENABLE([gprof],            [AS_HELP_STRING([--enable-gprof],             [Enable gprof log])],                           , [enable_gprof=no])
+AC_ARG_ENABLE([universal_binary], [AS_HELP_STRING([--enable-universal_binary],  [Create Mac PPC/i386 Universal binary])],       , [enable_universal_binary=no])
+AC_ARG_ENABLE([arch-ppc],         [AS_HELP_STRING(([--enable-arch-ppc],         [Create Mac PPC architecture]))],               , [enable_arch_ppc=no])
+AC_ARG_ENABLE([arch-ppc64],       [AS_HELP_STRING(([--enable-arch-ppc64],       [Create Mac PPC64 architecture]))],             , [enable_arch_ppc64=no])
+AC_ARG_ENABLE([arch-i386],        [AS_HELP_STRING(([--enable-arch-i386],        [Create Mac i386 architecture]))],              , [enable_arch_i386=no])
+AC_ARG_ENABLE([arch-x86_64],      [AS_HELP_STRING(([--enable-arch-x86_64],      [Create Mac x86_64 architecture]))],            , [enable_arch_x86_64=no])
+AC_ARG_ENABLE([unicode],          [AS_HELP_STRING(([--disable-unicode],         [Disable unicode]))],                           , [enable_unicode=yes])
+AC_ARG_ENABLE([wstringmissing],   [AS_HELP_STRING(([--enable-wstringmissing],   [Disable wstring support (old compilers)]))],   , [enable_wstringmissing=no])
+AC_ARG_ENABLE([large_files],      [AS_HELP_STRING(([--disable-large-files],     [Disable large files support]))],               , [enable_large_files=yes])
+dnl AC_ARG_ENABLE([threads],          [AS_HELP_STRING(([--disable-threads],         [Disable threads support]))],                   , [enable_threads=yes])
+ 
 
 dnl -------------------------------------------------------------------------
 dnl With
 dnl
-AC_ARG_WITH(macosx-sdk,         AC_HELP_STRING([--with-macosx-sdk],         [Force the Mac SDK]),                         , with_macosx_sdk=no)
-AC_ARG_WITH(macosx-version-min, AC_HELP_STRING([--with-macosx-version-min], [Force the Mac Version]),                     , with_macosx_version_min=no)
-AC_ARG_WITH(wxwidgets,      AC_HELP_STRING([--with-wxwidgets],      [Use WxWidgets]),                           , with_wxwidgets=no)
-AC_ARG_WITH(wx_gui,         AC_HELP_STRING([--with-wx-gui],         [Use WxWidgets with a GUI]),                , with_wx_gui=no)
-AC_ARG_WITH(wx_static,      AC_HELP_STRING([--with-wx-static],      [Use WxWidgets static libs]),               , with_wx_static=no)
-
-dnl -------------------------------------------------------------------------
-dnl Third party
-dnl
-m4_include(wxwin.m4)
-AM_OPTIONS_WXCONFIG
-
-dnl #########################################################################
-dnl ### Parsing options
-dnl #########################################################################
-
-dnl -------------------------------------------------------------------------
-dnl WxWidgets (v2)
-dnl
-
-dnl Download and compile
-WxBuiltInCompile()
-{
-	if test -e ../../../../Shared/Project/WxWidgets/Compile.sh; then
-		cd ../../../../Shared/Project/WxWidgets
-		chmod u+x Compile.sh
-		./Compile.sh --enable-unicode=$enable_unicode --enable-static=yes --enable-gui=$with_wx_gui --build=$build
-		cd $Home
-		if test -e ../../../../Shared/Source/WxWidgets/Compile/wx-config; then
-			if test "x$(../../../../Shared/Source/WxWidgets/Compile/wx-config --unicode=$enable_unicode --version)" = "x"; then
-				with_wxwidgets="no"
-			else
-				dnl Compiled builtin lib found!
-				with_wxwidgets="builtin"
-			fi
-		else
-			dnl Problem while compiling
-			with_wxwidgets="no"
-		fi
-	else
-		with_wxwidgets="no"
-	fi
-}
-
-dnl Search for a good build, else built it
-WxBuiltInSearchGoodBuild()
-{
-	if test -e ../../../../Shared/Source/WxWidgets/Compile/wx-config; then
-		dnl There is already a compiled version
-		if test "x$(../../../../Shared/Source/WxWidgets/Compile/wx-config --unicode=$enable_unicode --static=$with_wx_static --version)" = "x"; then
-			if test "x$(../../../../Shared/Source/WxWidgets/Compile/wx-config --unicode=$enable_unicode --version)" = "x"; then
-				dnl Not well compiled, try to compile again
-				WxBuiltInCompile
-			else
-				dnl Already compiled builtin lib found!
-				with_wxwidgets="builtin"
-			fi
-		else
-			dnl Already compiled builtin lib found!
-			with_wxwidgets="builtin"
-		fi
-	else
-		dnl Not yet compiled, try to compile
-		WxBuiltInCompile
-	fi
-}
-
-dnl The test
-if test "$with_wxwidgets" = "yes"; then
-    dnl Searching system libs
-    AM_PATH_WXCONFIG(2.8.0, WxSystemLibs=1, WxSystemLibs=0, [base], --unicode=$enable_unicode --static=$with_wx_static)
-    if test "$WxSystemLibs" != 1; then
-        dnl Searching builtin libs
-		WxBuiltInSearchGoodBuild
-	else
-        dnl System lib found!
-		with_wxwidgets="system"
-	fi
-	
-	if test "$with_wxwidgets" = "no"; then
-		AC_MSG_ERROR([
-			wxWidgets must be installed on your system.
-	 
-			Please check that wx-config is in path, the directory
-			where wxWidgets libraries are installed (returned by
-			'wx-config --libs' or 'wx-config --static --libs' command)
-			is in LD_LIBRARY_PATH or equivalent variable and
-			wxWidgets version is 2.8.0 or above, and the compilation 
-			is compatible with 
-			--unicode=$enable_unicode --static=$with_wx_static
-			])
-	fi
-	if test "$with_wxwidgets" = "system"; then
-		if test "${with_wx_config+set}" = set; then
-			ZenLib_Wx_Config=$with_wx_config;
-		else
-			ZenLib_Wx_Config="wx-config"
-		fi
-	fi
-	if test "$with_wxwidgets" = "builtin"; then
-       ZenLib_Wx_Config="../../../../Shared/Source/WxWidgets/Compile/wx-config"
-	fi
-fi
+AC_ARG_WITH([macosx-sdk],         [AS_HELP_STRING(([--with-macosx-sdk],         [Force the Mac SDK]))],                         , [with_macosx_sdk=no])
+AC_ARG_WITH([macosx-version-min], [AS_HELP_STRING(([--with-macosx-version-min], [Force the Mac Version]))],                     , [with_macosx_version_min=no])
 
 dnl #########################################################################
 dnl ### Compiler specific
@@ -226,16 +119,6 @@ dnl ### ZenLib flags
 dnl #########################################################################
 
 dnl -------------------------------------------------------------------------
-dnl WxWidgets
-dnl
-if test "$with_wxwidgets" != "no"; then
-	CFLAGS="$CFLAGS $($ZenLib_Wx_Config --unicode=$enable_unicode --cflags)"
-	CXXFLAGS="$CXXFLAGS $($ZenLib_Wx_Config --unicode=$enable_unicode --cxxflags)"
-	ZenLib_LIBS="$ZenLib_LIBS $($ZenLib_Wx_Config --unicode=$enable_unicode --libs)"
-	ZenLib_LIBS_Static="$ZenLib_LIBS_Static $($ZenLib_Wx_Config --unicode=$enable_unicode --libs)"
-fi
-
-dnl -------------------------------------------------------------------------
 dnl Common
 dnl
 ZenLib_LIBS="-L$(pwd) -lzen -lpthread $ZenLib_LIBS"
@@ -281,6 +164,21 @@ fi
 dnl -------------------------------------------------------------------------
 dnl Threads
 dnl
+
+dnl -------------------------------------------------------------------------
+dnl Check if size_t is long
+dnl
+AC_LANG([C++])
+AC_COMPILE_IFELSE([
+	#include <cstdlib>
+	void foo(signed int) {}
+	void foo(unsigned int) {}
+	int main () {foo(size_t(0));}], [size_t_is_long="no"], [size_t_is_long="yes"])
+
+if test "$size_t_is_long" = "yes"; then
+	CXXFLAGS="$CXXFLAGS -DSIZE_T_IS_LONG"
+	ZenLib_CXXFLAGS="$ZenLib_CXXFLAGS -DSIZE_T_IS_LONG"
+fi
 
 dnl -------------------------------------------------------------------------
 dnl GNU compiler
@@ -331,7 +229,6 @@ echo ""
 echo "  Unicode?                                                $enable_unicode"
 echo "  wstring missing support?                                $ZenLib_WstringMissing"
 echo "  Large files support?                                    $enable_large_files"
-echo "  Using WxWidgets?                                        $with_wxwidgets"
 echo ""
 echo "  Create static lib?                                      $enable_static"
 echo "  Create shared lib?                                      $enable_shared"

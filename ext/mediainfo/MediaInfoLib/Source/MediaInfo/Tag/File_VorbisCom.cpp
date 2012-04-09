@@ -1,5 +1,5 @@
 // File_VorbisCom - Info for VorbisComments tagged files
-// Copyright (C) 2007-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2007-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -18,11 +18,15 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //---------------------------------------------------------------------------
-// Compilation conditions
-#include "MediaInfo/Setup.h"
+// Pre-compilation
+#include "MediaInfo/PreComp.h"
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+#include "MediaInfo/Setup.h"
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
@@ -135,8 +139,8 @@ void File_VorbisCom::FileHeader_Parse()
                 Library_Version=Library_Date;
             if (Library_Date.size()==8)
             {
-                Library_Date.insert(Library_Date.begin()+6, _T('-'));
-                Library_Date.insert(Library_Date.begin()+4, _T('-'));
+                Library_Date.insert(6, 1, _T('-'));
+                Library_Date.insert(4, 1, _T('-'));
                 Library_Date.insert(0, _T("UTC "));
             }
         }
@@ -176,6 +180,11 @@ void File_VorbisCom::Data_Parse()
     //Parsing
     Ztring comment;
     Get_UTF8(Element_Size, comment,                             "comment");
+    if (Element_Size && comment.empty())
+    {
+        Element_Offset=0; //Retry
+        Get_Local(Element_Size, comment,                             "comment");
+    }
     Element_Name(comment);
 
     FILLING_BEGIN_PRECISE();
@@ -184,10 +193,10 @@ void File_VorbisCom::Data_Parse()
         Ztring Value=comment.SubString(_T("="), _T(""));
 
              if (Key==_T("ADDED_TIMESTAMP"))        Fill(StreamKind_Common,   0, "Added_Date", Ztring().Date_From_Milliseconds_1601(Value.To_int64u()/1000));
-        else if (Key==_T("ALBUM ARTIST"))           {if (Value!=Retrieve(StreamKind_Common,   0, "Performer")) Fill(StreamKind_Common,   0, "Performer", Value);}
+        else if (Key==_T("ALBUM ARTIST"))           {if (Value!=Retrieve(StreamKind_Common,   0, "Album/Performer")) Fill(StreamKind_Common,   0, "Album/Performer", Value);}
         else if (Key==_T("ALBUM"))                  Fill(StreamKind_Common,   0, "Album", Value);
         else if (Key==_T("ALBUM_COMMENT"))          Fill(StreamKind_Common,   0, "Comment", Value);
-        else if (Key==_T("ALBUMARTIST"))            {if (Value!=Retrieve(StreamKind_Common,   0, "Performer")) Fill(StreamKind_Common,   0, "Performer", Value);}
+        else if (Key==_T("ALBUMARTIST"))            {if (Value!=Retrieve(StreamKind_Common,   0, "Album/Performer")) Fill(StreamKind_Common,   0, "Album/Performer", Value);}
         else if (Key==_T("ARTIST"))                 {if (Value!=Retrieve(StreamKind_Common,   0, "Performer")) Fill(StreamKind_Common,   0, "Performer", Value);}
         else if (Key==_T("AUTHOR"))                 Fill(StreamKind_Common,   0, "WrittenBy", Value);
         else if (Key==_T("BUYCDURL"))               {}
@@ -201,6 +210,7 @@ void File_VorbisCom::Data_Parse()
         else if (Key==_T("DATE"))                   Fill(StreamKind_Common,   0, "Recorded_Date", Value, true);
         else if (Key==_T("DESCRIPTION"))            Fill(StreamKind_Common,   0, "Description", Value);
         else if (Key==_T("DISC"))                   Fill(StreamKind_Common,   0, "Part", Value, true);
+        else if (Key==_T("DISCID"))                 {}
         else if (Key==_T("DISCNUMBER"))             Fill(StreamKind_Common,   0, "Part", Value, true);
         else if (Key==_T("ENCODEDBY"))              Fill(StreamKind_Common,   0, "EncodedBy", Value);
         else if (Key==_T("ENCODER"))                Fill(StreamKind_Common,   0, "Encoded_Application", Value);
@@ -217,19 +227,29 @@ void File_VorbisCom::Data_Parse()
         else if (Key==_T("LYRICS"))                 Fill(StreamKind_Common,   0, "Lyrics", Value);
         else if (Key==_T("LWING_GAIN"))             Fill(StreamKind_Multiple, 0, "ReplayGain_Gain", Value.To_float64(), 2);
         else if (Key==_T("LOCATION"))               Fill(StreamKind_Common,   0, "Recorded/Location", Value);
+        else if (Key==_T("MUSICBRAINZ_ALBUMID"))    {}
+        else if (Key==_T("MUSICBRAINZ_ALBUMARTISTID")) {}
+        else if (Key==_T("MUSICBRAINZ_ARTISTID"))   {}
+        else if (Key==_T("MUSICBRAINZ_TRACKID"))    {}
+        else if (Key==_T("MUSICBRAINZ_SORTNAME"))   Fill(StreamKind_Common,   0, "Performer/Sort", Value);
+        else if (Key==_T("MUSICBRAINZ_DISCID"))     {}
         else if (Key==_T("ORGANIZATION"))           Fill(StreamKind_Common,   0, "Producer", Value);
         else if (Key==_T("PERFORMER"))              Fill(StreamKind_Common,   0, "Performer", Value);
         else if (Key==_T("PLAY_COUNT"))             Fill(StreamKind_Multiple, 0, "Played_Count", Value.To_int64u());
         else if (Key==_T("RATING"))                 Fill(StreamKind_Multiple, 0, "Rating", Value);
         else if (Key==_T("REPLAYGAIN_ALBUM_GAIN"))  Fill(StreamKind_Common,   0, "Album_ReplayGain_Gain", Value.To_float64(), 2);
         else if (Key==_T("REPLAYGAIN_ALBUM_PEAK"))  Fill(StreamKind_Common,   0, "Album_ReplayGain_Peak", Value.To_float64(), 6);
+        else if (Key==_T("REPLAYGAIN_REFERENCE_LOUDNESS")) {}
         else if (Key==_T("REPLAYGAIN_TRACK_GAIN"))  Fill(StreamKind_Specific, 0, "ReplayGain_Gain",       Value.To_float64(), 2);
         else if (Key==_T("REPLAYGAIN_TRACK_PEAK"))  Fill(StreamKind_Specific, 0, "ReplayGain_Peak",       Value.To_float64(), 6);
         else if (Key==_T("TITLE"))                  Fill(StreamKind_Common,   0, "Title", Value);
         else if (Key==_T("TOTALTRACKS"))            Fill(StreamKind_Common,   0, "Track/Position_Total", Value);
+        else if (Key==_T("TOTALDISCS"))             Fill(StreamKind_Common,   0, "Part/Position_Total", Value);
         else if (Key==_T("TRACK_COMMENT"))          Fill(StreamKind_Multiple, 0, "Comment", Value);
         else if (Key==_T("TRACKNUMBER"))            Fill(StreamKind_Multiple, 0, "Track/Position", Value);
+        else if (Key==_T("TRACKTOTAL"))             Fill(StreamKind_Multiple, 0, "Track/Position_Total", Value);
         else if (Key==_T("VERSION"))                Fill(StreamKind_Common,   0, "Track/More", Value);
+        else if (Key==_T("BPM"))                    Fill(StreamKind_Common,   0, "BPM", Value);
         else if (Key==_T("WAVEFORMATEXTENSIBLE_CHANNEL_MASK"))
         {
             //This is an hexadecimal value

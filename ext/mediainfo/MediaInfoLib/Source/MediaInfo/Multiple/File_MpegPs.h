@@ -1,5 +1,5 @@
 // File_Mpeg - Info for MPEG files
-// Copyright (C) 2002-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2002-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -45,20 +45,64 @@ public :
     //In
     bool   FromTS;                      //Indicate if stream comes from TS
     int8u  FromTS_stream_type;          //ID from TS
+    int32u FromTS_program_format_identifier; //Registration from TS
     int32u FromTS_format_identifier;    //Registration from TS
     int8u  FromTS_descriptor_tag;       //Descriptor from TS
     int8u  MPEG_Version;                //MPEG Version (or automaticly detected)
     bool   Searching_TimeStamp_Start;
     #ifdef MEDIAINFO_MPEG4_YES
-        File_Mpeg4_Descriptors::decspecificinfotag* DecSpecificInfoTag;
+        File__Analyze* ParserFromTs;
         File_Mpeg4_Descriptors::slconfig* SLConfig;
     #endif
+    #if MEDIAINFO_DEMUX
+        struct demux
+        {
+            struct buffer
+            {
+                int64u  DTS;
+                size_t  Buffer_Size;
+                size_t  Buffer_Size_Max;
+                int8u*  Buffer;
+
+                buffer()
+                {
+                    DTS=(int64u)-1;
+                    Buffer_Size=0;
+                    Buffer_Size_Max=0;
+                    Buffer=NULL;
+                }
+
+                ~buffer()
+                {
+                    delete[] Buffer;
+                }
+            };
+            std::vector<buffer*> Buffers;
+
+            demux()
+            {
+            }
+
+            ~demux()
+            {
+                for (size_t Pos=0; Pos<Buffers.size(); Pos++)
+                    delete Buffers[Pos]; //Buffers[Pos]=NULL;
+            }
+        };
+        demux* SubStream_Demux;
+        int8u Demux_StreamIsBeingParsed_type;
+        int8u Demux_StreamIsBeingParsed_stream_id;
+    #endif //MEDIAINFO_DEMUX
+    #if MEDIAINFO_SEEK
+        int64u Unsynch_Frame_Count_Temp;
+    #endif //MEDIAINFO_SEEK
 
     //Out
     bool   HasTimeStamps;
 
     //Constructor/Destructor
     File_MpegPs();
+    ~File_MpegPs();
 
 private :
     //Streams management
@@ -74,17 +118,21 @@ private :
     void Synched_Init();
 
     //Buffer - Global
+    void Read_Buffer_Init ();
     void Read_Buffer_Unsynched();
+    #if MEDIAINFO_SEEK
+    size_t Read_Buffer_Seek (size_t Method, int64u Value, int64u ID);
+    #endif //MEDIAINFO_SEEK
     void Read_Buffer_Continue ();
+    void Read_Buffer_AfterParsing();
 
     //Buffer - Per element
     void Header_Parse();
     bool Header_Parse_Fill_Size();
-    void Header_Parse_PES_packet(int8u start_code);
-    void Header_Parse_PES_packet_MPEG1(int8u start_code);
-    void Header_Parse_PES_packet_MPEG2(int8u start_code);
+    bool Header_Parse_PES_packet(int8u stream_id);
+    void Header_Parse_PES_packet_MPEG1(int8u stream_id);
+    void Header_Parse_PES_packet_MPEG2(int8u stream_id);
     void Data_Parse();
-    void Detect_EOF();
     bool BookMark_Needed();
 
     //Packet
@@ -104,7 +152,9 @@ private :
     bool           private_stream_1_Choose_DVD_ID();
     File__Analyze* private_stream_1_ChooseParser();
     const ZenLib::Char* private_stream_1_ChooseExtension();
-    void           private_stream_1_Element_Info();
+    #if MEDIAINFO_TRACE
+    void           private_stream_1_Element_Info1();
+    #endif //MEDIAINFO_TRACE
     int8u          private_stream_1_ID;
     size_t         private_stream_1_Offset;
     bool           private_stream_1_IsDvdVideo;
@@ -120,8 +170,9 @@ private :
     int8u video_stream_Count;
     int8u audio_stream_Count;
     int8u private_stream_1_Count;
-    bool  private_stream_2_Count;
+    int8u private_stream_2_Count;
     int8u extension_stream_Count;
+    int8u SL_packetized_stream_Count;
 
     //From packets
     int32u program_mux_rate;
@@ -154,11 +205,11 @@ private :
         std::vector<File__Analyze*> Parsers; //Sometimes, we need to do parallel tests
         Mpeg_TimeStamp TimeStamp_Start;
         Mpeg_TimeStamp TimeStamp_End;
-        bool           StreamIsRegistred;
+        size_t         StreamIsRegistred;
         bool           Searching_Payload;
         bool           Searching_TimeStamp_Start;
         bool           Searching_TimeStamp_End;
-        size_t         FrameCount_AfterLast_TimeStamp_End;
+        bool           IsFilled;
 
         ps_stream()
         {
@@ -166,11 +217,11 @@ private :
             StreamPos=0;
             stream_type=0;
             DVD_Identifier=0;
-            StreamIsRegistred=false;
+            StreamIsRegistred=0;
             Searching_Payload=false;
             Searching_TimeStamp_Start=false;
             Searching_TimeStamp_End=false;
-            FrameCount_AfterLast_TimeStamp_End=0;
+            IsFilled=false;
         }
 
         ~ps_stream()
@@ -182,19 +233,14 @@ private :
     std::vector<ps_stream> Streams;
     std::vector<ps_stream> Streams_Private1; //There can have multiple streams in one private stream
     std::vector<ps_stream> Streams_Extension; //There can have multiple streams in one private stream
-    int8u start_code;
+    int8u stream_id;
 
     //Temp
     int64u SizeToAnalyze; //Total size of a chunk to analyse, it may be changed by the parser
     int8u  stream_id_extension;
     bool   video_stream_Unlimited;
     int16u Buffer_DataSizeToParse;
-    int64u PTS;
-    int64u DTS;
-    bool   Parsing_End_ForDTS;
     std::vector<int64u> video_stream_PTS;
-    size_t video_stream_PTS_FrameCount;
-    bool video_stream_PTS_MustAddOffset;
 
     //Helpers
     bool Header_Parser_QuickSearch();
@@ -207,6 +253,7 @@ private :
     File__Analyze* ChooseParser_Dirac();
     File__Analyze* ChooseParser_Mpega();
     File__Analyze* ChooseParser_Adts();
+    File__Analyze* ChooseParser_Latm();
     File__Analyze* ChooseParser_AC3();
     File__Analyze* ChooseParser_DTS();
     File__Analyze* ChooseParser_SDDS();
@@ -214,23 +261,39 @@ private :
     File__Analyze* ChooseParser_PCM();
     File__Analyze* ChooseParser_AES3();
     File__Analyze* ChooseParser_RLE();
+    File__Analyze* ChooseParser_DvbSubtitle();
     File__Analyze* ChooseParser_PGS();
+    File__Analyze* ChooseParser_Teletext();
     File__Analyze* ChooseParser_PS2();
     File__Analyze* ChooseParser_NULL();
 
     //File__Analyze helpers
-    void Streams_Fill_PerStream(size_t StreamID, ps_stream &Temp);
-    void Streams_Finish_PerStream(size_t StreamID, ps_stream &Temp);
-    void xxx_stream_Parse(ps_stream &Temp, int8u &xxx_Count);
+    enum kindofstream
+    {
+        KindOfStream_Main,
+        KindOfStream_Private,
+        KindOfStream_Extension,
+    };
+    void Streams_Fill_PerStream(size_t StreamID, ps_stream &Temp, kindofstream KindOfStream);
+    void Streams_Finish_PerStream(size_t StreamID, ps_stream &Temp, kindofstream KindOfStream);
+    void xxx_stream_Parse(ps_stream &Temp, int8u &stream_Count);
 
     //Output buffer
     size_t Output_Buffer_Get (const String &Value);
     size_t Output_Buffer_Get (size_t Pos);
+
+    #if MEDIAINFO_SEEK
+        std::map<int16u, int64u>    Unsynch_Frame_Counts;
+        int64u                      Seek_Value;
+        int64u                      Seek_Value_Maximal;
+        int64u                      Seek_ID;
+        bool                        Duration_Detected;
+    #endif //MEDIAINFO_SEEK
+    #if MEDIAINFO_SEEK && MEDIAINFO_IBI
+        ibi Ibi;
+    #endif //MEDIAINFO_SEEK && MEDIAINFO_IBI
 };
 
 } //NameSpace
 
 #endif
-
-
-

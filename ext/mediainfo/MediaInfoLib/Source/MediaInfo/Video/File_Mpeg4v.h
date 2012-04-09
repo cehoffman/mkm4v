@@ -1,5 +1,5 @@
 // File_Avc - Info for MPEG-4 Visual Visual files
-// Copyright (C) 2006-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2006-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -42,7 +42,7 @@ class File_Mpeg4v : public File__Analyze
 {
 public :
     //In
-    size_t Frame_Count_Valid;
+    int64u Frame_Count_Valid;
     bool   FrameIsAlwaysComplete;
     void   OnlyVOP(); //Data has only VOPs in it (configuration is elsewhere)
 
@@ -64,7 +64,12 @@ private :
     bool Synchronize() {return Synchronize_0x000001();}
     bool Synched_Test();
     void Synched_Init();
-    
+
+    //Buffer - Demux
+    #if MEDIAINFO_DEMUX
+    bool Demux_UnpacketizeContainer_Test();
+    #endif //MEDIAINFO_DEMUX
+
     //Buffer - Per element
     void Header_Parse();
     bool Header_Parser_QuickSearch();
@@ -111,17 +116,17 @@ private :
     std::vector<stream> Streams;
 
     //Count of a Packets
-    size_t Frame_Count;
     size_t IVOP_Count;
     size_t PVOP_Count;
     size_t BVOP_Count;
+    size_t BVOP_Count_Max;
     size_t SVOP_Count;
     size_t NVOP_Count;
     size_t Interlaced_Top;
     size_t Interlaced_Bottom;
+    int64u Frame_Count_InThisBlock_Max;
 
     //From video_object_layer
-    size_t time_size;
     int32u fixed_vop_time_increment;
     int32u Time_Begin_Seconds;
     int32u Time_End_Seconds;
@@ -130,6 +135,7 @@ private :
     int16u object_layer_width;
     int16u object_layer_height;
     int16u vop_time_increment_resolution;
+    int8u  time_size;
     int8u  visual_object_verid;
     int8u  profile_and_level_indication;
     int8u  no_of_sprite_warping_points;

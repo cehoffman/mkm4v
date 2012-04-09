@@ -1,5 +1,5 @@
 // File_Dirac - Info for Dirac files
-// Copyright (C) 2007-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2007-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -41,7 +41,7 @@ class File_Dirac : public File__Analyze
 {
 public :
     //In
-    size_t Frame_Count_Valid;
+    int64u Frame_Count_Valid;
     bool   Ignore_End_of_Sequence;
 
     //Constructor/Destructor
@@ -95,9 +95,6 @@ private :
         }
     };
     std::vector<stream> Streams;
-
-    //Count of a Packets
-    size_t Frame_Count;
 
     //Temp
     int32u frame_width;

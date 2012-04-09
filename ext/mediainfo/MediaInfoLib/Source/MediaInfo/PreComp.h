@@ -1,5 +1,5 @@
 // PreComp - PreComp file for MediaInfo
-// Copyright (C) 2006-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2006-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -22,19 +22,18 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //---------------------------------------------------------------------------
-#ifdef ZENLIB_USEWX
-    #include <wx/wxprec.h>
-    #ifdef WX_PRECOMP
-        #include <string>
-        #include <sstream>
-        #include <vector>
-    #endif
-#else //ZENLIB_USEWX
-    #if defined(__BORLANDC__) ||defined(__VISUALC__)
-        #include <string>
-        #include <sstream>
-        #include <vector>
-    #endif
-#endif //ZENLIB_USEWX
+#ifndef MediaInfo_PreCompH
+#define MediaInfo_PreCompH
 //---------------------------------------------------------------------------
 
+//---------------------------------------------------------------------------
+#if defined(_MSC_VER) || defined(__BORLANDC__)
+ #include "MediaInfo/Setup.h"
+ #include "MediaInfo/File__Analyze.h"
+#endif //_MSC_VER
+#ifdef __BORLANDC__
+    #pragma hdrstop
+#endif
+//---------------------------------------------------------------------------
+
+#endif

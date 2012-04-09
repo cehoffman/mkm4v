@@ -1,5 +1,5 @@
 // File_Ac3 - Info for AC3 files
-// Copyright (C) 2004-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2004-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -37,9 +37,10 @@ class File_Ac3 : public File__Analyze
 {
 public :
     //In
-    size_t Frame_Count_Valid;
+    int64u Frame_Count_Valid;
     bool   MustParse_dac3;
     bool   MustParse_dec3;
+    bool   CalculateDelay;
 
     //Constructor/Destructor
     File_Ac3();
@@ -47,6 +48,7 @@ public :
 private :
     //Streams management
     void Streams_Fill();
+    void Streams_Finish();
 
     //Buffer - File header
     bool FileHeader_Begin();
@@ -54,6 +56,11 @@ private :
     //Buffer - Synchro
     bool Synchronize();
     bool Synched_Test();
+
+    //Buffer - Demux
+    #if MEDIAINFO_DEMUX
+    bool Demux_UnpacketizeContainer_Test();
+    #endif //MEDIAINFO_DEMUX
 
     //Buffer - Global
     void Read_Buffer_Continue ();
@@ -65,8 +72,17 @@ private :
     //Elements
     void Core();
     void HD();
+    void TimeStamp();
     void dac3();
     void dec3();
+    bool FrameSynchPoint_Test();
+    bool CRC_Compute(size_t Size);
+    size_t Core_Size_Get();
+
+    //Buffer
+    const int8u* Save_Buffer;
+    size_t Save_Buffer_Offset;
+    size_t Save_Buffer_Size;
 
     //Temp
     struct dolby
@@ -86,7 +102,14 @@ private :
     };
     dolby  FirstFrame_Dolby;
     dolby  FirstFrame_Dolby2;
-    size_t Frame_Count;
+    std::vector<int64u> dialnorms;
+    std::vector<int64u> dialnorm2s;
+    std::vector<int64u> comprs;
+    std::vector<int64u> compr2s;
+    std::vector<int64u> dynrngs;
+    std::vector<int64u> dynrng2s;
+    std::map<int8u, int64u> fscods;
+    std::map<int8u, int64u> frmsizecods;
     size_t HD_Count;
     int16u chanmap;
     int16u frmsiz;
@@ -99,7 +122,7 @@ private :
     int8u  bsmod;
     int8u  acmod;
     int8u  dsurmod;
-    int8u  numblks;
+    int8u  numblkscod;
     int8u  HD_StreamType;
     int8u  HD_SubStreams_Count;
     int8u  HD_SamplingRate1;
@@ -107,6 +130,7 @@ private :
     int8u  HD_Channels1;
     int8u  HD_Resolution1;
     int8u  HD_Resolution2;
+    int8u  dynrng_Old;
     bool   lfeon;
     bool   dxc3_Parsed;
     bool   HD_MajorSync_Parsed;
@@ -115,6 +139,14 @@ private :
     bool   HD_AlreadyCounted;
     bool   HD_IsVBR;
     bool   Core_IsPresent;
+    bool   dynrnge_Exists;
+    bool   TimeStamp_IsPresent;
+    bool   TimeStamp_IsParsing;
+    bool   TimeStamp_Parsed;
+    bool   TimeStamp_DropFrame_IsValid;
+    bool   TimeStamp_DropFrame_Content;
+    bool   BigEndian;
+    float64 TimeStamp_Content;
 };
 
 } //NameSpace

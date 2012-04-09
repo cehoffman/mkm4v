@@ -1,5 +1,5 @@
 // File_OtherText - Use magic number to detect only the format (Text)
-// Copyright (C) 2006-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2006-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -18,11 +18,15 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //---------------------------------------------------------------------------
-// Compilation conditions
-#include "MediaInfo/Setup.h"
+// Pre-compilation
+#include "MediaInfo/PreComp.h"
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+#include "MediaInfo/Setup.h"
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
@@ -186,10 +190,6 @@ void File_OtherText::Read_Buffer_Continue()
        Format=_T("CPC Captioning");
        Codec=_T("CPC Captioning");
     }
-    else if (false
-    )
-    {
-    }
     else
         return;
 
@@ -209,8 +209,8 @@ void File_OtherText::Read_Buffer_Continue()
     Fill(Stream_Text, 0, Text_Codec, Codec);
 
     //No more need data
-    Element_Begin(Format);
-    Element_End();
+    Element_Begin1(Format);
+    Element_End0();
     Finish("Other text");
 }
 

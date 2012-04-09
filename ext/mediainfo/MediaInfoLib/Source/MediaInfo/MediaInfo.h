@@ -1,5 +1,5 @@
 // MediaInfo - All information about media files
-// Copyright (C) 2002-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2002-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -111,6 +111,11 @@ public :
         /// Open a stream and collect information about it (technical information and tags)
         /// @brief Open a stream (Finalize)
     size_t Open_Buffer_Finalize ();
+        /// If Open() is used in "PerPacket" mode, parse only one packet and return
+        /// @brief Read one packet (if "PerPacket" mode is set)
+        /// @return a bitfield \n
+        ///         bit 0: A packet was read
+    size_t Open_NextPacket ();
         /// (NOT IMPLEMENTED YET) Save the file opened before with Open() (modifications of tags)
         /// @brief (NOT IMPLEMENTED YET) Save the file
         /// @retval 0 failed
@@ -160,7 +165,7 @@ public :
         /// @param OldValue The old value of the parameter \n if OldValue is empty and ToSet is filled: tag is added \n if OldValue is filled and ToSet is filled: tag is replaced \n if OldValue is filled and ToSet is empty: tag is deleted
         /// @retval >0 succeed
         /// @retval 0 failed
-    size_t Set (const String &ToSet, stream_t StreamKind, size_t StreamNumber, size_t Parameter, const String &OldValue=_T(""));
+    size_t Set (const String &ToSet, stream_t StreamKind, size_t StreamNumber, size_t Parameter, const String &OldValue=String());
         /// (NOT IMPLEMENTED YET) Set a piece of information about a file (parameter is a string)
         /// @warning Not yet implemented, do not use it
         /// @brief (NOT IMPLEMENTED YET) Set information about a file (parameter is a string)
@@ -171,7 +176,7 @@ public :
         /// @param OldValue The old value of the parameter \n if OldValue is empty and ToSet is filled: tag is added \n if OldValue is filled and ToSet is filled: tag is replaced \n if OldValue is filled and ToSet is empty: tag is deleted
         /// @retval >0 succeed
         /// @retval 0 failed
-    size_t Set (const String &ToSet, stream_t StreamKind, size_t StreamNumber, const String &Parameter, const String &OldValue=_T(""));
+    size_t Set (const String &ToSet, stream_t StreamKind, size_t StreamNumber, const String &Parameter, const String &OldValue=String());
 
     //Output_Buffered
         /// Output the written size when "File_Duplicate" option is used.
@@ -224,13 +229,13 @@ public :
         ///       * "Info_Codecs": Information about which codec is known \n
         ///       * "Info_Version": Information about the version of MediaInfoLib
         ///       * "Info_Url": Information about where to find the last version
-    String        Option (const String &Option, const String &Value=_T(""));
+    String        Option (const String &Option, const String &Value=String());
         /// Configure or get information about MediaInfoLib
         /// @param Option The name of option
         /// @param Value The value of option
         /// @return Depend of the option: by default "" (nothing) means No, other means Yes
         /// @post Known options are: See MediaInfo::Option()
-    static String Option_Static (const String &Option, const String &Value=_T(""));
+    static String Option_Static (const String &Option, const String &Value=String());
         /// @brief (NOT IMPLEMENTED YET) Get the state of the library
         /// @retval <1000 No information is available for the file yet
         /// @retval >=1000_<5000 Only local (into the file) information is available, getting Internet information (titles only) is no finished yet

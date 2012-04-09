@@ -1,5 +1,5 @@
 // File_Mpeg_Descriptors - Info for MPEG files
-// Copyright (C) 2007-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2007-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -61,15 +61,20 @@ struct complete_stream
         {
             bool HasChanged;
             std::map<std::string, Ztring> Infos;
+            std::map<Ztring, Ztring> EPGs;
             std::vector<int16u> elementary_PIDs;
             size_t StreamPos; //Stream_Menu
             int32u registration_format_identifier;
             int16u pid;
             int16u PCR_PID;
-            int16u program_number;
             int16u source_id; //ATSC
+            bool   source_id_IsValid;
             bool   IsParsed;
             bool   IsRegistered;
+            bool   Update_Needed_IsRegistered;
+            bool   Update_Needed_StreamCount;
+            bool   Update_Needed_StreamPos;
+            bool   Update_Needed_Info;
 
             //DVB
             struct dvb_epg_block
@@ -95,6 +100,37 @@ struct complete_stream
             dvb_epg_blocks DVB_EPG_Blocks; //Key is table_id
             bool DVB_EPG_Blocks_IsUpdated;
 
+            //SCTE 35
+            struct scte35
+            {
+                struct segmentation
+                {
+                    struct segment
+                    {
+                        int8u Status; //If it is currently in the program: 0=Running, 1=Ended, 2=Early termination
+
+                        segment()
+                        {
+                            Status=(int8u)-1;
+                        }
+                    };
+
+                    typedef std::map<int8u, segment> segments; //Key is segmentation_type_id
+                    segments Segments;
+                    ;
+                };
+
+                typedef std::map<int32u, segmentation> segmentations; //Key is segmentation_event_id
+                segmentations Segmentations;
+                int16u  pid;
+
+                scte35()
+                {
+                    pid=(int16u)-1;
+                }
+            };
+            scte35* Scte35;
+
             //Constructor/Destructor
             program()
             {
@@ -103,11 +139,16 @@ struct complete_stream
                 registration_format_identifier=0x00000000;
                 pid=0x00000;
                 PCR_PID=0x0000;
-                program_number=0x0000;
-                source_id=0x0000;
+                source_id=(int16u)-1;
+                source_id_IsValid=false;
                 IsParsed=false;
                 IsRegistered=false;
+                Update_Needed_IsRegistered=false;
+                Update_Needed_StreamCount=false;
+                Update_Needed_StreamPos=false;
+                Update_Needed_Info=false;
                 DVB_EPG_Blocks_IsUpdated=false;
+                Scte35=NULL;
             }
         };
         typedef std::map<int16u, program> programs; //Key is program_number
@@ -119,7 +160,6 @@ struct complete_stream
         {
             File__Analyze*                                  Parser;
             #ifdef MEDIAINFO_MPEG4_YES
-                File_Mpeg4_Descriptors::decspecificinfotag* DecSpecificInfoTag;
                 File_Mpeg4_Descriptors::slconfig*           SLConfig;
             #endif
 
@@ -128,7 +168,6 @@ struct complete_stream
             {
                 Parser=NULL;
                 #ifdef MEDIAINFO_MPEG4_YES
-                    DecSpecificInfoTag=NULL;
                     SLConfig=NULL;
                 #endif
             }
@@ -137,7 +176,6 @@ struct complete_stream
             {
                 delete Parser; //Parser=NULL;
                 #ifdef MEDIAINFO_MPEG4_YES
-                    delete DecSpecificInfoTag; //DecSpecificInfoTag=NULL;
                     delete SLConfig; //SLConfig=NULL;
                 #endif
             }
@@ -147,18 +185,20 @@ struct complete_stream
 
         //ATSC
         int16u source_id; //Global
+        int16u source_id_IsValid;
 
         transport_stream()
         {
             HasChanged=false;
-            source_id=0;
+            source_id=(int16u)-1;
+            source_id_IsValid=false;
             Programs_NotParsedCount=(size_t)-1;
         }
     };
     typedef std::map<int16u, transport_stream> transport_streams; //Key is transport_stream_id
     transport_streams Transport_Streams; //Key is transport_stream_id
 
-    //Per PID
+    //Per pid
     struct stream
     {
         File__Analyze*                              Parser;
@@ -192,25 +232,35 @@ struct complete_stream
         typedef std::vector<table_id*>              table_ids;
         table_ids                                   Table_IDs; //Key is table_id
         std::map<std::string, Ztring>               Infos;
-        std::vector<Ztring>                         Captions_Language;
-        #ifndef MEDIAINFO_MINIMIZESIZE
-            Ztring Element_Info;
-        #endif //MEDIAINFO_MINIMIZESIZE
+        std::map<int8u, Ztring>                     Languages; //Key is caption_service_number or 128+line21_field
+        struct teletext
+        {
+            std::map<std::string, Ztring>           Infos;
+        };
+        std::map<int16u, teletext>                  Teletexts; //Key is teletext_magazine_number
+        #if MEDIAINFO_TRACE
+            Ztring Element_Info1;
+        #endif //MEDIAINFO_TRACE
         stream_t                                    StreamKind;
+        stream_t                                    StreamKind_FromDescriptor;
         size_t                                      StreamPos;
         ts_kind                                     Kind;
+        bool                                        IsParsed;
         bool                                        IsPCR;
+        float64                                     IsPCR_Duration;
         #ifdef MEDIAINFO_MPEGTS_PCR_YES
             int64u                                  TimeStamp_Start;
             int64u                                  TimeStamp_Start_Offset;
             int64u                                  TimeStamp_End;
             int64u                                  TimeStamp_End_Offset;
-            int16u                                  PCR_PID; //If this PID has no PCR, decide which PCR should be used
+            int16u                                  PCR_PID; //If this pid has no PCR, decide which PCR should be used
+            bool                                    TimeStamp_End_IsUpdated;
         #endif //MEDIAINFO_MPEGTS_PCR_YES
         int32u                                      registration_format_identifier;
         int16u                                      FMC_ES_ID;
         int16u                                      table_type; //ATSC
         int8u                                       stream_type;
+        int8u                                       descriptor_tag;
         bool                                        FMC_ES_ID_IsValid;
         bool                                        Searching;
         bool                                        Searching_Payload_Start;
@@ -226,27 +276,38 @@ struct complete_stream
         bool                                        EndTimeStampMoreThanxSeconds;
         bool                                        ShouldDuplicate;
         bool                                        IsRegistered;
+        bool                                        IsUpdated_IsRegistered;
+        bool                                        IsUpdated_Info;
         size_t                                      IsScrambled;
+        int16u                                      SubStream_pid;
+        #if MEDIAINFO_IBI
+            int64u                                  Ibi_SynchronizationOffset_BeginOfFrame;
+        #endif //MEDIAINFO_IBI
 
         //Constructor/Destructor
         stream()
         {
             Parser=NULL;
             StreamKind=Stream_Max;
+            StreamKind_FromDescriptor=Stream_Max;
             StreamPos=(size_t)-1;
             Kind=unknown;
+            IsParsed=false;
             IsPCR=false;
+            IsPCR_Duration=0;
             #ifdef MEDIAINFO_MPEGTS_PCR_YES
                 TimeStamp_Start=(int64u)-1;
                 TimeStamp_Start_Offset=(int64u)-1;
                 TimeStamp_End=(int64u)-1;
                 TimeStamp_End_Offset=(int64u)-1;
                 PCR_PID=0x0000;
+                TimeStamp_End_IsUpdated=false;
             #endif //MEDIAINFO_MPEGTS_PCR_YES
             registration_format_identifier=0x00000000;
             FMC_ES_ID=0x0000;
             table_type=0x0000;
-            stream_type=0x00;
+            stream_type=(int8u)-1;
+            descriptor_tag=(int8u)-1;
             FMC_ES_ID_IsValid=false;
             Searching=false;
             Searching_Payload_Start=false;
@@ -262,7 +323,13 @@ struct complete_stream
             EndTimeStampMoreThanxSeconds=false;
             ShouldDuplicate=false;
             IsRegistered=false;
-            IsScrambled=0;
+            IsUpdated_IsRegistered=false;
+            IsUpdated_Info=false;
+            IsScrambled=false;
+            SubStream_pid=0x0000;
+            #if MEDIAINFO_IBI
+                Ibi_SynchronizationOffset_BeginOfFrame=(int64u)-1;
+            #endif //MEDIAINFO_IBI
         }
 
         ~stream()
@@ -322,8 +389,8 @@ struct complete_stream
                     ;
         }
     };
-    typedef std::vector<stream> streams;
-    streams Streams; //Key is PID
+    typedef std::vector<stream*> streams;
+    streams Streams; //Key is pid
     size_t Streams_NotParsedCount;
     size_t Streams_With_StartTimeStampCount;
     size_t Streams_With_EndTimeStampMoreThanxSecondsCount;
@@ -340,7 +407,7 @@ struct complete_stream
                 int32u  start_time;
                 Ztring  duration;
                 Ztring  title;
-                Ztring  language;
+                std::map<int8u, Ztring>  Languages; //Key is caption_service_number or 128+line21_field
                 std::map<int16u, Ztring> texts;
 
                 event()
@@ -365,6 +432,7 @@ struct complete_stream
     sources Sources; //Key is source_id
     bool Sources_IsUpdated; //For EPG ATSC
     bool Programs_IsUpdated; //For EPG DVB
+    bool NoPatPmt;
 
     //File__Duplicate
     bool                                                File__Duplicate_HasChanged_;
@@ -372,29 +440,40 @@ struct complete_stream
     std::vector<File__Duplicate_MpegTs*>                Duplicates_Speed;
     std::vector<std::vector<File__Duplicate_MpegTs*> >  Duplicates_Speed_FromPID;
     std::map<const String, File__Duplicate_MpegTs*>     Duplicates;
-    bool File__Duplicate_Get_From_PID (int16u PID)
+    bool File__Duplicate_Get_From_PID (int16u pid)
     {
         if (Duplicates_Speed_FromPID.empty())
             return false;
-        return !Duplicates_Speed_FromPID[PID].empty();
+        return !Duplicates_Speed_FromPID[pid].empty();
     }
+
+    //SpeedUp information
+    std::vector<std::vector<size_t> >   StreamPos_ToRemove;
+    std::map<int16u, int16u>            PCR_PIDs; //Key is PCR_PID, value is count of programs using it
+    std::set<int16u>                    PES_PIDs; //Key is pid
+    std::vector<int16u>                 program_number_Order;
 
     //Constructor/Destructor
     complete_stream()
     {
-        transport_stream_id=0;
+        transport_stream_id=(int16u)-1;
         transport_stream_id_IsValid=false;
         Duration_End_IsUpdated=false;
-        Streams_NotParsedCount=0;
+        Streams_NotParsedCount=(size_t)-1;
         Streams_With_StartTimeStampCount=0;
         Streams_With_EndTimeStampMoreThanxSecondsCount=0;
         GPS_UTC_offset=0;
         Sources_IsUpdated=false;
         Programs_IsUpdated=false;
+        NoPatPmt=false;
+        StreamPos_ToRemove.resize(Stream_Max);
     }
 
     ~complete_stream()
     {
+        for (size_t StreamID=0; StreamID<Streams.size(); StreamID++)
+            delete Streams[StreamID]; //Streams[StreamID]=NULL;
+
         std::map<const String, File__Duplicate_MpegTs*>::iterator Duplicates_Temp=Duplicates.begin();
         while (Duplicates_Temp!=Duplicates.end())
         {
@@ -429,7 +508,7 @@ public :
     bool   event_id_IsValid;
 
     //Out
-    
+
     //Constructor/Destructor
     File_Mpeg_Descriptors();
 
@@ -565,6 +644,11 @@ private :
     void Descriptor_A9() {Skip_XX(Element_Size, "Data");};
     void Descriptor_AA();
     void Descriptor_AB() {Skip_XX(Element_Size, "Data");};
+
+    //SCTE 35
+    void CUEI_00();
+    void CUEI_01();
+    void CUEI_02();
 
     //Helpers
     void ATSC_multiple_string_structure(Ztring &Value, const char* Info);

@@ -1,5 +1,5 @@
 // File_Id3 - Info for ID3v2 tagged files
-// Copyright (C) 2005-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2005-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -18,11 +18,15 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //---------------------------------------------------------------------------
-// Compilation conditions
-#include "MediaInfo/Setup.h"
+// Pre-compilation
+#include "MediaInfo/PreComp.h"
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+#include "MediaInfo/Setup.h"
 //---------------------------------------------------------------------------
 
 //***************************************************************************
@@ -85,7 +89,7 @@ extern const char* Id3v2_PictureType(int8u Type)
 #include "MediaInfo/Tag/File_Id3v2.h"
 #include "ZenLib/ZtringListList.h"
 #include "ZenLib/Utils.h"
-#include "ZenLib/Base64/base64.h"
+#include "base64.h"
 #include <cstring>
 using namespace ZenLib;
 //---------------------------------------------------------------------------
@@ -313,7 +317,6 @@ File_Id3v2::File_Id3v2()
     
     //Temp
     Id3v2_Size=0;
-    Unsynchronisation_Frame=false;
 }
 
 //***************************************************************************
@@ -339,56 +342,37 @@ bool File_Id3v2::Static_Synchronize_Tags(const int8u* Buffer, size_t Buffer_Offs
 //***************************************************************************
 
 //---------------------------------------------------------------------------
-void File_Id3v2::Streams_Finish()
+void File_Id3v2::Streams_Fill()
 {
     if (Count_Get(Stream_General)==0)
         return;
 
     //Specific formats (multiple Id3v2 tags for one MI tag)
-    Ztring Recorded_Date;
     if (Retrieve(Stream_General, 0, General_Recorded_Date).empty() && !Year.empty())
     {
-        Recorded_Date+=Year;
-        if (!Month.empty() && !Month.empty())
+        Ztring Recorded_Date=Year;
+        if (!Month.empty())
         {
-            Recorded_Date+=_T("-");
-            Recorded_Date+=Year;
-            Recorded_Date+=_T("-");
-            Recorded_Date+=Day;
-            if (!Month.empty() && !Month.empty())
+            Recorded_Date+=_T('-');
+            Recorded_Date+=Month;
+            if (!Day.empty())
             {
-                Recorded_Date+=_T(" ");
-                Recorded_Date+=Hour;
-                Recorded_Date+=_T(":");
-                Recorded_Date+=Minute;
+                Recorded_Date+=_T('-');
+                Recorded_Date+=Day;
+                if (!Hour.empty())
+                {
+                    Recorded_Date+=_T(' ');
+                    Recorded_Date+=Hour;
+                    if (Minute.empty())
+                    {
+                        Recorded_Date+=_T(':');
+                        Recorded_Date+=Minute;
+                    }
+                }
             }
         }
+        Fill(Stream_General, 0, General_Recorded_Date, Recorded_Date);
     }
-    if (!Recorded_Date.empty())
-        Fill(Stream_General, 0, "Recorded_Date", Recorded_Date);
-
-    //Special cases
-    //-Position and total parts
-    if (Retrieve(Stream_General, 0, General_Part_Position).find(_T("/"))!=Error)
-    {
-        Ztring Temp=Retrieve(Stream_General, 0, General_Part_Position);
-        Fill(Stream_General, 0, General_Part_Position_Total, Temp.SubString(_T("/"), _T("")));
-        Fill(Stream_General, 0, General_Part_Position, Temp.SubString(_T(""), _T("/")));
-    }
-    if (Retrieve(Stream_General, 0, General_Track_Position).find(_T("/"))!=Error)
-    {
-        const Ztring &Temp=Retrieve(Stream_General, 0, General_Track_Position);
-        Fill(Stream_General, 0, General_Track_Position_Total, Temp.SubString(_T("/"), _T("")), true);
-        Fill(Stream_General, 0, General_Track_Position, Temp.SubString(_T(""), _T("/")), true);
-    }
-    //-Genre
-    if (Retrieve(Stream_General, 0, General_Genre).find(_T("("))==0)
-    {
-        const Ztring &Genre=Retrieve(Stream_General, 0, General_Genre);
-        Fill(Stream_General, 0, General_Genre, Genre.SubString(_T("("), _T(")")), true); //Replace (nn) by nn
-    }
-    if (Retrieve(Stream_General, 0, General_Genre)==_T("0") || Retrieve(Stream_General, 0, General_Genre)==_T("255"))
-        Clear(Stream_General, 0, General_Genre);
 }
 
 //***************************************************************************
@@ -414,14 +398,14 @@ void File_Id3v2::FileHeader_Parse()
              | ((Size>>1)&0x3F80)
              | ((Size>>2)&0x1FC000)
              | ((Size>>3)&0x0FE00000);
-    Param_Info(Id3v2_Size);
+    Param_Info1(Id3v2_Size);
     if (ExtendedHeader)
     {
-        Element_Begin("Extended header");
+        Element_Begin1("Extended header");
         int32u Size_Extended;
         Get_B4 (Size_Extended,                                  "Size");
         Skip_XX(Size_Extended,                                  "Extended header");
-        Element_End();
+        Element_End0();
     }
 
     FILLING_BEGIN();
@@ -450,6 +434,9 @@ void File_Id3v2::FileHeader_Parse()
 //---------------------------------------------------------------------------
 void File_Id3v2::Header_Parse()
 {
+    Unsynchronisation_Frame=false;
+    DataLengthIndicator=false;
+
     if (Id3v2_Size<10) //first 10 is minimum size of a tag, Second 10 is ID3v2 header size
     {
         //Not enough place for a tag, must be padding
@@ -486,6 +473,14 @@ void File_Id3v2::Header_Parse()
         int16u Flags;
         Get_C4 (Frame_ID,                                       "Frame ID");
         Get_B4 (Size,                                           "Size");
+        if (Id3v2_Version!=3)
+        {
+            Size=((Size>>0)&0x7F)
+               | ((Size>>1)&0x3F80)
+               | ((Size>>2)&0x1FC000)
+               | ((Size>>3)&0x0FE00000);
+            Param_Info2(Size, " bytes");
+        }
         Get_B2 (Flags,                                          "Flags");
         if (Id3v2_Version==3)
         {
@@ -505,15 +500,7 @@ void File_Id3v2::Header_Parse()
             Skip_Flags(Flags,  3,                               "Compression");
             Skip_Flags(Flags,  2,                               "Encryption");
             Get_Flags (Flags,  1, Unsynchronisation_Frame,      "Unsynchronisation");
-            Skip_Flags(Flags,  0,                               "Data length indicator");
-        }
-        if (Id3v2_Version!=3)
-        {
-            Size=((Size>>0)&0x7F)
-               | ((Size>>1)&0x3F80)
-               | ((Size>>2)&0x1FC000)
-               | ((Size>>3)&0x0FE00000);
-            Param_Info(Size);
+            Get_Flags (Flags,  0, DataLengthIndicator,          "Data length indicator");
         }
     }
 
@@ -532,24 +519,42 @@ void File_Id3v2::Data_Parse()
 {
     Id3v2_Size-=Header_Size+Element_Size;
 
+    int32u DataLength=(int32u)-1;
+    if (DataLengthIndicator)
+    {
+        Get_B4 (DataLength,                             "Data length");
+        DataLength=((DataLength>>0)&0x7F)
+                 | ((DataLength>>1)&0x3F80)
+                 | ((DataLength>>2)&0x1FC000)
+                 | ((DataLength>>3)&0x0FE00000);
+        Param_Info2(DataLength, " bytes");
+    }
+
     //Unsynchronisation
     int8u* Buffer_Unsynch=NULL;
     const int8u* Save_Buffer=Buffer;
+    int64u Save_File_Offset=File_Offset;
     size_t Save_Buffer_Offset=Buffer_Offset;
     int64u Save_Element_Size=Element_Size;
-    size_t Element_Offset_Unsynch=0;
+    int64u Element_Offset_Unsynch=Element_Offset;
     std::vector<size_t> Unsynch_List;
     if (Unsynchronisation_Global || Unsynchronisation_Frame)
     {
-        while (Element_Offset_Unsynch+3<=Element_Size)
+        while (Element_Offset_Unsynch+2<Element_Size)
         {
             if (CC2(Buffer+Buffer_Offset+(size_t)Element_Offset_Unsynch)==0xFF00)
-                Unsynch_List.push_back(Element_Offset_Unsynch+1);
+                Unsynch_List.push_back((size_t)(Element_Offset_Unsynch+1));
             Element_Offset_Unsynch++;
+        }
+        if (DataLength!=(int32u)-1 && 4+DataLength!=Element_Size-Unsynch_List.size())
+        {
+            Skip_XX(Element_Size-Element_Offset,                "Size coherency issue");
+            return;
         }
         if (!Unsynch_List.empty())
         {
             //We must change the buffer for keeping out
+            File_Offset=Save_File_Offset+Buffer_Offset;
             Element_Size=Save_Element_Size-Unsynch_List.size();
             Buffer_Offset=0;
             Buffer_Unsynch=new int8u[(size_t)Element_Size];
@@ -567,7 +572,7 @@ void File_Id3v2::Data_Parse()
     }
 
     #define CASE_INFO(_NAME, _DETAIL) \
-        case Elements::_NAME : Element_Info(_DETAIL); _NAME(); break;
+        case Elements::_NAME : Element_Info1(_DETAIL); _NAME(); break;
 
     //Parsing
     Element_Value.clear();
@@ -740,6 +745,7 @@ void File_Id3v2::Data_Parse()
     if (!Unsynch_List.empty())
     {
         //We must change the buffer for keeping out
+        File_Offset=Save_File_Offset;
         Element_Size=Save_Element_Size;
         Buffer_Offset=Save_Buffer_Offset;
         delete[] Buffer; Buffer=Save_Buffer;
@@ -763,14 +769,23 @@ void File_Id3v2::T___()
     Get_B1 (Encoding,                                           "Text_encoding");
     switch (Encoding)
     {
-        case 0 : Get_Local (Element_Size-1, Element_Value,      "Information"); break;
-        case 1 : Get_UTF16 (Element_Size-1, Element_Value,      "Information"); break;
-        case 2 : Get_UTF16B(Element_Size-1, Element_Value,      "Information"); break;
-        case 3 : Get_UTF8  (Element_Size-1, Element_Value,      "Information"); break;
+        case 0 : Get_ISO_8859_1 (Element_Size-Element_Offset, Element_Value, "Information"); break;
+        case 1 : Get_UTF16      (Element_Size-Element_Offset, Element_Value, "Information"); break;
+        case 2 : Get_UTF16B     (Element_Size-Element_Offset, Element_Value, "Information"); break;
+        case 3 : Get_UTF8       (Element_Size-Element_Offset, Element_Value, "Information"); break;
         default : ;
     }
 
+    //Exceptions
+    if (Element_Code==Elements::TCMP || Element_Code==Elements::TCP)
+    {
+        if (Element_Value==_T("0")) Element_Value.clear(); //This is usually set to 0 even if the user did not explicitely indicated something (default)
+        if (Element_Value==_T("1")) Element_Value=_T("Yes");
+    }
+
     //Filling
+    if (Element_Value.empty())
+        return;
     Fill_Name();
 }
 
@@ -801,17 +816,15 @@ void File_Id3v2::T__X()
                     return; //Problem
                 switch (Encoding)
                 {
-                    // case 0 : Get_Local (Value0_Size, Element_Values(0), "Short_content_descrip"); break;
                     case 0 : Get_ISO_8859_1 (Value0_Size, Element_Values(0), "Short_content_descrip"); break;
-                    case 3 : Get_UTF8  (Value0_Size, Element_Values(0), "Short_content_descrip"); break;
+                    case 3 : Get_UTF8       (Value0_Size, Element_Values(0), "Short_content_descrip"); break;
                     default : ;
                 }
                 Skip_B1(                                        "Null");
                 switch (Encoding)
                 {
-                    // case 0 : Get_Local (Element_Size-Element_Offset, Element_Values(1), "The_actual_text"); break;
                     case 0 : Get_ISO_8859_1 (Element_Size-Element_Offset, Element_Values(1), "The_actual_text"); break;
-                    case 3 : Get_UTF8  (Element_Size-Element_Offset, Element_Values(1), "The_actual_text"); break;
+                    case 3 : Get_UTF8       (Element_Size-Element_Offset, Element_Values(1), "The_actual_text"); break;
                     default : ;
                 }
                 break;
@@ -846,7 +859,7 @@ void File_Id3v2::T__X()
 //---------------------------------------------------------------------------
 void File_Id3v2::W___()
 {
-    Get_Local(Element_Size, Element_Value,                      "URL");
+    Get_ISO_8859_1(Element_Size, Element_Value,                 "URL");
 
     //Filling
     Fill_Name();
@@ -862,21 +875,23 @@ void File_Id3v2::W__X()
     Get_B1 (Encoding,                                           "Text_encoding");
     switch (Encoding)
     {
-        case 0 : Get_Local (Element_Size-1, Element_Values(0),  "Description"); break;
-        case 1 : Get_UTF16 (Element_Size-1, Element_Values(0),  "Description"); break;
-        case 2 : Get_UTF16B(Element_Size-1, Element_Values(0),  "Description"); break;
-        case 3 : Get_UTF8  (Element_Size-1, Element_Values(0),  "Description"); break;
+        case 0 : Get_ISO_8859_1 (Element_Size-1, Element_Values(0),  "Description"); break;
+        case 1 : Get_UTF16      (Element_Size-1, Element_Values(0),  "Description"); break;
+        case 2 : Get_UTF16B     (Element_Size-1, Element_Values(0),  "Description"); break;
+        case 3 : Get_UTF8       (Element_Size-1, Element_Values(0),  "Description"); break;
         default : ;
     }
     Element_Offset=1;
-    if (Encoding==1)
-        Element_Offset+=Element_Values(0).size()*2+4; //UTF-16 BOM + UTF-16 NULL
-    else if (Encoding==1 || Encoding==2)
-        Element_Offset+=Element_Values(0).size()*2+2; //UTF-16 NULL
-    else
-        Element_Offset+=Element_Values(0).size()+1;   //UTF-8 NULL
+    switch (Encoding)
+    {
+        case 0 : Element_Offset+=Element_Values(0).size()+1; break; //NULL
+        case 1 : Element_Offset+=Element_Values(0).size()*2+4; break; //UTF-16 BOM + UTF-16 NULL
+        case 2 : Element_Offset+=Element_Values(0).size()*2+2; break; //UTF-16 NULL
+        case 3 : Element_Offset+=Element_Values(0).To_UTF8().size()+1; break; //UTF-8 NULL
+        default : ;
+    }
     if (Element_Offset<Element_Size)
-        Get_Local(Element_Size-Element_Offset, Element_Values(1),  "URL");
+        Get_ISO_8859_1(Element_Size-Element_Offset, Element_Values(1), "URL");
 }
 
 //---------------------------------------------------------------------------
@@ -884,7 +899,6 @@ void File_Id3v2::APIC()
 {
     int8u Encoding, PictureType;
     Ztring Mime, Description;
-    size_t MimeLength;
     Get_B1 (Encoding,                                           "Text_encoding");
     if (Id3v2_Version==2)
     {
@@ -896,17 +910,32 @@ void File_Id3v2::APIC()
             case 0x4A5047 : Mime="image/jpeg";
             default       : ;
         }
-        MimeLength=3;
     }
     else
     {
-        Get_Local(Element_Size-1, Mime,                         "MIME_type");
-        MimeLength=Mime.size()+1;
+        int64u Element_Offset_Real=Element_Offset;
+        Get_ISO_8859_1(Element_Size-Element_Offset, Mime,       "MIME_type");
+        Element_Offset=Element_Offset_Real+Mime.size()+1;
     }
-    Element_Offset=1+MimeLength;
-    Get_B1 (PictureType,                                        "Picture_type"); Element_Info(Id3v2_PictureType(PictureType));
-    Get_Local(Element_Size-Element_Offset, Description,         "Description");
-    Element_Offset=1+MimeLength+1+Description.size()+1;
+    Get_B1 (PictureType,                                        "Picture_type"); Element_Info1(Id3v2_PictureType(PictureType));
+    int64u Element_Offset_Real=Element_Offset;
+    switch (Encoding)
+    {
+        case 0 : Get_ISO_8859_1 (Element_Size-Element_Offset, Description, "Description"); break;
+        case 1 : Get_UTF16      (Element_Size-Element_Offset, Description, "Description"); break;
+        case 2 : Get_UTF16B     (Element_Size-Element_Offset, Description, "Description"); break;
+        case 3 : Get_UTF8       (Element_Size-Element_Offset, Description, "Description"); break;
+        default : ;
+    }
+    Element_Offset=Element_Offset_Real;
+    switch (Encoding)
+    {
+        case 0 : Element_Offset+=Description.size()+1; break; //NULL
+        case 1 : Element_Offset+=Description.size()*2+4; break; //UTF-16 BOM + UTF-16 NULL
+        case 2 : Element_Offset+=Description.size()*2+2; break; //UTF-16 NULL
+        case 3 : Element_Offset+=Description.To_UTF8().size()+1; break; //UTF-8 NULL
+        default : ;
+    }
     if (Element_Offset>Element_Size)
         return; //There is a problem
     std::string Data_Raw((const char*)(Buffer+(size_t)(Buffer_Offset+Element_Offset)), (size_t)(Element_Size-Element_Offset));
@@ -926,7 +955,10 @@ void File_Id3v2::COMM()
     T__X();
 
     //Testing
-         if (Element_Values(0)==_T("Songs-DB_Tempo")) return;
+         if (Element_Values(0)==_T("iTunes_CDDB_IDs")) return;
+    else if (Element_Values(0)==_T("iTunNORM")) return;
+    else if (Element_Values(0)==_T("iTunSMPB")) return;
+    else if (Element_Values(0)==_T("Songs-DB_Tempo")) return;
     else if (Element_Values(0)==_T("Songs-DB_Preference")) return;
     else if (Element_Values(0)==_T("MusicMatch_Tempo")) return;
     else if (Element_Values(0)==_T("MusicMatch_Mood"))
@@ -952,17 +984,17 @@ void File_Id3v2::RGAD()
     Get_BF4 (Peak_Amplitude,                                    "Peak Amplitude");
     while (Element_Offset+2<=Element_Size)
     {
-        Element_Begin("Gain Adjustement", 2);
+        Element_Begin1("Gain Adjustement");
         int16u Replay_Gain_Adjustment;
         int8u  Name_code;
         bool   Sign_bit;
         BS_Begin();
-        Get_S1 (3, Name_code,                                   "Name code"); Param_Info(Id3v2_RGAD_Name_code[Name_code]);
-        Info_S1(3, Originator_code,                             "Originator code"); Param_Info(Id3v2_RGAD_Originator_code[Originator_code]);
+        Get_S1 (3, Name_code,                                   "Name code"); Param_Info1(Id3v2_RGAD_Name_code[Name_code]);
+        Info_S1(3, Originator_code,                             "Originator code"); Param_Info1(Id3v2_RGAD_Originator_code[Originator_code]);
         Get_SB (Sign_bit,                                       "Sign bit");
-        Get_S2 (9, Replay_Gain_Adjustment,                      "Replay Gain Adjustment"); Param_Info ((Sign_bit?-1:1)*(float)Replay_Gain_Adjustment/10, 1, " dB");
+        Get_S2 (9, Replay_Gain_Adjustment,                      "Replay Gain Adjustment"); Param_Info3 ((Sign_bit?-1:1)*(float)Replay_Gain_Adjustment/10, 1, " dB");
         BS_End();
-        Element_End();
+        Element_End0();
 
         FILLING_BEGIN();
             switch (Name_code)
@@ -986,7 +1018,7 @@ void File_Id3v2::PRIV()
 {
     //Parsing
     Ztring Owner;
-    Get_Local(Element_Size, Owner,                              "Owner identifier");
+    Get_ISO_8859_1(Element_Size, Owner,                         "Owner identifier");
     Element_Offset=Owner.size()+1;
     Skip_XX(Element_Size-Element_Offset,                        "Data");
 }
@@ -1025,10 +1057,10 @@ void File_Id3v2::SYLT()
     Skip_B1(                                                    "Content_type");
     switch (Encoding)
     {
-        case 0 : Get_Local (Element_Size-6, Element_Value,      "Short_content_descrip"); break;
-        case 1 : Get_UTF16 (Element_Size-6, Element_Value,      "Short_content_descrip"); break;
-        case 2 : Get_UTF16B(Element_Size-6, Element_Value,      "Short_content_descrip"); break;
-        case 3 : Get_UTF8  (Element_Size-6, Element_Value,      "Short_content_descrip"); break;
+        case 0 : Get_ISO_8859_1 (Element_Size-6, Element_Value, "Short_content_descrip"); break;
+        case 1 : Get_UTF16      (Element_Size-6, Element_Value, "Short_content_descrip"); break;
+        case 2 : Get_UTF16B     (Element_Size-6, Element_Value, "Short_content_descrip"); break;
+        case 3 : Get_UTF8       (Element_Size-6, Element_Value, "Short_content_descrip"); break;
         default : ;
     }
 
@@ -1042,6 +1074,8 @@ void File_Id3v2::WXXX()
     W__X();
 
     //Filling
+    if (Element_Values(1).empty())
+        return;
     if (Element_Values(0).empty())
         Element_Values(0)=_T("URL");
     Fill_Name();
@@ -1054,6 +1088,13 @@ void File_Id3v2::WXXX()
 //---------------------------------------------------------------------------
 void File_Id3v2::Fill_Name()
 {
+    Ztring Value=Ztring().From_CC4((int32u)Element_Code);
+    if (MediaInfoLib::Config.CustomMapping_IsPresent(_T("Id3v2"), Value))
+    {
+        Fill(Stream_General, 0, MediaInfoLib::Config.CustomMapping_Get(_T("Id3v2"), Value).To_Local().c_str(), Element_Value);
+        return;
+    }
+
     switch (Element_Code)
     {
         case Elements::AENC : break;
@@ -1085,8 +1126,17 @@ void File_Id3v2::Fill_Name()
         case Elements::SYTC : break;
         case Elements::TALB : Fill(Stream_General, 0, General_Album, Element_Value); break;
         case Elements::TBPM : Fill(Stream_General, 0, General_BPM, Element_Value); break;
+        case Elements::TCMP : Fill(Stream_General, 0, General_Compilation, Element_Value); break;
         case Elements::TCOM : Fill(Stream_General, 0, General_Composer, Element_Value); break;
-        case Elements::TCON : Fill(Stream_General, 0, General_Genre, Element_Value); break;
+        case Elements::TCON :
+                              {
+                                if (Element_Value.find(_T("("))==0)
+                                    Element_Value=Element_Value.SubString(_T("("), _T(")")); //Replace (nn) by nn
+                                if (Element_Value==_T("0") || Element_Value==_T("255"))
+                                    Element_Value.clear();
+                                Fill(Stream_General, 0, General_Genre, Element_Value);
+                              }
+                              break;
         case Elements::TCOP : Fill(Stream_General, 0, General_Copyright, Element_Value); break;
         case Elements::TDA  :
         case Elements::TDAT : if (Element_Value.size()==4)
@@ -1100,7 +1150,7 @@ void File_Id3v2::Fill_Name()
         case Elements::TDRC : Normalize_Date(Element_Value); Fill(Stream_General, 0, General_Recorded_Date, Element_Value); break;
         case Elements::TDRL : Normalize_Date(Element_Value); Fill(Stream_General, 0, General_Released_Date, Element_Value); break;
         case Elements::TDTG : Normalize_Date(Element_Value); Fill(Stream_General, 0, General_Tagged_Date, Element_Value); break;
-        case Elements::TENC : Fill(Stream_General, 0, General_Encoded_Library, Element_Value); break;
+        case Elements::TENC : Fill(Stream_General, 0, General_EncodedBy, Element_Value); break;
         case Elements::TEXT : Fill(Stream_General, 0, General_Lyricist, Element_Value); break;
         case Elements::TFLT : Fill(Stream_General, 0, "File type", Element_Value); break;
         case Elements::TIM  :
@@ -1110,7 +1160,7 @@ void File_Id3v2::Fill_Name()
                             Minute.assign(Element_Value.c_str(), 2, 2); break;
                          }
         case Elements::TIPL : Fill(Stream_General, 0, General_ThanksTo, Element_Value); break;
-        case Elements::TIT1 : Fill(Stream_General, 0, General_ContentType, Element_Value); break;
+        case Elements::TIT1 : Fill(Stream_General, 0, General_Grouping, Element_Value); break;
         case Elements::TIT2 : Fill(Stream_General, 0, General_Track, Element_Value); break;
         case Elements::TIT3 : Fill(Stream_General, 0, General_Track_More, Element_Value); break;
         case Elements::TKEY : Fill(Stream_General, 0, "Initial key", Element_Value); break;
@@ -1126,13 +1176,29 @@ void File_Id3v2::Fill_Name()
         case Elements::TORY : Normalize_Date(Element_Value); Fill(Stream_General, 0, "Original/Released_Date", Element_Value); break;
         case Elements::TOWN : Fill(Stream_General, 0, General_Owner, Element_Value); break;
         case Elements::TPE1 : Fill(Stream_General, 0, General_Performer, Element_Value); break;
-        case Elements::TPE2 : Fill(Stream_General, 0, General_Accompaniment, Element_Value); break;
+        case Elements::TPE2 : Fill(Stream_General, 0, General_Album_Performer, Element_Value); break;
         case Elements::TPE3 : Fill(Stream_General, 0, General_Conductor, Element_Value); break;
         case Elements::TPE4 : Fill(Stream_General, 0, General_RemixedBy, Element_Value); break;
-        case Elements::TPOS : Fill(Stream_General, 0, General_Part_Position, Element_Value); break;
+        case Elements::TPOS :
+                              {
+                                ZtringList List; List.Separator_Set(0, _T("/")); List.Write(Element_Value);
+                                if (!List(0).empty())
+                                    Fill(Stream_General, 0, General_Part_Position, List(0));
+                                if (!List(1).empty())
+                                    Fill(Stream_General, 0, General_Part_Position_Total, List(1));
+                              }
+                              break;
         case Elements::TPRO : Fill(Stream_General, 0, General_Producer_Copyright, Element_Value); break;
         case Elements::TPUB : Fill(Stream_General, 0, General_Publisher, Element_Value); break;
-        case Elements::TRCK : Fill(Stream_General, 0, General_Track_Position, Element_Value); break;
+        case Elements::TRCK :
+                              {
+                                ZtringList List; List.Separator_Set(0, _T("/")); List.Write(Element_Value);
+                                if (!List(0).empty())
+                                    Fill(Stream_General, 0, General_Track_Position, List(0));
+                                if (!List(1).empty())
+                                    Fill(Stream_General, 0, General_Track_Position_Total, List(1));
+                              }
+                              break;
         case Elements::TRDA : Normalize_Date(Element_Value); Fill(Stream_General, 0, "Recorded_Date", Element_Value); break;
         case Elements::TRSN : Fill(Stream_General, 0, General_ServiceName, Element_Value); break;
         case Elements::TRSO : Fill(Stream_General, 0, General_ServiceProvider, Element_Value); break;
@@ -1143,9 +1209,11 @@ void File_Id3v2::Fill_Name()
         case Elements::TSOP : Fill(Stream_General, 0, General_Performer_Sort, Element_Value); break;
         case Elements::TSOT : Fill(Stream_General, 0, General_Track_Sort, Element_Value); break;
         case Elements::TSRC : Fill(Stream_General, 0, General_ISRC, Element_Value); break;
-        case Elements::TSSE : Fill(Stream_General, 0, General_Encoded_Library_Settings, Element_Value); break;
+        case Elements::TSSE : Fill(Stream_General, 0, General_Encoded_Library, Element_Value); break;
         case Elements::TSST : Fill(Stream_General, 0, "Set subtitle", Element_Value); break;
-        case Elements::TXXX :      if (Element_Values(0)==_T("CT_GAPLESS_DATA"))        ;
+        case Elements::TXXX : if (Element_Values(0)==_T("AccurateRipResult"))      ;
+                         else if (Element_Values(0)==_T("AccurateRipDiscID"))      ;
+                         else if (Element_Values(0)==_T("CT_GAPLESS_DATA"))        ;
                          else if (Element_Values(0)==_T("DISCNUMBER"))             Fill(Stream_General, 0, General_Part_Position,           Element_Values(1), true);
                          else if (Element_Values(0)==_T("DISCTOTAL"))              Fill(Stream_General, 0, General_Part_Position_Total,     Element_Values(1), true);
                          else if (Element_Values(0)==_T("first_played_timestamp")) Fill(Stream_General, 0, General_Played_First_Date,       Ztring().Date_From_Milliseconds_1601(Element_Values(1).To_int64u()/10000));
@@ -1194,7 +1262,16 @@ void File_Id3v2::Fill_Name()
         case Elements::TAL  : Fill(Stream_General, 0, "Album", Element_Value); break;
         case Elements::TBP  : Fill(Stream_General, 0, "BPM", Element_Value); break;
         case Elements::TCM  : Fill(Stream_General, 0, "Composer", Element_Value); break;
-        case Elements::TCO  : Fill(Stream_General, 0, "Genre", Element_Value); break;
+        case Elements::TCO  :
+                              {
+                                if (Element_Value.find(_T("("))==0)
+                                    Element_Value=Element_Value.SubString(_T("("), _T(")")); //Replace (nn) by nn
+                                if (Element_Value==_T("0") || Element_Value==_T("255"))
+                                    Element_Value.clear();
+                                if (!Element_Value.empty())
+                                    Fill(Stream_General, 0, General_Genre, Element_Value);
+                              }
+                              break;
         case Elements::TCR  : Fill(Stream_General, 0, "Copyright", Element_Value); break;
         case Elements::TDY  : break;
         case Elements::TEN  : Fill(Stream_General, 0, "Encoded_Library", Element_Value); break;
@@ -1212,14 +1289,30 @@ void File_Id3v2::Fill_Name()
         case Elements::TP2  : Fill(Stream_General, 0, "Accompaniment", Element_Value); break;
         case Elements::TP3  : Fill(Stream_General, 0, "Conductor", Element_Value); break;
         case Elements::TP4  : Fill(Stream_General, 0, "RemixedBy", Element_Value); break;
-        case Elements::TPA  : Fill(Stream_General, 0, "Part/Position", Element_Value); break;
+        case Elements::TPA  :
+                              {
+                                ZtringList List; List.Separator_Set(0, _T("/")); List.Write(Element_Value);
+                                if (!List(0).empty())
+                                    Fill(Stream_General, 0, General_Part_Position, List(0));
+                                if (!List(1).empty())
+                                    Fill(Stream_General, 0, General_Part_Position_Total, List(1));
+                              }
+                              break;
         case Elements::TPB  : Fill(Stream_General, 0, "Publisher", Element_Value); break;
         case Elements::TRC  : Fill(Stream_General, 0, "ISRC", Element_Value); break;
         case Elements::TRD  : Normalize_Date(Element_Value); Fill(Stream_General, 0, "Recorded_Date", Element_Value); break;
-        case Elements::TRK  : Fill(Stream_General, 0, "Track/Position", Element_Value); break;
+        case Elements::TRK  :
+                              {
+                                ZtringList List; List.Separator_Set(0, _T("/")); List.Write(Element_Value);
+                                if (!List(0).empty())
+                                    Fill(Stream_General, 0, General_Track_Position, List(0));
+                                if (!List(1).empty())
+                                    Fill(Stream_General, 0, General_Track_Position_Total, List(1));
+                              }
+                              break;
         case Elements::TSI  : break;
         case Elements::TSS  : break;
-        case Elements::TT1  : Fill(Stream_General, 0, "ContentType", Element_Value); break;
+        case Elements::TT1  : Fill(Stream_General, 0, "Grouping", Element_Value); break;
         case Elements::TT2  : Fill(Stream_General, 0, "Track", Element_Value); break;
         case Elements::TT3  : Fill(Stream_General, 0, "Track/More", Element_Value); break;
         case Elements::TXT  : Fill(Stream_General, 0, "Lyricist", Element_Value); break;

@@ -1,5 +1,5 @@
 // File_Ogg - Info for ogg files
-// Copyright (C) 2002-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2002-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -18,11 +18,15 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //---------------------------------------------------------------------------
-// Compilation conditions
-#include "MediaInfo/Setup.h"
+// Pre-compilation
+#include "MediaInfo/PreComp.h"
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+#include "MediaInfo/Setup.h"
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
@@ -84,7 +88,7 @@ void File_Ogg::Streams_Fill()
             Stream_Temp->second.StreamPos=Count_Get(Stream_Temp->second.StreamKind)-1;
             if (!SizedBlocks && !XiphLacing)
                 Stream_Temp->second.absolute_granule_position_Resolution=((File_Ogg_SubElement*)Stream_Temp->second.Parser)->absolute_granule_position_Resolution;
-            if (Stream_Temp->second.StreamKind==Stream_Audio, Stream_Temp->second.absolute_granule_position_Resolution==0)
+            if (Stream_Temp->second.StreamKind==Stream_Audio && Stream_Temp->second.absolute_granule_position_Resolution==0)
                 Stream_Temp->second.absolute_granule_position_Resolution=Retrieve(Stream_Audio, Stream_Temp->second.StreamPos, Audio_SamplingRate).To_int64u();
             if (!IsSub && Stream_Temp->second.absolute_granule_position && Stream_Temp->second.absolute_granule_position_Resolution)
             {
@@ -163,11 +167,17 @@ bool File_Ogg::Synchronize()
     //Synchronizing
     while (Buffer_Offset+4<=Buffer_Size)
     {
-        while (Buffer_Offset+4<=Buffer_Size)
+        while(Buffer_Offset+4<=Buffer_Size && (Buffer[Buffer_Offset  ]!=0x4F
+                                            || Buffer[Buffer_Offset+1]!=0x67
+                                            || Buffer[Buffer_Offset+2]!=0x67
+                                            || Buffer[Buffer_Offset+3]!=0x53)) //"OggS"
         {
-            if (CC4(Buffer+Buffer_Offset)==0x4F676753) //"OggS"
-                break;
-            Buffer_Offset++;
+            Buffer_Offset+=1+2;
+            while(Buffer_Offset<Buffer_Size && Buffer[Buffer_Offset]!=0x67)
+                Buffer_Offset+=2;
+            if (Buffer_Offset>=Buffer_Size || Buffer[Buffer_Offset-1]==0x67)
+                Buffer_Offset--;
+            Buffer_Offset--;
         }
 
         if (Buffer_Offset+4<=Buffer_Size) //Testing if size is coherant
@@ -260,7 +270,7 @@ void File_Ogg::Header_Parse()
                     Size+=Size8;
                 }
                 while (Size8==0xFF);
-                Param_Info(Size);
+                Param_Info1(Size);
                 Chunk_Sizes.push_back(Size);
                 UsedSize+=Size;
             }
@@ -316,6 +326,9 @@ void File_Ogg::Header_Parse()
 //---------------------------------------------------------------------------
 void File_Ogg::Data_Parse()
 {
+    //Counting
+    Frame_Count++;
+
     //If first chunk of a stream
     if (Stream[Element_Code].Parser==NULL)
     {
@@ -323,7 +336,7 @@ void File_Ogg::Data_Parse()
             return; //Maybe multitracks concatained, not supported
         Stream[Element_Code].Parser=new File_Ogg_SubElement;
         Open_Buffer_Init(Stream[Element_Code].Parser);
-        ((File_Ogg_SubElement*)Stream[Element_Code].Parser)->InAnotherContainer=SizedBlocks|SizedBlocks;
+        ((File_Ogg_SubElement*)Stream[Element_Code].Parser)->InAnotherContainer=IsSub;
         StreamsToDo++;
     }
     ((File_Ogg_SubElement*)Stream[Element_Code].Parser)->MultipleStreams=Stream.size()>1; //has no sens for the first init, must check allways
@@ -337,9 +350,8 @@ void File_Ogg::Data_Parse()
             //Info
             if (!continued)
                 Peek_L1(packet_type); //Only for information
-            Element_Info(Ztring::ToZtring(packet_type, 16));
-            if (continued)
-                Element_Info("Continue");
+            Element_Info1(Ztring::ToZtring(packet_type, 16));
+            Element_Info1C((continued), "Continue");
 
             //Parsing
             if (continued || Parser->File_Offset!=Parser->File_Size)

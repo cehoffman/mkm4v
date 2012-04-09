@@ -1,5 +1,5 @@
 // File_ApeTag - Info for ApeTag tagged files
-// Copyright (C) 2005-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2005-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -18,11 +18,15 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //---------------------------------------------------------------------------
-// Compilation conditions
-#include "MediaInfo/Setup.h"
+// Pre-compilation
+#include "MediaInfo/PreComp.h"
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+#include "MediaInfo/Setup.h"
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
@@ -150,7 +154,7 @@ void File_ApeTag::Data_Parse()
 
     //Parsing
     Ztring Value;
-    Get_UTF8(Element_Size, Value,                               "Value"); Element_Info(Value);
+    Get_UTF8(Element_Size, Value,                               "Value"); Element_Info1(Value);
 
     //Filling
     transform(Key.begin(), Key.end(), Key.begin(), (int(*)(int))toupper); //(int(*)(int)) is a patch for unix

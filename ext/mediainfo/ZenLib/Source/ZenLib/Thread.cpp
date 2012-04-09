@@ -1,5 +1,5 @@
 // ZenLib::Thread - Thread functions
-// Copyright (C) 2007-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2007-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -21,11 +21,16 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //---------------------------------------------------------------------------
-#include "ZenLib/Conf_Internal.h"
+#include "ZenLib/PreComp.h"
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
 //---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+#include "ZenLib/Conf_Internal.h"
+//---------------------------------------------------------------------------
+
 //---------------------------------------------------------------------------
 #include "ZenLib/Thread.h"
 #include <iostream>
@@ -158,7 +163,7 @@ void Thread::Yield()
 #endif //__BORLANDC__
 
 
-#if  defined(__VISUALC__) || \
+#if  defined(_MSC_VER) || \
     (defined(__GNUG__) && defined(__MSVCRT__)) || \
      defined(__WATCOMC__) || \
      defined(__MWERKS__)
@@ -250,7 +255,7 @@ Thread::returnvalue Thread::Run()
     if (ThreadPointer==NULL)
     {
         C.Leave();
-        return Ressource;
+        return Resource;
     }
 
     //Running

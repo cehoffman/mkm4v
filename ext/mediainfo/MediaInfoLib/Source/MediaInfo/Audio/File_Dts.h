@@ -1,5 +1,5 @@
 // File_Dts - Info for DTS files
-// Copyright (C) 2004-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2004-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -40,7 +40,7 @@ class File_Dts : public File__Analyze
 {
 public :
     //In
-    size_t Frame_Count_Valid;
+    int64u Frame_Count_Valid;
 
     //Constructor/Destructor
     File_Dts();
@@ -57,6 +57,11 @@ private :
     //Buffer - Synchro
     bool Synchronize();
     bool Synched_Test();
+
+    //Buffer - Demux
+    #if MEDIAINFO_DEMUX
+    bool Demux_UnpacketizeContainer_Test();
+    #endif //MEDIAINFO_DEMUX
 
     //Buffer - Global
     void Read_Buffer_Continue ();
@@ -83,13 +88,13 @@ private :
     std::vector<ZenLib::int32u> Asset_Sizes;
     Ztring Profile;
     File__Analyze* Parser; //14 bits or Little Endian
-    size_t Frame_Count;
     int32u HD_size;
     int16u Primary_Frame_Byte_Size_minus_1;
     int16u HD_SpeakerActivityMask;
     int8u  channel_arrangement;
     int8u  channel_arrangement_XCh;
     int8u  sample_frequency;
+    int8u  sample_frequency_X96k;
     int8u  bit_rate;
     int8u  lfe_effects;
     int8u  bits_per_sample;
@@ -103,6 +108,9 @@ private :
     bool   BigEndian;
     bool   ES;
     bool   Core_Exists;
+
+    //Helpers
+    float64 BitRate_Get(bool WithHD=false);
 };
 
 } //NameSpace

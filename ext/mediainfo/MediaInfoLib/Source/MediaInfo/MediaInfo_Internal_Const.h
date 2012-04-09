@@ -1,5 +1,5 @@
 // MediaInfo_Config - Configuration class
-// Copyright (C) 2005-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2005-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -47,6 +47,7 @@ enum infoformat_t
     InfoFormat_Extensions,          ///<
     InfoFormat_InternetMediaType,   ///<
     InfoFormat_Url,                 ///<
+    InfoFormat_Compression_Mode,    ///<
     InfoFormat_Max
 };
 
@@ -61,6 +62,9 @@ enum infocodecid_t
     InfoCodecID_Profile,            ///<
     InfoCodecID_Version,            ///<
     InfoCodecID_ColorSpace,         ///<
+    InfoCodecID_ChromaSubsampling,  ///<
+    InfoCodecID_BitDepth,           ///<
+    InfoCodecID_Compression_Mode,   ///<
     InfoCodecID_Max
 };
 

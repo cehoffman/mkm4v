@@ -1,5 +1,5 @@
 // File_TwinVQ - Info for TwiVQ files
-// Copyright (C) 2007-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2007-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -22,11 +22,15 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //---------------------------------------------------------------------------
-// Compilation conditions
-#include "MediaInfo/Setup.h"
+// Pre-compilation
+#include "MediaInfo/PreComp.h"
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+#include "MediaInfo/Setup.h"
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
@@ -129,7 +133,7 @@ void File_TwinVQ::Header_Parse()
 void File_TwinVQ::Data_Parse()
 {
     #define ELEMENT_CASE(_NAME, _DETAIL) \
-        case Elements::_NAME : Element_Info(_DETAIL); _NAME(); break;
+        case Elements::_NAME : Element_Info1(_DETAIL); _NAME(); break;
 
     //Parsing
     switch (Element_Code)

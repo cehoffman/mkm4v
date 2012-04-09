@@ -1,5 +1,5 @@
 // File_Flv - Info for Flash files
-// Copyright (C) 2005-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2005-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -40,16 +40,25 @@ namespace MediaInfoLib
 
 class File_Flv : public File__Analyze
 {
-protected :
-    //Streams management
-    void Streams_Finish();
-
 public :
     File_Flv();
 
 private :
-    //Buffer
-    void FileHeader_Parse ();
+    //Streams management
+    void Streams_Fill();
+    void Streams_Finish();
+    void Streams_Finish_PerStream(stream_t StreamID);
+
+    //Buffer - File header
+    void FileHeader_Parse();
+
+    //Buffer - Synchro
+    bool Synchronize();
+
+    //Buffer - Global
+    void Read_Buffer_Unsynched();
+
+    //Buffer - Per element
     void Header_Parse();
     void Data_Parse();
 
@@ -75,12 +84,15 @@ private :
         File__Analyze*          Parser;
         size_t                  PacketCount;
         int32u                  Delay;
+        int32u                  TimeStamp;
+        std::vector<int32u>     Durations;
 
         stream()
         {
             Parser=NULL;
             PacketCount=0;
             Delay=(int32u)-1;
+            TimeStamp=(int32u)-1;
         }
 
         ~stream()
@@ -101,11 +113,10 @@ private :
     int8u  meta_Level;
     std::map<int8u, bool> meta_LevelFinished;
     bool Searching_Duration;
+    bool MetaData_NotTrustable;
     int32u PreviousTagSize;
     int64u meta_filesize;
     float64 meta_duration;
-    int32u LastFrame_Time;
-    int8u  LastFrame_Type;
 };
 
 } //NameSpace

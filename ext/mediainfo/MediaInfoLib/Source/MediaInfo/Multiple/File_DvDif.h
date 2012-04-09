@@ -1,5 +1,5 @@
 // File_DvDif - Info for DVD objects (IFO) files
-// Copyright (C) 2002-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2002-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //
-// Information about DV-DIF (Digital Video Digital Interface Format)
+// Information about DV-DIF (DV Digital Interface Format)
 //
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -41,7 +41,7 @@ class File_DvDif : public File__Analyze
 {
 public :
     //In
-    size_t Frame_Count_Valid;
+    int64u Frame_Count_Valid;
     int8u  AuxToAnalyze; //Only Aux must be parsed
     bool   IgnoreAudio;
 
@@ -54,10 +54,28 @@ protected :
     void Streams_Fill();
     void Streams_Finish();
 
+    //Buffer - File header
+    bool FileHeader_Begin();
+
+    //Buffer - Synchro
+    bool Synchronize();
+    bool Synched_Test();
+    void Synched_Test_Reset();
+    void Synched_Init();
+
+    //Buffer - Demux
+    #if MEDIAINFO_DEMUX
+    bool Demux_UnpacketizeContainer_Test();
+    #endif //MEDIAINFO_DEMUX
+
     //Buffer - Global
     #ifdef MEDIAINFO_DVDIF_ANALYZE_YES
     void Read_Buffer_Continue();
     #endif //MEDIAINFO_DVDIF_ANALYZE_YES
+    void Read_Buffer_Unsynched();
+    #if MEDIAINFO_SEEK
+    size_t Read_Buffer_Seek (size_t Method, int64u Value, int64u ID);
+    #endif //MEDIAINFO_SEEK
 
     //Buffer
     void Header_Parse();
@@ -74,6 +92,7 @@ protected :
     //Elements - Sub
     void Element();
     void timecode();
+    void binary_group();
     void audio_source();
     void audio_sourcecontrol();
     void audio_recdate();
@@ -90,6 +109,13 @@ protected :
     Ztring recdate();
     Ztring rectime();
 
+    //Streams
+    struct stream
+    {
+        std::map<std::string, Ztring> Infos;
+    };
+    std::vector<stream*> Streams_Audio;
+
     //Temp
     #if defined(MEDIAINFO_EIA608_YES)
         std::vector<File__Analyze*> CC_Parsers;
@@ -97,7 +123,6 @@ protected :
     Ztring Recorded_Date_Date;
     Ztring Recorded_Date_Time;
     Ztring Encoded_Library_Settings;
-    size_t FrameCount;
     int64u Duration;
     int64u TimeCode_First;
     int64u FrameSize_Theory; //The size of a frame
@@ -107,7 +132,8 @@ protected :
     int8u  Dseq_Old;
     int8u  DBN;
     int8u  DBN_Olds[8];
-    int8u  stype;
+    int8u  video_source_stype;
+    int8u  audio_source_stype;
     bool   FSC;
     bool   FSP;
     bool   DSF;
@@ -117,11 +143,20 @@ protected :
     bool   TF2;
     bool   TF3;
     int8u  aspect;
+    int8u  ssyb_AP3;
+    bool   FieldOrder_FF;
+    bool   FieldOrder_FS;
     bool   Interlaced;
     bool   system;
     bool   FSC_WasSet;
     bool   FSP_WasNotSet;
     bool   video_sourcecontrol_IsParsed;
+    bool   audio_locked;
+
+    #if MEDIAINFO_SEEK
+        bool            Duration_Detected;
+        int64u          TotalFrames;
+    #endif //MEDIAINFO_SEEK
 
     #ifdef MEDIAINFO_DVDIF_ANALYZE_YES
     bool Analyze_Activated;

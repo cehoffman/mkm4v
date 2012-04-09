@@ -1,5 +1,5 @@
 // File_Vc1 - Info for MPEG Video files
-// Copyright (C) 2004-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2004-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -41,7 +41,7 @@ class File_Vc1 : public File__Analyze
 {
 public :
     //In
-    size_t Frame_Count_Valid;
+    int64u Frame_Count_Valid;
     bool   FrameIsAlwaysComplete;
     bool   From_WMV3;
     bool   Only_0D;
@@ -61,6 +61,14 @@ private :
     bool Synchronize() {return Synchronize_0x000001();}
     bool Synched_Test();
     void Synched_Init();
+
+    //Buffer - Demux
+    #if MEDIAINFO_DEMUX
+    bool Demux_UnpacketizeContainer_Test();
+    #endif //MEDIAINFO_DEMUX
+
+    //Buffer - Global
+    void Read_Buffer_Unsynched();
 
     //Buffer - Per element
     void Header_Parse();
@@ -82,7 +90,6 @@ private :
     void UserDefinedSequenceHeader();
 
     //Count
-    size_t Frame_Count;
     size_t Interlaced_Top;
     size_t Interlaced_Bottom;
     std::vector<size_t> PictureFormat_Count;
@@ -144,7 +151,10 @@ private :
     size_t Height;
     size_t RatioValue;
     size_t BitRate;
+    int8u  start_code;
     bool   EntryPoint_Parsed;
+    float32 FrameRate;
+    size_t RefFramesCount;
 
     //Error controls
     std::vector<int8u> Frame_ShouldBe;

@@ -1,5 +1,5 @@
 // File_Wm - Info for Windows Media files
-// Copyright (C) 2002-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2002-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -22,11 +22,15 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //---------------------------------------------------------------------------
-// Compilation conditions
-#include "MediaInfo/Setup.h"
+// Pre-compilation
+#include "MediaInfo/PreComp.h"
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+#include "MediaInfo/Setup.h"
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
@@ -38,6 +42,9 @@
 #if defined(MEDIAINFO_MPEGPS_YES)
     #include "MediaInfo/Multiple/File_MpegPs.h"
 #endif
+#if MEDIAINFO_EVENTS
+    #include "MediaInfo/MediaInfo_Events.h"
+#endif //MEDIAINFO_EVENTS
 #include "ZenLib/Utils.h"
 using namespace ZenLib;
 //---------------------------------------------------------------------------
@@ -54,17 +61,26 @@ File_Wm::File_Wm()
 :File__Analyze()
 {
     //Configuration
+    ParserName=_T("Wm");
+    #if MEDIAINFO_EVENTS
+        ParserIDs[0]=MediaInfo_Parser_Wm;
+        StreamIDs_Width[0]=2;
+    #endif //MEDIAINFO_EVENTS
+    #if MEDIAINFO_DEMUX
+        Demux_Level=2; //Container
+    #endif //MEDIAINFO_DEMUX
     DataMustAlwaysBeComplete=false;
 
     //Stream
     Packet_Count=0;
-    MaximumDataPacketSize=0;
+    MaximumDataPacketSize=(int32u)-1;
+    Header_ExtendedContentDescription_AspectRatioX=0;
+    Header_ExtendedContentDescription_AspectRatioY=0;
     SizeOfMediaObject_BytesAlreadyParsed=0;
     FileProperties_Preroll=0;
     Codec_Description_Count=0;
     Stream_Number=0;
     Data_Parse_Padding=0;
-    MaximumDataPacketSize=(int32u)-1;
     NumberPayloads=1;
     NumberPayloads_Pos=0;
     Data_Parse_Begin=true;
@@ -99,8 +115,8 @@ void File_Wm::Streams_Finish()
         //Codec Info
         for (size_t Pos=0; Pos<CodecInfos.size(); Pos++)
         {
-            if (CodecInfos[Pos].Type==1 && Temp->second.StreamKind==Stream_Video
-             || CodecInfos[Pos].Type==2 && Temp->second.StreamKind==Stream_Audio)
+            if ((CodecInfos[Pos].Type==1 && Temp->second.StreamKind==Stream_Video)
+             || (CodecInfos[Pos].Type==2 && Temp->second.StreamKind==Stream_Audio))
             {
                 Fill(Temp->second.StreamKind, Temp->second.StreamPos, "CodecID_Description", CodecInfos[Pos].Info, true);
                 Fill(Temp->second.StreamKind, Temp->second.StreamPos, "Codec_Description", CodecInfos[Pos].Info, true);
@@ -173,22 +189,27 @@ void File_Wm::Streams_Finish()
             if (Temp->second.StreamKind==Stream_Video)
                 Format_Profile=Retrieve(Stream_Video, Temp->second.StreamPos, Video_Format_Profile);
             Finish(Temp->second.Parser);
+            if (Temp->second.Parser->Get(Stream_Video, 0, Video_Format)==_T("MPEG Video"))
+                {
+                    //Width/Height are junk
+                    Clear(Stream_Video, Temp->second.StreamPos, Video_Width);
+                    Clear(Stream_Video, Temp->second.StreamPos, Video_Height);
+                    Clear(Stream_Video, Temp->second.StreamPos, Video_PixelAspectRatio);
+                    Clear(Stream_Video, Temp->second.StreamPos, Video_DisplayAspectRatio);
+                }
+
+            //Delay (in case of MPEG-PS)
+            if (Temp->second.TimeCode_First!=(int64u)-1)
+            {
+                Fill(Temp->second.StreamKind, Temp->second.StreamPos, Fill_Parameter(Temp->second.StreamKind, Generic_Delay), Temp->second.TimeCode_First, 10);
+                Fill(Temp->second.StreamKind, Temp->second.StreamPos, Fill_Parameter(Temp->second.StreamKind, Generic_Delay_Source), "Container");
+            }
+
+
             Merge(*Temp->second.Parser, Temp->second.StreamKind, 0, Temp->second.StreamPos);
             if (!Format_Profile.empty() && Format_Profile.find(Retrieve(Stream_Video, Temp->second.StreamPos, Video_Format_Profile))==0)
                 Fill(Stream_Video, Temp->second.StreamPos, Video_Format_Profile, Format_Profile, true);
         }
-
-        //Delay (in case of MPEG-PS)
-        if (Temp->second.StreamKind==Stream_Video)
-        {
-            Fill(Stream_Video, Temp->second.StreamPos, Video_Delay_Original, Retrieve(Temp->second.StreamKind, Temp->second.StreamPos, "Delay"));
-            Fill(Stream_Video, Temp->second.StreamPos, Video_Delay_Original_Settings, Retrieve(Temp->second.StreamKind, Temp->second.StreamPos, "Delay_Settings"));
-        }
-        if (Temp->second.TimeCode_First!=(int64u)-1)
-            Fill(Temp->second.StreamKind, Temp->second.StreamPos, "Delay", Temp->second.TimeCode_First, 10, true);
-        else
-            Fill(Temp->second.StreamKind, Temp->second.StreamPos, "Delay", "", Unlimited, true, true);
-        Fill(Temp->second.StreamKind, Temp->second.StreamPos, "Delay_Settings", "", Unlimited, true, true);
 
         Temp++;
     }

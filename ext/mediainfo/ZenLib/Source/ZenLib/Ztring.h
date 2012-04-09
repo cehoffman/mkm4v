@@ -1,5 +1,5 @@
 // ZenLib::Ztring - More methods for std::(w)string
-// Copyright (C) 2002-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2002-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -67,11 +67,11 @@ class Ztring : public tstring  //for details about undocumented methods see http
 public :
     //Constructor/destructor
     Ztring ()                                                                   : tstring(){};
-    Ztring (const tstring& S, size_type Pos=0, size_type n=npos)                : tstring(S.c_str(), Pos, n){};
-    Ztring (const tstring* S, size_type Pos=0, size_type n=npos)                : tstring(S->c_str(), Pos, n){};
-    Ztring (const Char* S)                                                      : tstring(S){};
-    Ztring (const Char* S, size_type n)                                         : tstring(S, n){};
-    Ztring (size_type n, const Char &S)                                         : tstring(n, S){};
+    Ztring (const tstring& str)                                                 : tstring(str){};
+    Ztring (const tstring& str, size_type pos, size_type n=npos)                : tstring(str, pos, n){};
+    Ztring (const Char* s, size_type n)                                         : tstring(s, n){};
+    Ztring (const Char* s)                                                      : tstring(s){};
+    Ztring (size_type n, Char c)                                                : tstring(n, c){};
     #ifdef UNICODE
     Ztring (const char* S)                                                      : tstring(){From_UTF8(S);};
     Ztring (const char* S, size_type n)                                         : tstring(){From_UTF8(S, 0, n);};
@@ -137,6 +137,13 @@ public :
         /// @brief convert an ISO-8859-1 encoded string into Ztring
     Ztring& From_ISO_8859_1   (const char  *S, size_type Length)                {return From_ISO_8859_1(S, 0, Length);};
 
+        /// @brief convert an ISO-8859-2 encoded string into Ztring
+    Ztring& From_ISO_8859_2   (const char  *S);
+        /// @brief convert an ISO-8859-1 encoded string into Ztring
+    Ztring& From_ISO_8859_2   (const char  *S, size_type Start,  size_type Length);
+        /// @brief convert an ISO-8859-1 encoded string into Ztring
+    Ztring& From_ISO_8859_2   (const char  *S, size_type Length)                {return From_ISO_8859_2(S, 0, Length);};
+
         /// @brief convert an 16 byte GUID into Ztring
     Ztring& From_GUID    (const int128u S);
         /// @brief convert an 16 byte UUID into Ztring
@@ -189,10 +196,10 @@ public :
     Ztring& From_Number  (const float64,  int8u AfterComma=3, ztring_t Options=Ztring_Nothing);
         /// @brief convert number into Ztring
     Ztring& From_Number  (const float80,  int8u AfterComma=3, ztring_t Options=Ztring_Nothing);
-    #ifdef NEED_SIZET
+    #ifdef SIZE_T_IS_LONG
         /// @brief convert number into Ztring
     Ztring& From_Number  (const size_t,   int8u Radix=10);
-    #endif //NEED_SIZET
+    #endif //SIZE_T_IS_LONG
         /// @brief convert number (BCD coded) into Ztring
     Ztring& From_BCD     (const int8u);
         /// @brief convert count of milliseconds into a readable and sortable string
@@ -307,9 +314,9 @@ public :
     static Ztring ToZtring  (const float32  F, int8u AfterComma=3)               {return Ztring().From_Number(F, AfterComma);};
     static Ztring ToZtring  (const float64  F, int8u AfterComma=3)               {return Ztring().From_Number(F, AfterComma);};
     static Ztring ToZtring  (const float80  F, int8u AfterComma=3)               {return Ztring().From_Number(F, AfterComma);};
-    #ifdef NEED_SIZET
+    #ifdef SIZE_T_IS_LONG
     static Ztring ToZtring  (const size_t   I,  int8u Radix=10)                  {return Ztring().From_Number(I, Radix);};
-    #endif //NEED_SIZET
+    #endif //SIZE_T_IS_LONG
 
     //Edition
         /// @brief test if it is a number

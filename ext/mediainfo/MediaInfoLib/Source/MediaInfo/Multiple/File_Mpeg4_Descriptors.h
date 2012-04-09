@@ -42,28 +42,12 @@ class File_Mpeg4_Descriptors : public File__Analyze
 public :
     //In
     stream_t KindOfStream;
-    std::vector<int32u> ftyps;
     bool     Parser_DoNotFreeIt; //If you want to keep the Parser
-    bool     DecSpecificInfoTag_DoNotFreeIt; //If you want to keep the DecSpecificInfoTag
     bool     SLConfig_DoNotFreeIt; //If you want to keep the SLConfig
 
     //Out
     File__Analyze* Parser;
     int16u ES_ID;
-    struct decspecificinfotag
-    {
-        int8u* Buffer;
-        size_t Buffer_Size;
-        decspecificinfotag()
-        {
-            Buffer=NULL;
-            Buffer_Size=0;
-        }
-        ~decspecificinfotag()
-        {
-            delete[] Buffer; //Buffer=NULL;
-        }
-    };
 
     struct slconfig
     {
@@ -93,7 +77,6 @@ public :
         int64u startCompositionTimeStamp;
     };
 
-    decspecificinfotag* DecSpecificInfoTag;
     slconfig* SLConfig;
 
 public :
@@ -108,15 +91,15 @@ private :
 
     //Elements
     void Descriptor_00() {Skip_XX(Element_Size, "Data");};
-    void Descriptor_01() {Skip_XX(Element_Size, "Data");};
-    void Descriptor_02();
+    void Descriptor_01();
+    void Descriptor_02() {Descriptor_01();}
     void Descriptor_03();
     void Descriptor_04();
     void Descriptor_05();
     void Descriptor_06();
     void Descriptor_07() {Skip_XX(Element_Size, "Data");};
     void Descriptor_08() {Skip_XX(Element_Size, "Data");};
-    void Descriptor_09() {Skip_XX(Element_Size, "Data");};
+    void Descriptor_09();
     void Descriptor_0A() {Skip_XX(Element_Size, "Data");};
     void Descriptor_0B() {Skip_XX(Element_Size, "Data");};
     void Descriptor_0C() {Skip_XX(Element_Size, "Data");};

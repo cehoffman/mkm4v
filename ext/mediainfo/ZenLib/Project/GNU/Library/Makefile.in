@@ -14,6 +14,8 @@
 
 @SET_MAKE@
 
+
+
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
 VPATH = @srcdir@
@@ -38,12 +40,13 @@ build_triplet = @build@
 host_triplet = @host@
 DIST_COMMON = $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(srcdir)/libzen-config.in \
-	$(srcdir)/libzen.pc.in $(top_srcdir)/configure config.guess \
+	$(srcdir)/libzen.pc.in $(top_srcdir)/configure \
+	$(zen_format_html_HEADERS) $(zen_format_http_HEADERS) \
+	$(zen_httpclient_HEADERS) $(zeninclude_HEADERS) config.guess \
 	config.sub depcomp install-sh ltmain.sh missing
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/wxwin.m4 \
-	$(top_srcdir)/configure.ac
+am__aclocal_m4_deps = $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
@@ -56,7 +59,10 @@ am__vpath_adj = case $$p in \
     *) f=$$p;; \
   esac;
 am__strip_dir = `echo $$p | sed -e 's|^.*/||'`;
-am__installdirs = "$(DESTDIR)$(libdir)"
+am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(pkgconfigdir)" \
+	"$(DESTDIR)$(zen_format_htmldir)" \
+	"$(DESTDIR)$(zen_format_httpdir)" \
+	"$(DESTDIR)$(zen_httpclientdir)" "$(DESTDIR)$(zenincludedir)"
 libLTLIBRARIES_INSTALL = $(INSTALL)
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libzen_la_LIBADD =
@@ -80,6 +86,14 @@ CXXLINK = $(LIBTOOL) --tag=CXX --mode=link $(CXXLD) $(AM_CXXFLAGS) \
 	$(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 SOURCES = $(libzen_la_SOURCES)
 DIST_SOURCES = $(libzen_la_SOURCES)
+pkgconfigDATA_INSTALL = $(INSTALL_DATA)
+DATA = $(pkgconfig_DATA)
+zen_format_htmlHEADERS_INSTALL = $(INSTALL_HEADER)
+zen_format_httpHEADERS_INSTALL = $(INSTALL_HEADER)
+zen_httpclientHEADERS_INSTALL = $(INSTALL_HEADER)
+zenincludeHEADERS_INSTALL = $(INSTALL_HEADER)
+HEADERS = $(zen_format_html_HEADERS) $(zen_format_http_HEADERS) \
+	$(zen_httpclient_HEADERS) $(zeninclude_HEADERS)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -150,16 +164,6 @@ SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
 VERSION = @VERSION@
-WX_CFLAGS = @WX_CFLAGS@
-WX_CFLAGS_ONLY = @WX_CFLAGS_ONLY@
-WX_CONFIG_PATH = @WX_CONFIG_PATH@
-WX_CPPFLAGS = @WX_CPPFLAGS@
-WX_CXXFLAGS = @WX_CXXFLAGS@
-WX_CXXFLAGS_ONLY = @WX_CXXFLAGS_ONLY@
-WX_LIBS = @WX_LIBS@
-WX_LIBS_STATIC = @WX_LIBS_STATIC@
-WX_RESCOMP = @WX_RESCOMP@
-WX_VERSION = @WX_VERSION@
 ZenLib_CXXFLAGS = @ZenLib_CXXFLAGS@
 ZenLib_LIBS = @ZenLib_LIBS@
 ZenLib_LIBS_Static = @ZenLib_LIBS_Static@
@@ -240,7 +244,55 @@ libzen_la_SOURCES = \
                        ../../../Source/ZenLib/Format/Http/Http_Utils.cpp
 
 libzen_la_LDFLAGS = -no-undefined -version-info 0:0:0
-INCLUDES = -I../../../Source
+zenincludedir = $(includedir)/ZenLib
+zeninclude_HEADERS = \
+ ../../../Source/ZenLib/BitStream.h \
+ ../../../Source/ZenLib/BitStream_LE.h \
+ ../../../Source/ZenLib/Conf.h \
+ ../../../Source/ZenLib/Conf_Internal.h \
+ ../../../Source/ZenLib/CriticalSection.h \
+ ../../../Source/ZenLib/Dir.h \
+ ../../../Source/ZenLib/File.h \
+ ../../../Source/ZenLib/FileName.h \
+ ../../../Source/ZenLib/HTTP_Client.h \
+ ../../../Source/ZenLib/InfoMap.h \
+ ../../../Source/ZenLib/int128s.h \
+ ../../../Source/ZenLib/int128u.h \
+ ../../../Source/ZenLib/MemoryDebug.h \
+ ../../../Source/ZenLib/OS_Utils.h \
+ ../../../Source/ZenLib/PreComp.h \
+ ../../../Source/ZenLib/Thread.h \
+ ../../../Source/ZenLib/Trace.h \
+ ../../../Source/ZenLib/Translation.h \
+ ../../../Source/ZenLib/Utils.h \
+ ../../../Source/ZenLib/Ztring.h \
+ ../../../Source/ZenLib/ZtringList.h \
+ ../../../Source/ZenLib/ZtringListListF.h \
+ ../../../Source/ZenLib/ZtringListList.h
+
+zen_httpclientdir = $(zenincludedir)/HTTP_Client
+zen_httpclient_HEADERS = \
+ ../../../Source/ZenLib/HTTP_Client/HTTPClient.h \
+ ../../../Source/ZenLib/HTTP_Client/HTTPClientCommon.h \
+ ../../../Source/ZenLib/HTTP_Client/HTTPClientString.h \
+ ../../../Source/ZenLib/HTTP_Client/HTTPClientAuth.h \
+ ../../../Source/ZenLib/HTTP_Client/HTTPClientWrapper.h
+
+zen_format_htmldir = $(zenincludedir)/Format/Html
+zen_format_html_HEADERS = \
+ ../../../Source/ZenLib/Format/Html/Html_Handler.h \
+ ../../../Source/ZenLib/Format/Html/Html_Request.h
+
+zen_format_httpdir = $(zenincludedir)/Format/Http
+zen_format_http_HEADERS = \
+ ../../../Source/ZenLib/Format/Http/Http_Utils.h \
+ ../../../Source/ZenLib/Format/Http/Http_Request.h \
+ ../../../Source/ZenLib/Format/Http/Http_Handler.h \
+ ../../../Source/ZenLib/Format/Http/Http_Cookies.h
+
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = libzen.pc
+AM_CPPFLAGS = -I../../../Source
 all: all-am
 
 .SUFFIXES:
@@ -533,6 +585,91 @@ clean-libtool:
 distclean-libtool:
 	-rm -f libtool
 uninstall-info-am:
+install-pkgconfigDATA: $(pkgconfig_DATA)
+	@$(NORMAL_INSTALL)
+	test -z "$(pkgconfigdir)" || $(mkdir_p) "$(DESTDIR)$(pkgconfigdir)"
+	@list='$(pkgconfig_DATA)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  f=$(am__strip_dir) \
+	  echo " $(pkgconfigDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(pkgconfigdir)/$$f'"; \
+	  $(pkgconfigDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(pkgconfigdir)/$$f"; \
+	done
+
+uninstall-pkgconfigDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(pkgconfig_DATA)'; for p in $$list; do \
+	  f=$(am__strip_dir) \
+	  echo " rm -f '$(DESTDIR)$(pkgconfigdir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(pkgconfigdir)/$$f"; \
+	done
+install-zen_format_htmlHEADERS: $(zen_format_html_HEADERS)
+	@$(NORMAL_INSTALL)
+	test -z "$(zen_format_htmldir)" || $(mkdir_p) "$(DESTDIR)$(zen_format_htmldir)"
+	@list='$(zen_format_html_HEADERS)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  f=$(am__strip_dir) \
+	  echo " $(zen_format_htmlHEADERS_INSTALL) '$$d$$p' '$(DESTDIR)$(zen_format_htmldir)/$$f'"; \
+	  $(zen_format_htmlHEADERS_INSTALL) "$$d$$p" "$(DESTDIR)$(zen_format_htmldir)/$$f"; \
+	done
+
+uninstall-zen_format_htmlHEADERS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(zen_format_html_HEADERS)'; for p in $$list; do \
+	  f=$(am__strip_dir) \
+	  echo " rm -f '$(DESTDIR)$(zen_format_htmldir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(zen_format_htmldir)/$$f"; \
+	done
+install-zen_format_httpHEADERS: $(zen_format_http_HEADERS)
+	@$(NORMAL_INSTALL)
+	test -z "$(zen_format_httpdir)" || $(mkdir_p) "$(DESTDIR)$(zen_format_httpdir)"
+	@list='$(zen_format_http_HEADERS)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  f=$(am__strip_dir) \
+	  echo " $(zen_format_httpHEADERS_INSTALL) '$$d$$p' '$(DESTDIR)$(zen_format_httpdir)/$$f'"; \
+	  $(zen_format_httpHEADERS_INSTALL) "$$d$$p" "$(DESTDIR)$(zen_format_httpdir)/$$f"; \
+	done
+
+uninstall-zen_format_httpHEADERS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(zen_format_http_HEADERS)'; for p in $$list; do \
+	  f=$(am__strip_dir) \
+	  echo " rm -f '$(DESTDIR)$(zen_format_httpdir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(zen_format_httpdir)/$$f"; \
+	done
+install-zen_httpclientHEADERS: $(zen_httpclient_HEADERS)
+	@$(NORMAL_INSTALL)
+	test -z "$(zen_httpclientdir)" || $(mkdir_p) "$(DESTDIR)$(zen_httpclientdir)"
+	@list='$(zen_httpclient_HEADERS)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  f=$(am__strip_dir) \
+	  echo " $(zen_httpclientHEADERS_INSTALL) '$$d$$p' '$(DESTDIR)$(zen_httpclientdir)/$$f'"; \
+	  $(zen_httpclientHEADERS_INSTALL) "$$d$$p" "$(DESTDIR)$(zen_httpclientdir)/$$f"; \
+	done
+
+uninstall-zen_httpclientHEADERS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(zen_httpclient_HEADERS)'; for p in $$list; do \
+	  f=$(am__strip_dir) \
+	  echo " rm -f '$(DESTDIR)$(zen_httpclientdir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(zen_httpclientdir)/$$f"; \
+	done
+install-zenincludeHEADERS: $(zeninclude_HEADERS)
+	@$(NORMAL_INSTALL)
+	test -z "$(zenincludedir)" || $(mkdir_p) "$(DESTDIR)$(zenincludedir)"
+	@list='$(zeninclude_HEADERS)'; for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  f=$(am__strip_dir) \
+	  echo " $(zenincludeHEADERS_INSTALL) '$$d$$p' '$(DESTDIR)$(zenincludedir)/$$f'"; \
+	  $(zenincludeHEADERS_INSTALL) "$$d$$p" "$(DESTDIR)$(zenincludedir)/$$f"; \
+	done
+
+uninstall-zenincludeHEADERS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(zeninclude_HEADERS)'; for p in $$list; do \
+	  f=$(am__strip_dir) \
+	  echo " rm -f '$(DESTDIR)$(zenincludedir)/$$f'"; \
+	  rm -f "$(DESTDIR)$(zenincludedir)/$$f"; \
+	done
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
@@ -585,7 +722,7 @@ distclean-tags:
 distdir: $(DISTFILES)
 	$(am__remove_distdir)
 	mkdir $(distdir)
-	$(mkdir_p) $(distdir)/.
+	$(mkdir_p) $(distdir)/. $(distdir)/../../../Source/ZenLib $(distdir)/../../../Source/ZenLib/Format/Html $(distdir)/../../../Source/ZenLib/Format/Http $(distdir)/../../../Source/ZenLib/HTTP_Client
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \
@@ -612,7 +749,7 @@ distdir: $(DISTFILES)
 	    || exit 1; \
 	  fi; \
 	done
-	-find $(distdir) -type d ! -perm -777 -exec chmod a+rwx {} \; -o \
+	-find $(distdir) -type d ! -perm -755 -exec chmod a+rwx,go+rx {} \; -o \
 	  ! -type d ! -perm -444 -links 1 -exec chmod a+r {} \; -o \
 	  ! -type d ! -perm -400 -exec chmod a+r {} \; -o \
 	  ! -type d ! -perm -444 -exec $(SHELL) $(install_sh) -c -m a+r {} {} \; \
@@ -711,9 +848,9 @@ distcleancheck: distclean
 	       exit 1; } >&2
 check-am: all-am
 check: check-am
-all-am: Makefile $(LTLIBRARIES)
+all-am: Makefile $(LTLIBRARIES) $(DATA) $(HEADERS)
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)"; do \
+	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(zen_format_htmldir)" "$(DESTDIR)$(zen_format_httpdir)" "$(DESTDIR)$(zen_httpclientdir)" "$(DESTDIR)$(zenincludedir)"; do \
 	  test -z "$$dir" || $(mkdir_p) "$$dir"; \
 	done
 install: install-am
@@ -762,7 +899,9 @@ info: info-am
 
 info-am:
 
-install-data-am:
+install-data-am: install-pkgconfigDATA install-zen_format_htmlHEADERS \
+	install-zen_format_httpHEADERS install-zen_httpclientHEADERS \
+	install-zenincludeHEADERS
 
 install-exec-am: install-libLTLIBRARIES
 
@@ -792,7 +931,10 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-info-am uninstall-libLTLIBRARIES
+uninstall-am: uninstall-info-am uninstall-libLTLIBRARIES \
+	uninstall-pkgconfigDATA uninstall-zen_format_htmlHEADERS \
+	uninstall-zen_format_httpHEADERS \
+	uninstall-zen_httpclientHEADERS uninstall-zenincludeHEADERS
 
 .PHONY: CTAGS GTAGS all all-am am--refresh check check-am clean \
 	clean-generic clean-libLTLIBRARIES clean-libtool ctags dist \
@@ -802,12 +944,17 @@ uninstall-am: uninstall-info-am uninstall-libLTLIBRARIES
 	distuninstallcheck dvi dvi-am html html-am info info-am \
 	install install-am install-data install-data-am install-exec \
 	install-exec-am install-info install-info-am \
-	install-libLTLIBRARIES install-man install-strip installcheck \
-	installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-compile \
-	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags uninstall uninstall-am uninstall-info-am \
-	uninstall-libLTLIBRARIES
+	install-libLTLIBRARIES install-man install-pkgconfigDATA \
+	install-strip install-zen_format_htmlHEADERS \
+	install-zen_format_httpHEADERS install-zen_httpclientHEADERS \
+	install-zenincludeHEADERS installcheck installcheck-am \
+	installdirs maintainer-clean maintainer-clean-generic \
+	mostlyclean mostlyclean-compile mostlyclean-generic \
+	mostlyclean-libtool pdf pdf-am ps ps-am tags uninstall \
+	uninstall-am uninstall-info-am uninstall-libLTLIBRARIES \
+	uninstall-pkgconfigDATA uninstall-zen_format_htmlHEADERS \
+	uninstall-zen_format_httpHEADERS \
+	uninstall-zen_httpclientHEADERS uninstall-zenincludeHEADERS
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

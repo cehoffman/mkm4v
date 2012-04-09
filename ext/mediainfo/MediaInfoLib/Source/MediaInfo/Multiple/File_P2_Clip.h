@@ -1,5 +1,5 @@
-// File_Aac_Adif - Info for AAC (ADIF) files
-// Copyright (C) 2007-2010 MediaArea.net SARL, Info@MediaArea.net
+// File_P2_Clip - Info for P2 Clip (XML) files
+// Copyright (C) 2010-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -16,42 +16,54 @@
 //
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//
+// Information about P2 Clip files
+//
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //---------------------------------------------------------------------------
-#ifndef MediaInfo_File_AdifH
-#define MediaInfo_File_AdifH
+#ifndef MediaInfo_File_P2_ClipH
+#define MediaInfo_File_P2_ClipH
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
 #include "MediaInfo/File__Analyze.h"
-#include "MediaInfo/Tag/File__Tags.h"
+#include <vector>
 //---------------------------------------------------------------------------
 
 namespace MediaInfoLib
 {
 
+class File__ReferenceFilesHelper;
+
 //***************************************************************************
-// Class File_Adif
+// Class File_P2_Clip
 //***************************************************************************
 
-class File_Adif : public File__Analyze, public File__Tags_Helper
+class File_P2_Clip : public File__Analyze
 {
 public :
     //Constructor/Destructor
-    File_Adif();
+    File_P2_Clip();
+    ~File_P2_Clip();
 
 private :
     //Streams management
-    void Streams_Finish()                                                       {File__Tags_Helper::Streams_Finish();}
+    void Streams_Finish ();
+
+    //Buffer - Global
+    #if MEDIAINFO_SEEK
+    size_t Read_Buffer_Seek (size_t Method, int64u Value, int64u ID);
+    #endif //MEDIAINFO_SEEK
 
     //Buffer - File header
     bool FileHeader_Begin();
-    void FileHeader_Parse();
 
-    //Buffer - Global
-    void Read_Buffer_Continue()                                                 {File__Tags_Helper::Read_Buffer_Continue();}
+    //Temp
+    File__ReferenceFilesHelper*     ReferenceFiles;
 };
 
 } //NameSpace
 
 #endif
+

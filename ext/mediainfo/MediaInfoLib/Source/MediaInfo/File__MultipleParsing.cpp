@@ -1,5 +1,5 @@
 // File__MultipleParsing - Info for MultipleParsing files
-// Copyright (C) 2007-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2007-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -18,11 +18,15 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //---------------------------------------------------------------------------
-// Compilation conditions
-#include "MediaInfo/Setup.h"
+// Pre-compilation
+#include "MediaInfo/PreComp.h"
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+#include "MediaInfo/Setup.h"
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
@@ -31,6 +35,9 @@
 // Multiple
 #if defined(MEDIAINFO_CDXA_YES)
     #include "MediaInfo/Multiple/File_Cdxa.h"
+#endif
+#if defined(MEDIAINFO_DCP_YES)
+    #include "MediaInfo/Multiple/File_Dcp.h"
 #endif
 #if defined(MEDIAINFO_DPG_YES)
     #include "MediaInfo/Multiple/File_Dpg.h"
@@ -41,11 +48,26 @@
 #if defined(MEDIAINFO_DVDV_YES)
     #include "MediaInfo/Multiple/File_Dvdv.h"
 #endif
+#if defined(MEDIAINFO_DXW_YES)
+    #include "MediaInfo/Multiple/File_Dxw.h"
+#endif
 #if defined(MEDIAINFO_FLV_YES)
     #include "MediaInfo/Multiple/File_Flv.h"
 #endif
 #if defined(MEDIAINFO_GXF_YES)
     #include "MediaInfo/Multiple/File_Gxf.h"
+#endif
+#if defined(MEDIAINFO_HLS_YES)
+    #include "MediaInfo/Multiple/File_Hls.h"
+#endif
+#if defined(MEDIAINFO_ISM_YES)
+    #include "MediaInfo/Multiple/File_Ism.h"
+#endif
+#if defined(MEDIAINFO_IVF_YES)
+    #include "MediaInfo/Multiple/File_Ivf.h"
+#endif
+#if defined(MEDIAINFO_LXF_YES)
+    #include "MediaInfo/Multiple/File_Lxf.h"
 #endif
 #if defined(MEDIAINFO_MK_YES)
     #include "MediaInfo/Multiple/File_Mk.h"
@@ -56,7 +78,7 @@
 #if defined(MEDIAINFO_MPEGPS_YES)
     #include "MediaInfo/Multiple/File_MpegPs.h"
 #endif
-#if defined(MEDIAINFO_MPEGTS_YES)
+#if defined(MEDIAINFO_MPEGTS_YES) || defined(MEDIAINFO_BDAV_YES) || defined(MEDIAINFO_TSP_YES)
     #include "MediaInfo/Multiple/File_MpegTs.h"
 #endif
 #if defined(MEDIAINFO_MXF_YES)
@@ -68,11 +90,17 @@
 #if defined(MEDIAINFO_OGG_YES)
     #include "MediaInfo/Multiple/File_Ogg.h"
 #endif
+#if defined(MEDIAINFO_P2_YES)
+    #include "MediaInfo/Multiple/File_P2_Clip.h"
+#endif
 #if defined(MEDIAINFO_RIFF_YES)
     #include "MediaInfo/Multiple/File_Riff.h"
 #endif
 #if defined(MEDIAINFO_RM_YES)
     #include "MediaInfo/Multiple/File_Rm.h"
+#endif
+#if defined(MEDIAINFO_SEQUENCEINFO_YES)
+    #include "MediaInfo/Multiple/File_SequenceInfo.h"
 #endif
 #if defined(MEDIAINFO_SKM_YES)
     #include "MediaInfo/Multiple/File_Skm.h"
@@ -82,6 +110,9 @@
 #endif
 #if defined(MEDIAINFO_WM_YES)
     #include "MediaInfo/Multiple/File_Wm.h"
+#endif
+#if defined(MEDIAINFO_XDCAM_YES)
+    #include "MediaInfo/Multiple/File_Xdcam_Clip.h"
 #endif
 
 //---------------------------------------------------------------------------
@@ -98,6 +129,9 @@
 #if defined(MEDIAINFO_FLIC_YES)
     #include "MediaInfo/Video/File_Flic.h"
 #endif
+#if defined(MEDIAINFO_H263_YES)
+    #include "MediaInfo/Video/File_H263.h"
+#endif
 #if defined(MEDIAINFO_MPEG4V_YES)
     #include "MediaInfo/Video/File_Mpeg4v.h"
 #endif
@@ -107,17 +141,23 @@
 #if defined(MEDIAINFO_VC1_YES)
     #include "MediaInfo/Video/File_Vc1.h"
 #endif
+#if defined(MEDIAINFO_VC3_YES)
+    #include "MediaInfo/Video/File_Vc3.h"
+#endif
+#if defined(MEDIAINFO_Y4M_YES)
+    #include "MediaInfo/Video/File_Y4m.h"
+#endif
 
 //---------------------------------------------------------------------------
 // Audio
+#if defined(MEDIAINFO_AAC_YES)
+    #include "MediaInfo/Audio/File_Aac.h"
+#endif
 #if defined(MEDIAINFO_AC3_YES)
     #include "MediaInfo/Audio/File_Ac3.h"
 #endif
-#if defined(MEDIAINFO_ADIF_YES)
-    #include "MediaInfo/Audio/File_Adif.h"
-#endif
-#if defined(MEDIAINFO_ADTS_YES)
-    #include "MediaInfo/Audio/File_Adts.h"
+#if defined(MEDIAINFO_AES3_YES)
+    #include "MediaInfo/Audio/File_Aes3.h"
 #endif
 #if defined(MEDIAINFO_ALS_YES)
     #include "MediaInfo/Audio/File_Als.h"
@@ -167,6 +207,9 @@
 #if defined(MEDIAINFO_PCM_YES)
     #include "MediaInfo/Audio/File_Pcm.h"
 #endif
+#if defined(MEDIAINFO_RKAU_YES)
+    #include "MediaInfo/Audio/File_Rkau.h"
+#endif
 #if defined(MEDIAINFO_S3M_YES)
     #include "MediaInfo/Audio/File_ScreamTracker3.h"
 #endif
@@ -212,6 +255,9 @@
 #if defined(MEDIAINFO_TIFF_YES)
     #include "MediaInfo/Image/File_Tiff.h"
 #endif
+#if defined(MEDIAINFO_TIFF_YES)
+    #include "MediaInfo/Image/File_Tga.h"
+#endif
 
 //---------------------------------------------------------------------------
 // Archive
@@ -229,6 +275,9 @@
 #endif
 #if defined(MEDIAINFO_GZIP_YES)
     #include "MediaInfo/Archive/File_Gzip.h"
+#endif
+#if defined(MEDIAINFO_ISO9660_YES)
+    #include "MediaInfo/Archive/File_Iso9660.h"
 #endif
 #if defined(MEDIAINFO_MZ_YES)
     #include "MediaInfo/Archive/File_Mz.h"
@@ -279,9 +328,9 @@ File__Analyze* File__MultipleParsing::Parser_Get()
 File__MultipleParsing::File__MultipleParsing()
 :File__Analyze()
 {
-    #ifndef MEDIAINFO_MINIMIZESIZE
-        Details_DoNotSave=true;
-    #endif //MEDIAINFO_MINIMIZESIZE
+    #if MEDIAINFO_TRACE
+        Trace_DoNotSave=true;
+    #endif //MEDIAINFO_TRACE
 
     File__Analyze* Temp;
     // Multiple
@@ -290,6 +339,9 @@ File__MultipleParsing::File__MultipleParsing()
     #endif
     #if defined(MEDIAINFO_CDXA_YES)
         Temp=new File_Cdxa(); Parser.push_back(Temp);
+    #endif
+    #if defined(MEDIAINFO_DCP_YES)
+        Temp=new File_Dcp(); Parser.push_back(Temp);
     #endif
     #if defined(MEDIAINFO_DPG_YES)
         Temp=new File_Dpg(); Parser.push_back(Temp);
@@ -300,11 +352,26 @@ File__MultipleParsing::File__MultipleParsing()
     #if defined(MEDIAINFO_DVDV_YES)
         Temp=new File_Dvdv(); Parser.push_back(Temp);
     #endif
+    #if defined(MEDIAINFO_DXW_YES)
+        Temp=new File_Dxw(); Parser.push_back(Temp);
+    #endif
     #if defined(MEDIAINFO_FLV_YES)
         Temp=new File_Flv(); Parser.push_back(Temp);
     #endif
     #if defined(MEDIAINFO_GXF_YES)
         Temp=new File_Gxf(); Parser.push_back(Temp);
+    #endif
+    #if defined(MEDIAINFO_HLS_YES)
+        Temp=new File_Hls(); Parser.push_back(Temp);
+    #endif
+    #if defined(MEDIAINFO_ISM_YES)
+        Temp=new File_Ism(); Parser.push_back(Temp);
+    #endif
+    #if defined(MEDIAINFO_IVF_YES)
+        Temp=new File_Ivf(); Parser.push_back(Temp);
+    #endif
+    #if defined(MEDIAINFO_LXF_YES)
+        Temp=new File_Lxf(); Parser.push_back(Temp);
     #endif
     #if defined(MEDIAINFO_MK_YES)
         Temp=new File_Mk(); Parser.push_back(Temp);
@@ -330,11 +397,17 @@ File__MultipleParsing::File__MultipleParsing()
     #if defined(MEDIAINFO_OGG_YES)
         Temp=new File_Ogg(); Parser.push_back(Temp);
     #endif
+    #if defined(MEDIAINFO_P2_YES)
+        Temp=new File_P2_Clip(); Parser.push_back(Temp);
+    #endif
     #if defined(MEDIAINFO_RIFF_YES)
         Temp=new File_Riff(); Parser.push_back(Temp);
     #endif
     #if defined(MEDIAINFO_RM_YES)
         Temp=new File_Rm(); Parser.push_back(Temp);
+    #endif
+    #if defined(MEDIAINFO_SEQUENCEINFO_YES)
+        Temp=new File_Skm(); Parser.push_back(Temp);
     #endif
     #if defined(MEDIAINFO_SKM_YES)
         Temp=new File_Skm(); Parser.push_back(Temp);
@@ -344,6 +417,9 @@ File__MultipleParsing::File__MultipleParsing()
     #endif
     #if defined(MEDIAINFO_WM_YES)
         Temp=new File_Wm(); Parser.push_back(Temp);
+    #endif
+    #if defined(MEDIAINFO_XDCAM_YES)
+        Temp=new File_Xdcam_Clip(); Parser.push_back(Temp);
     #endif
 
     // Video
@@ -359,6 +435,9 @@ File__MultipleParsing::File__MultipleParsing()
     #if defined(MEDIAINFO_FLIC_YES)
         Temp=new File_Flic(); Parser.push_back(Temp);
     #endif
+    #if defined(MEDIAINFO_H263_YES)
+        Temp=new File_H263(); Parser.push_back(Temp);
+    #endif
     #if defined(MEDIAINFO_MPEG4V_YES)
         Temp=new File_Mpeg4v(); Parser.push_back(Temp);
     #endif
@@ -368,16 +447,22 @@ File__MultipleParsing::File__MultipleParsing()
     #if defined(MEDIAINFO_VC1_YES)
         Temp=new File_Vc1(); Parser.push_back(Temp);
     #endif
+    #if defined(MEDIAINFO_Y4M_YES)
+        Temp=new File_Y4m(); Parser.push_back(Temp);
+    #endif
 
     // Audio
+    #if defined(MEDIAINFO_AAC_YES)
+        Temp=new File_Aac(); ((File_Aac*)Temp)->Mode=File_Aac::Mode_ADIF; Parser.push_back(Temp);
+    #endif
+    #if defined(MEDIAINFO_AAC_YES)
+        Temp=new File_Aac(); ((File_Aac*)Temp)->Mode=File_Aac::Mode_ADTS; Parser.push_back(Temp);
+    #endif
     #if defined(MEDIAINFO_AC3_YES)
         Temp=new File_Ac3(); Parser.push_back(Temp);
     #endif
-    #if defined(MEDIAINFO_ADIF_YES)
-        Temp=new File_Adif(); Parser.push_back(Temp);
-    #endif
-    #if defined(MEDIAINFO_ADTS_YES)
-        Temp=new File_Adts(); Parser.push_back(Temp);
+    #if defined(MEDIAINFO_AES3_YES)
+        Temp=new File_Aes3(); Parser.push_back(Temp);
     #endif
     #if defined(MEDIAINFO_ALS_YES)
         Temp=new File_Als(); Parser.push_back(Temp);
@@ -420,6 +505,9 @@ File__MultipleParsing::File__MultipleParsing()
     #endif
     #if defined(MEDIAINFO_MPEGA_YES)
         Temp=new File_Mpega(); Parser.push_back(Temp);
+    #endif
+    #if defined(MEDIAINFO_RKAU_YES)
+        Temp=new File_Rkau(); Parser.push_back(Temp);
     #endif
     #if defined(MEDIAINFO_S3M_YES)
         Temp=new File_ScreamTracker3(); Parser.push_back(Temp);
@@ -467,6 +555,9 @@ File__MultipleParsing::File__MultipleParsing()
     #if defined(MEDIAINFO_TIFF_YES)
         Temp=new File_Tiff(); Parser.push_back(Temp);
     #endif
+    #if defined(MEDIAINFO_TGA_YES)
+        Temp=new File_Tga(); Parser.push_back(Temp);
+    #endif
 
     // Archive
     #if defined(MEDIAINFO_7Z_YES)
@@ -483,6 +574,9 @@ File__MultipleParsing::File__MultipleParsing()
     #endif
     #if defined(MEDIAINFO_GZIP_YES)
         Temp=new File_Gzip(); Parser.push_back(Temp);
+    #endif
+    #if defined(MEDIAINFO_ISO9660_YES)
+        Temp=new File_Iso9660(); Parser.push_back(Temp);
     #endif
     #if defined(MEDIAINFO_MZ_YES)
         Temp=new File_Mz(); Parser.push_back(Temp);
@@ -520,9 +614,9 @@ void File__MultipleParsing::Streams_Finish()
         return;
 
     Parser[0]->Open_Buffer_Finalize();
-    #ifndef MEDIAINFO_MINIMIZESIZE
+    #if MEDIAINFO_TRACE
         Details=Parser[0]->Details;
-    #endif //MEDIAINFO_MINIMIZESIZE
+    #endif //MEDIAINFO_TRACE
 }
 
 //***************************************************************************
@@ -536,11 +630,11 @@ void File__MultipleParsing::Read_Buffer_Init()
     for (size_t Pos=0; Pos<Parser.size(); Pos++)
     {
         //Parsing
-        #ifndef MEDIAINFO_MINIMIZESIZE
+        #if MEDIAINFO_TRACE
             Parser[Pos]->Init(Config, Details, Stream, Stream_More);
-        #else //MEDIAINFO_MINIMIZESIZE
+        #else //MEDIAINFO_TRACE
             Parser[Pos]->Init(Config, Stream, Stream_More);
-        #endif //MEDIAINFO_MINIMIZESIZE
+        #endif //MEDIAINFO_TRACE
         Parser[Pos]->File_Name=File_Name;
         Parser[Pos]->Open_Buffer_Init(File_Size);
     }
@@ -561,9 +655,9 @@ void File__MultipleParsing::Read_Buffer_Continue()
     for (size_t Pos=0; Pos<Parser.size(); Pos++)
     {
         //Parsing
-        Open_Buffer_Continue(Parser[Pos], Buffer+Buffer_Offset, (size_t)Element_Size);
+        Parser[Pos]->Open_Buffer_Continue(Buffer+Buffer_Offset, (size_t)Element_Size);
         if (File_Offset+Buffer_Size==File_Size)
-            Open_Buffer_Finalize(Parser[Pos]);
+            Parser[Pos]->Open_Buffer_Finalize();
 
         //Testing if the parser failed
         if (Parser[Pos]->Status[IsFinished] && !Parser[Pos]->Status[IsAccepted])

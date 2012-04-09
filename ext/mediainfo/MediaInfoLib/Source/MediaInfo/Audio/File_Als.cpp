@@ -1,6 +1,6 @@
 // File_Als - Info for MPEG-4 ALS files
-// Copyright (C) 2009-2009 Lionel Duchateau, kurtnoise@free.fr
-// Copyright (C) 2009-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2009-2011 Lionel Duchateau, kurtnoise@free.fr
+// Copyright (C) 2009-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -25,11 +25,15 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //---------------------------------------------------------------------------
-// Compilation conditions
-#include "MediaInfo/Setup.h"
+// Pre-compilation
+#include "MediaInfo/PreComp.h"
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+#include "MediaInfo/Setup.h"
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
@@ -67,7 +71,7 @@ void File_Als::Streams_Finish()
     float32 CompressionRatio=((float32)UncompressedSize)/CompressedSize;
 
     Fill(Stream_Audio, 0, Audio_StreamSize, CompressedSize);
-    Fill(Stream_Audio, 0, Audio_CompressionRatio, CompressionRatio);
+    Fill(Stream_Audio, 0, Audio_Compression_Ratio, CompressionRatio);
 
     File__Tags_Helper::Streams_Finish();
 }
@@ -104,10 +108,10 @@ void File_Als::FileHeader_Parse()
     Skip_C4(                                                    "signature");
     Get_B4 (SampleRate,                                         "sample rate");
     Get_B4 (Samples,                                            "samples");
-    Get_B2 (Channels,                                           "channels-1"); Param_Info(Channels+1, " channel(s)");
+    Get_B2 (Channels,                                           "channels-1"); Param_Info2(Channels+1, " channel(s)");
     BS_Begin();
     Get_S1 (3, FileType,                                        "file type"); // WAV, RIFF, AIFF
-    Get_S1 (3, BitsPerSample,                                   "bits per sample"); Param_Info((BitsPerSample+1)*8, " bits");
+    Get_S1 (3, BitsPerSample,                                   "bits per sample"); Param_Info2((BitsPerSample+1)*8, " bits");
     Skip_SB(                                                    "floating point");
     Skip_SB(                                                    "samples are big-endian");
     BS_End();
@@ -127,7 +131,7 @@ void File_Als::FileHeader_Parse()
         File__Tags_Helper::Stream_Prepare(Stream_Audio);
         Fill(Stream_Audio, 0, Audio_Format, "ALS");
         Fill(Stream_Audio, 0, Audio_Codec, "ALS");
-        Fill(Stream_Audio, 0, Audio_Resolution, (BitsPerSample+1)*8);
+        Fill(Stream_Audio, 0, Audio_BitDepth, (BitsPerSample+1)*8);
         Fill(Stream_Audio, StreamPos_Last, Audio_Channel_s_, Channels+1);
         Fill(Stream_Audio, StreamPos_Last, Audio_SamplingRate, SampleRate);
         Fill(Stream_Audio, 0, Audio_Duration, Duration);

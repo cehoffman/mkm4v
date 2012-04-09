@@ -1,3 +1,22 @@
+// MediaInfo_Events -
+// Copyright (C) 2010-2011 MediaArea.net SARL, Info@MediaArea.net
+//
+// This library is free software: you can redistribute it and/or modify it
+// under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// any later version.
+//
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this library. If not, see <http://www.gnu.org/licenses/>.
+//
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 /*Structures for MediaInfo events */
 
 #ifndef MediaInfo_EventsH
@@ -169,8 +188,12 @@
 
 
 /***************************************************************************/
-/* The callback function
+/* The callback function                                                   */
 /***************************************************************************/
+
+#if !defined(__WINDOWS__)
+    #define __stdcall
+#endif //!defined(__WINDOWS__)
 
 #ifdef __cplusplus
 extern "C"
@@ -184,7 +207,7 @@ extern "C"
 #endif /* __cplusplus */
 
 /***************************************************************************/
-/* EventCode management
+/* EventCode management                                                    */
 /***************************************************************************/
 
 #define MediaInfo_EventCode_Create(ParserID, EventID, EventVersion) \
@@ -193,25 +216,143 @@ extern "C"
    | ((MediaInfo_int32u)EventVersion)    )
 
 /***************************************************************************/
-/* General                                                                 */
+/* Global                                                                  */
 /***************************************************************************/
-
-#define MediaInfo_Parser_None           0x00 
 
 /*-------------------------------------------------------------------------*/
 /* Generic                                                                 */
 struct MediaInfo_Event_Generic
 {
-    MediaInfo_int32u    EventCode;
+    MediaInfo_int32u        EventCode;
 };
+
+/*-------------------------------------------------------------------------*/
+/* MediaInfo_Event_Log_0                                                   */
+#define MediaInfo_Event_Log 0x0F00
+struct MediaInfo_Event_Log_0
+{
+    MediaInfo_int32u        EventCode;
+    MediaInfo_int8u         Type;
+    MediaInfo_int8u         Severity;
+    MediaInfo_int8u         Reserved2;
+    MediaInfo_int8u         Reserved3;
+    MediaInfo_int32u        MessageCode;
+    MediaInfo_int32u        Reserved4;
+    const wchar_t*          MessageString;
+};
+
+/*-------------------------------------------------------------------------*/
+/* Demux                                                                   */
+#define MediaInfo_Event_Global_Demux 0xAF00
+enum MediaInfo_Event_Global_Demux_0_contenttype
+{
+    MediaInfo_Event_Global_Demux_0_ContentType_MainStream,
+    MediaInfo_Event_Global_Demux_0_ContentType_SubStream,
+    MediaInfo_Event_Global_Demux_0_ContentType_Header,
+    MediaInfo_Event_Global_Demux_0_ContentType_Synchro
+};
+struct MediaInfo_Event_Global_Demux_0
+{
+    MediaInfo_int32u        EventCode;
+    MediaInfo_int64u        Stream_Offset;
+    MediaInfo_int64u        PCR;
+    MediaInfo_int64u        PTS;
+    MediaInfo_int64u        DTS;
+    size_t                  StreamIDs_Size;
+    MediaInfo_int64u*       StreamIDs;
+    MediaInfo_int8u*        StreamIDs_Width;
+    MediaInfo_int8u*        ParserIDs;
+    MediaInfo_int8u         Content_Type; /*MediaInfo_Event_Global_Demux_0_contenttype*/
+    size_t                  Content_Size;
+    const MediaInfo_int8u*  Content;
+};
+struct MediaInfo_Event_Global_Demux_1
+{
+    MediaInfo_int32u        EventCode;
+    MediaInfo_int64u        Stream_Offset;
+    MediaInfo_int64u        PCR;
+    MediaInfo_int64u        PTS;
+    MediaInfo_int64u        DTS;
+    size_t                  StreamIDs_Size;
+    MediaInfo_int64u*       StreamIDs;
+    MediaInfo_int8u*        StreamIDs_Width;
+    MediaInfo_int8u*        ParserIDs;
+    MediaInfo_int8u         Content_Type; /*MediaInfo_Event_Global_Demux_0_contenttype*/
+    size_t                  Content_Size;
+    const MediaInfo_int8u*  Content;
+    MediaInfo_int64u        DUR;
+};
+struct MediaInfo_Event_Global_Demux_2
+{
+    MediaInfo_int32u        EventCode;
+    MediaInfo_int64u        Stream_Offset;
+    MediaInfo_int64u        PCR;
+    MediaInfo_int64u        PTS;
+    MediaInfo_int64u        DTS;
+    size_t                  StreamIDs_Size;
+    MediaInfo_int64u*       StreamIDs;
+    MediaInfo_int8u*        StreamIDs_Width;
+    MediaInfo_int8u*        ParserIDs;
+    MediaInfo_int8u         Content_Type; /*MediaInfo_Event_Global_Demux_0_contenttype*/
+    size_t                  Content_Size;
+    const MediaInfo_int8u*  Content;
+    MediaInfo_int64u        DUR;
+    MediaInfo_int64u        Flags; /*bit0=random_access*/
+};
+struct MediaInfo_Event_Global_Demux_3
+{
+    MediaInfo_int32u        EventCode;
+    MediaInfo_int64u        Stream_Offset;
+    MediaInfo_int64u        PCR;
+    MediaInfo_int64u        PTS;
+    MediaInfo_int64u        DTS;
+    size_t                  StreamIDs_Size;
+    MediaInfo_int64u*       StreamIDs;
+    MediaInfo_int8u*        StreamIDs_Width;
+    MediaInfo_int8u*        ParserIDs;
+    MediaInfo_int8u         Content_Type; /*MediaInfo_Event_Global_Demux_0_contenttype*/
+    size_t                  Content_Size;
+    const MediaInfo_int8u*  Content;
+    MediaInfo_int64u        DUR;
+    MediaInfo_int64u        Flags; /*bit0=random_access*/
+    MediaInfo_int64u        FrameNumber;
+};
+
+/*-------------------------------------------------------------------------*/
+/* MediaInfo_Event_Video_SliceInfo_0                                       */
+#define MediaInfo_Event_Video_SliceInfo 0x7801
+struct MediaInfo_Event_Video_SliceInfo_0
+{
+    MediaInfo_int32u        EventCode;
+    MediaInfo_int64u        Stream_Offset;
+    MediaInfo_int64u        PCR;
+    MediaInfo_int64u        PTS;
+    MediaInfo_int64u        DTS;
+    MediaInfo_int64u        DUR;
+    size_t                  StreamIDs_Size;
+    MediaInfo_int64u*       StreamIDs;
+    MediaInfo_int8u*        StreamIDs_Width;
+    MediaInfo_int8u*        ParserIDs;
+    MediaInfo_int64u        FramePosition;
+    MediaInfo_int64u        FieldPosition;
+    MediaInfo_int64u        SlicePosition;
+    MediaInfo_int8u         SliceType;
+    MediaInfo_int64u        Flags;
+};
+
+/***************************************************************************/
+/* General                                                                 */
+/***************************************************************************/
+
+#define MediaInfo_Parser_None           0x00
 
 /*-------------------------------------------------------------------------*/
 /* Start                                                                   */
 #define MediaInfo_Event_General_Start 0x7001
 struct MediaInfo_Event_General_Start_0
 {
-    MediaInfo_int32u    EventCode;
-    MediaInfo_int64u    Stream_Size;
+    MediaInfo_int32u        EventCode;
+    MediaInfo_int64u        Stream_Size;
 };
 
 /*-------------------------------------------------------------------------*/
@@ -219,8 +360,8 @@ struct MediaInfo_Event_General_Start_0
 #define MediaInfo_Event_General_End 0x7002
 struct MediaInfo_Event_General_End_0
 {
-    MediaInfo_int32u    EventCode;
-    MediaInfo_int64u    Stream_Bytes_Analyzed;
+    MediaInfo_int32u        EventCode;
+    MediaInfo_int64u        Stream_Bytes_Analyzed;
 };
 
 /*-------------------------------------------------------------------------*/
@@ -228,27 +369,295 @@ struct MediaInfo_Event_General_End_0
 #define MediaInfo_Event_General_Parser_Selected 0x7003
 struct MediaInfo_Event_General_Parser_Selected_0
 {
-    MediaInfo_int32u    EventCode;
-    char                Name[16];
+    MediaInfo_int32u        EventCode;
+    char                    Name[16];
 };
 
 /*-------------------------------------------------------------------------*/
 /* Move request                                                            */
-#define MediaInfo_Event_General_Move_Request 0x7004 
+#define MediaInfo_Event_General_Move_Request 0x7004
 struct MediaInfo_Event_General_Move_Request_0
 {
-    MediaInfo_int32u    EventCode;
-    MediaInfo_int64u    Stream_Offset;
+    MediaInfo_int32u        EventCode;
+    MediaInfo_int64u        Stream_Offset;
 };
 
 /*-------------------------------------------------------------------------*/
 /* Move done                                                               */
-#define MediaInfo_Event_General_Move_Done 0x7005 
+#define MediaInfo_Event_General_Move_Done 0x7005
 struct MediaInfo_Event_General_Move_Done_0
 {
-    MediaInfo_int32u    EventCode;
-    MediaInfo_int64u    Stream_Offset;
+    MediaInfo_int32u        EventCode;
+    MediaInfo_int64u        Stream_Offset;
 };
 
-#endif //MediaInfo_EventsH
+/*-------------------------------------------------------------------------*/
+/* SubFile_Start                                                           */
+#define MediaInfo_Event_General_SubFile_Start 0x7006
+struct MediaInfo_Event_General_SubFile_Start_0
+{
+    MediaInfo_int32u        EventCode;
+    size_t                  StreamIDs_Size;
+    MediaInfo_int64u*       StreamIDs;
+    MediaInfo_int8u*        StreamIDs_Width;
+    MediaInfo_int8u*        ParserIDs;
+    char*                   FileName_Relative;
+    wchar_t*                FileName_Relative_Unicode;
+    char*                   FileName_Absolute;
+    wchar_t*                FileName_Absolute_Unicode;
+};
 
+/*-------------------------------------------------------------------------*/
+/* SubFile_End                                                             */
+#define MediaInfo_Event_General_SubFile_End 0x7007
+struct MediaInfo_Event_General_SubFile_End_0
+{
+    MediaInfo_int32u        EventCode;
+};
+
+/***************************************************************************/
+/* MPEG-TS / BDAV / TSP                                                    */
+/***************************************************************************/
+
+#define MediaInfo_Parser_MpegTs         0x01
+
+/***************************************************************************/
+/* MPEG-PS                                                                 */
+/***************************************************************************/
+
+#define MediaInfo_Parser_MpegPs         0x02
+#define MediaInfo_Parser_MpegPs_Ext     0x70
+
+/***************************************************************************/
+/* DV / DIF                                                                 */
+/***************************************************************************/
+
+#define MediaInfo_Parser_DvDif          0x03
+
+/*-------------------------------------------------------------------------*/
+/* Analysis                                                                */
+#define MediaInfo_Event_DvDif_Analysis_Frame 0xB001
+struct MediaInfo_Event_DvDif_Analysis_Frame_0
+{
+    MediaInfo_int32u        EventCode;
+    MediaInfo_int32u        TimeCode;
+    MediaInfo_int32u        RecordedDateTime1;
+    MediaInfo_int16u        RecordedDateTime2;
+    MediaInfo_int8u         Arb;
+    MediaInfo_int8u         Verbosity;
+    char*                   Errors;
+};
+
+/***************************************************************************/
+/* CDXA                                                                    */
+/***************************************************************************/
+
+#define MediaInfo_Parser_Cdxa           0x04
+
+/***************************************************************************/
+/* FLV                                                                     */
+/***************************************************************************/
+
+#define MediaInfo_Parser_Flv            0x06
+
+/***************************************************************************/
+/* GXF                                                                     */
+/***************************************************************************/
+
+#define MediaInfo_Parser_Gxf            0x07
+
+/***************************************************************************/
+/* Matroska                                                                */
+/***************************************************************************/
+
+#define MediaInfo_Parser_Matroska       0x08
+
+/***************************************************************************/
+/* MPEG-4                                                                  */
+/***************************************************************************/
+
+#define MediaInfo_Parser_Mpeg4          0x09
+#define MediaInfo_Parser_Mpeg4_Desc     0x71
+
+/***************************************************************************/
+/* MXF                                                                     */
+/***************************************************************************/
+
+#define MediaInfo_Parser_Mxf            0x0A
+
+/***************************************************************************/
+/* OGG                                                                     */
+/***************************************************************************/
+
+#define MediaInfo_Parser_Ogg            0x0B
+
+/***************************************************************************/
+/* RIFF                                                                    */
+/***************************************************************************/
+
+#define MediaInfo_Parser_Riff           0x0C
+
+/***************************************************************************/
+/* WM                                                                      */
+/***************************************************************************/
+
+#define MediaInfo_Parser_Wm             0x0D
+
+/***************************************************************************/
+/* LXF                                                                     */
+/***************************************************************************/
+
+#define MediaInfo_Parser_Lxf            0x0E
+
+/***************************************************************************/
+/* HLS                                                                     */
+/***************************************************************************/
+
+#define MediaInfo_Parser_Hls            0x70
+
+/***************************************************************************/
+/* HLS Index                                                               */
+/***************************************************************************/
+
+#define MediaInfo_Parser_HlsIndex       0x71
+
+/***************************************************************************/
+/* MPEG Video                                                              */
+/***************************************************************************/
+
+#define MediaInfo_Parser_Mpegv          0x80
+
+/***************************************************************************/
+/* AVC                                                                     */
+/***************************************************************************/
+
+#define MediaInfo_Parser_Avc            0x81
+
+/***************************************************************************/
+/* VC-1                                                                    */
+/***************************************************************************/
+
+#define MediaInfo_Parser_Vc1            0x82
+
+/***************************************************************************/
+/* Active Format Description (AFD)                                         */
+/***************************************************************************/
+
+#define MediaInfo_Parser_Afd            0x83
+
+/***************************************************************************/
+/* Bar Data                                                                */
+/***************************************************************************/
+
+#define MediaInfo_Parser_BarData        0x84
+
+/***************************************************************************/
+/* MPEG-4 Visual                                                           */
+/***************************************************************************/
+
+#define MediaInfo_Parser_Mpeg4v         0x85
+
+/***************************************************************************/
+/* DTS                                                                     */
+/***************************************************************************/
+
+#define MediaInfo_Parser_Dts            0xA0
+
+/***************************************************************************/
+/* AC-3                                                                    */
+/***************************************************************************/
+
+#define MediaInfo_Parser_Ac3            0xA1
+
+/***************************************************************************/
+/* AAC                                                                     */
+/***************************************************************************/
+
+#define MediaInfo_Parser_Aac            0xA2
+
+/***************************************************************************/
+/* MPEG Audio                                                              */
+/***************************************************************************/
+
+#define MediaInfo_Parser_Mpega          0xA3
+
+/***************************************************************************/
+/* PCM                                                                     */
+/***************************************************************************/
+
+#define MediaInfo_Parser_Pcm            0xA4
+
+/***************************************************************************/
+/* AES-3                                                                   */
+/***************************************************************************/
+
+#define MediaInfo_Parser_Aes3           0xA5
+
+/***************************************************************************/
+/* Dolby E                                                                 */
+/***************************************************************************/
+
+#define MediaInfo_Parser_DolbyE         0xA6
+
+/***************************************************************************/
+/* Channel grouping intermediate module                                    */
+/***************************************************************************/
+
+#define MediaInfo_Parser_ChannelGrouping 0xA7
+
+/***************************************************************************/
+/* CEA-608 (formely IEA-608)                                               */
+/***************************************************************************/
+
+#define MediaInfo_Parser_Eia608         0xF0
+
+/***************************************************************************/
+/* DTVCC Transport (CEA-708, formely IEA-708)                              */
+/***************************************************************************/
+
+#define MediaInfo_Parser_DtvccTransport 0xF1
+#define MediaInfo_Parser_Eia708         0xF1 /*Deprecated*/
+
+/***************************************************************************/
+/* DTVCC Caption (CEA-708, formely IEA-708)                                */
+/***************************************************************************/
+
+#define MediaInfo_Parser_DtvccCaption   0xF2
+
+/***************************************************************************/
+/* CDP                                                                     */
+/***************************************************************************/
+
+#define MediaInfo_Parser_Cdp            0xF3
+
+/***************************************************************************/
+/* DVD CC                                                                  */
+/***************************************************************************/
+
+#define MediaInfo_Parser_DvdCc          0xF4
+
+/***************************************************************************/
+/* SCTE 20                                                                 */
+/***************************************************************************/
+
+#define MediaInfo_Parser_Scte20         0xF5
+
+/***************************************************************************/
+/* DVB Subtitle                                                            */
+/***************************************************************************/
+
+#define MediaInfo_Parser_DvbSubtitle    0xF6
+
+/***************************************************************************/
+/* Teletext                                                                */
+/***************************************************************************/
+
+#define MediaInfo_Parser_Teletext       0xF7
+
+/***************************************************************************/
+/* SCC                                                                     */
+/***************************************************************************/
+
+#define MediaInfo_Parser_Scc            0xF8
+
+#endif //MediaInfo_EventsH

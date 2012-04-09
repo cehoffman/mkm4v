@@ -1,5 +1,5 @@
 // File_Mk - Info for Matroska Video/Audio files
-// Copyright (C) 2002-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2002-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -180,7 +180,7 @@ private :
     void Segment_Tracks_TrackEntry_ContentEncodings_ContentEncoding_Order() {UInteger_Info();};
     void Segment_Tracks_TrackEntry_ContentEncodings_ContentEncoding_Scope() {UInteger_Info();};
     void Segment_Tracks_TrackEntry_ContentEncodings_ContentEncoding_Type() {UInteger_Info();};
-    void Segment_Tracks_TrackEntry_ContentEncodings_ContentEncoding_Compression() {};
+    void Segment_Tracks_TrackEntry_ContentEncodings_ContentEncoding_Compression();
     void Segment_Tracks_TrackEntry_ContentEncodings_ContentEncoding_Compression_ContentCompAlgo();
     void Segment_Tracks_TrackEntry_ContentEncodings_ContentEncoding_Compression_ContentCompSettings();
     void Segment_Tracks_TrackEntry_ContentEncodings_ContentEncoding_Encryption() {};
@@ -216,12 +216,15 @@ private :
     void Segment_Tracks_TrackEntry_Video_DisplayUnit();
     void Segment_Tracks_TrackEntry_Video_DisplayWidth();
     void Segment_Tracks_TrackEntry_Video_FlagInterlaced();
+    void Segment_Tracks_TrackEntry_Video_FrameRate();
     void Segment_Tracks_TrackEntry_Video_PixelCropBottom();
     void Segment_Tracks_TrackEntry_Video_PixelCropLeft();
     void Segment_Tracks_TrackEntry_Video_PixelCropRight();
     void Segment_Tracks_TrackEntry_Video_PixelCropTop();
     void Segment_Tracks_TrackEntry_Video_PixelHeight();
     void Segment_Tracks_TrackEntry_Video_PixelWidth();
+    void Segment_Tracks_TrackEntry_Video_StereoMode();
+    void Segment_Tracks_TrackEntry_Video_StereoModeBuggy() {Segment_Tracks_TrackEntry_Video_StereoMode();}
     void Segment_Tracks_TrackEntry_TrackOverlay();
     void Segment_Tracks_TrackEntry_TrackTranslate();
     void Segment_Tracks_TrackEntry_TrackTranslate_Codec();
@@ -238,12 +241,16 @@ private :
         size_t                  PacketCount;
         int32u                  AvgBytesPerSec; //Only used by x_MS/* codecIDs
         float32                 DisplayAspectRatio;
+        float64                 FrameRate;
         bool                    Searching_Payload;
         bool                    Searching_TimeStamps;
         bool                    Searching_TimeStamp_Start;
+        bool                    Default;
+        bool                    Forced;
         int64u                  ContentCompAlgo;
         size_t                  ContentCompSettings_Buffer_Size;
         int8u*                  ContentCompSettings_Buffer;
+        std::map<std::string, Ztring> Infos;
 
         stream()
         {
@@ -254,9 +261,12 @@ private :
             PacketCount=0;
             AvgBytesPerSec=0;
             DisplayAspectRatio=0;
+            FrameRate=0;
             Searching_Payload=false;
             Searching_TimeStamps=false;
             Searching_TimeStamp_Start=false;
+            Default=true;
+            Forced=false;
             ContentCompAlgo=(int32u)-1;
             ContentCompSettings_Buffer_Size=0;
             ContentCompSettings_Buffer=NULL;
@@ -273,6 +283,7 @@ private :
 
     //Data
     int64u   UInteger_Get();
+    int128u  UInteger16_Get();
     void     UInteger_Info();
 
     float64  Float_Get();
@@ -295,6 +306,7 @@ private :
 
     //Temp
     std::vector<Ztring> AttachedFiles;
+    int64u  Format_Version;
     int64u  TimecodeScale;
     float64 Duration;
     int64u  TrackNumber;
@@ -329,6 +341,11 @@ private :
     size_t EditionEntries_Pos;
     size_t ChapterAtoms_Pos;
     size_t ChapterDisplays_Pos;
+    int64u              Segment_Offset_Begin;
+    int64u              Segment_Offset_End;
+    std::vector<int64u> Segment_Seeks;
+    int64u              Segment_Tag_TrackUID;
+    std::vector<Ztring> Segment_Tag_SimpleTag_TagNames;
 };
 
 } //NameSpace

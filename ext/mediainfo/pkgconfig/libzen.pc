@@ -1,0 +1,13 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=/Users/cehoffman/Projects/mkm4v/ext/mediainfo
+includedir=${prefix}/include
+Unicode=yes
+WstringMissing=no
+Libs_Static=/Users/cehoffman/Projects/mkm4v/ext/mediainfo/libzen.a -lpthread
+
+Name: libzen
+Version: 0.4.25
+Description: ZenLib
+Libs: -L/Users/cehoffman/Projects/mkm4v/ext/mediainfo -lzen -lpthread
+Cflags: -I${includedir}  -DUNICODE -DSIZE_T_IS_LONG

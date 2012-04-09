@@ -1,5 +1,5 @@
 // File__Base - Base for other files
-// Copyright (C) 2002-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2002-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -18,10 +18,15 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //---------------------------------------------------------------------------
-#include "MediaInfo/Setup.h"
+// Pre-compilation
+#include "MediaInfo/PreComp.h"
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+#include "MediaInfo/Setup.h"
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
@@ -47,9 +52,9 @@ extern MediaInfo_Config Config;
 File__Base::File__Base ()
 {
     //Init pointers
-    #ifndef MEDIAINFO_MINIMIZESIZE
+    #if MEDIAINFO_TRACE
         Details=NULL;
-    #endif //MEDIAINFO_MINIMIZESIZE
+    #endif //MEDIAINFO_TRACE
     Stream=NULL;
     Stream_More=NULL;
     Stream_MustBeDeleted=false;
@@ -81,11 +86,11 @@ File__Base::~File__Base ()
 
 //---------------------------------------------------------------------------
 //Base
-#ifndef MEDIAINFO_MINIMIZESIZE
+#if MEDIAINFO_TRACE
 void File__Base::Init (MediaInfo_Config_MediaInfo * Config_, Ztring* Details_, std::vector<std::vector<ZtringList> > * Stream_, std::vector<std::vector<ZtringListList> > * Stream_More_)
-#else //MEDIAINFO_MINIMIZESIZE
+#else //MEDIAINFO_TRACE
 void File__Base::Init (MediaInfo_Config_MediaInfo * Config_, std::vector<std::vector<ZtringList> > * Stream_, std::vector<std::vector<ZtringListList> > * Stream_More_)
-#endif //MEDIAINFO_MINIMIZESIZE
+#endif //MEDIAINFO_TRACE
 {
     if (Config)
         return; //Already done
@@ -106,9 +111,9 @@ void File__Base::Init (MediaInfo_Config_MediaInfo * Config_, std::vector<std::ve
     }
 
     Config=Config_;
-    #ifndef MEDIAINFO_MINIMIZESIZE
+    #if MEDIAINFO_TRACE
         Details=Details_;
-    #endif //MEDIAINFO_MINIMIZESIZE
+    #endif //MEDIAINFO_TRACE
 }
 
 //***************************************************************************
@@ -168,7 +173,9 @@ const Ztring &File__Base::Get (stream_t StreamKind, size_t StreamPos, const Ztri
     size_t ParameterI=0;
 
     //Check integrity
-    if (StreamKind>=Stream_Max || StreamPos>=(*Stream)[StreamKind].size() || (ParameterI=MediaInfoLib::Config.Info_Get(StreamKind).Find(Parameter, KindOfSearch))==Error || KindOfInfo>=Info_Max)
+    if (StreamKind>=Stream_Max || StreamPos>=(*Stream)[StreamKind].size() || KindOfInfo>=Info_Max)
+        return MediaInfoLib::Config.EmptyString_Get();
+    if ((ParameterI=MediaInfoLib::Config.Info_Get(StreamKind).Find(Parameter, KindOfSearch))==Error)
     {
         ParameterI=(*Stream_More)[StreamKind][StreamPos].Find(Parameter, KindOfSearch);
         if (ParameterI==Error)
@@ -203,25 +210,6 @@ int File__Base::Set (stream_t StreamKind, size_t StreamNumber, const Ztring &Par
 void File__Base::Language_Set()
 {
 }
-
-//***************************************************************************
-// Demux
-//***************************************************************************
-
-#ifndef MEDIAINFO_MINIMIZESIZE
-void File__Base::Demux (const int8u* Buffer, size_t Buffer_Size, const Ztring& StreamName)
-{
-    if (!MediaInfoLib::Config.Demux_Get())
-        return;
-
-    if (File_Name.empty())
-        return;
-
-    File F;
-    F.Open(File_Name+_T('.')+StreamName, File::Access_Write_Append);
-    F.Write(Buffer, Buffer_Size);
-}
-#endif //MEDIAINFO_MINIMIZESIZE
 
 //***************************************************************************
 // Divers

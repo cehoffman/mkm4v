@@ -1,3 +1,82 @@
+Version 0.4.25, 2012-03-13
+--------------
++ Fast bitstream parser
++ Removing Win9X detection on 64-bit CPU
++ Ztring: integer to text conversion with radix=2
++ Updated Linux compilation scripts
+
+Version 0.4.24, 2012-01-24
+--------------
++ Convertion from ctime style date to ISO date
++ GNU: more generic test of size_t as a long (e.g. for s390)
+x Read of text arrays of data was not well done if separator is bigger than 1 character
+x UTF-8 to UCS4 conversion was buggy with 4-byte characters
+x LittleEndian2float80() was buggy
+x Removing TinyXml and Base64 from the package
+
+Version 0.4.23, 2011-11-10
+--------------
++ Loading of CSV or any 2-dimensional array is carriage return mode insensitive
++ Ztring: ISO_8859_2 support
++ File: Truncate method
+x Ztring: UTF-8 load/save using generic code instead of Windows functions (they don't work for all Unicode codes)
+x File: Crash with some unordered API calls
+x FileName: Name::Get() wrong behavior in some cases
+
+Version 0.4.22, 2011-09-23
+--------------
++ File size retrieval is dynamic = support of growing files (Windows)
+x #3412495, Ztring: To_UTF8() was working wrong, corrected thanks to Andrew Jang
+
+Version 0.4.21, 2011-08-16
+--------------
++ File size retrieval is faster (Windows)
+x #3157308, Ztring::Assign_FromFile(): Memory leak
+
+Version 0.4.20, 2011-06-15
+--------------
++ TinyXml updated
++ float16 (on disk) support
+
+Version 0.4.19, 2011-03-19
+--------------
++ Ztring: more compatibility with uCLibC
+x BitStream_LE: wrong result if buffer underrun
+
+Version 0.4.18, 2011-03-03
+--------------
++ HTTP helpers in Unicode version
+x BitStream Little Endian: count of remaining bits was wrong
+x ZtringList and ZtringListList :: Read(): do not remove pending delimiters
+x File Open status: error with Windows return value
+
+Version 0.4.17, 2010-12-16
+--------------
++ uClibc compatibility, thanks to Metin KAYA <metin@EnderUNIX.org>
++ BitStream: Skip methods improvements
+
+Version 0.4.16, 2010-10-24
+-------------
++ BitStream: Peek3()
+x Decimal point issues with some specific compilers/OS
+x ZtringList: issues with EOL
+x #3025205, File is not opened if a "?" is in it
+
+Version 0.4.15, 2010-05-14
+-------------
+x Ztring: Solaris compatibility was broken
+x Solaris: pkgtrans packages, with optional default directory as script parameter
+
+Version 0.4.14, 2010-05-02
+-------------
++ Ztring: better compatibility with std::string
++ TinyXml import
+
+Version 0.4.13, 2010-04-16
+-------------
++ MSVC2010 project files update
++ Solaris package creation files update (with relocation)
+
 Version 0.4.12, 2010-03-08
 -------------
 + MSVC2010 project files

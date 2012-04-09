@@ -1,5 +1,5 @@
 // File_Dvdv - Info for DVD objects (IFO) files
-// Copyright (C) 2002-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2002-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -109,7 +109,7 @@ private :
     Ztring Time_ADT(int32u Value);
     size_t Program_Pos;
     size_t Time_Pos;
-    void Time_BCD(const Ztring &Name);
+    void Get_Duration(int64u  &Duration, const Ztring &Name);
     Ztring Time_String; //Value from Time_*()
     void PGC(int64u Offset, bool Title=false);
 };

@@ -1,5 +1,5 @@
 // MediaInfo_Internal - All information about media files
-// Copyright (C) 2002-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2002-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -28,11 +28,12 @@
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
-// For developper: you can disable or enable traces
+// For developer: you can disable or enable traces
 //#define MEDIAINFO_DEBUG_CONFIG
 //#define MEDIAINFO_DEBUG_BUFFER
 //#define MEDIAINFO_DEBUG_OUTPUT
-// For developper: customization of traces
+//#define MEDIAINFO_DEBUG_WARNING_GET
+// For developer: customization of traces
 #ifdef MEDIAINFO_DEBUG_BUFFER
     const size_t MEDIAINFO_DEBUG_BUFFER_SAVE_FileSize=128*1024*1024;
 #endif //MEDIAINFO_DEBUG_BUFFER
@@ -58,6 +59,7 @@ namespace MediaInfoLib
 
 class File__Analyze;
 class Internet__Base;
+class Reader__Base;
 
 //***************************************************************************
 /// @brief MediaInfo_Internal
@@ -79,12 +81,17 @@ public :
     std::bitset<32> Open_Buffer_Continue (const ZenLib::int8u* Buffer, size_t Buffer_Size);
     ZenLib::int64u Open_Buffer_Continue_GoTo_Get ();
     bool   Open_Buffer_Position_Set(int64u File_Offset);
+    #if MEDIAINFO_SEEK
+    size_t Open_Buffer_Seek        (size_t Method, int64u Value, int64u ID);
+    #endif //MEDIAINFO_SEEK
+    void    Open_Buffer_Unsynch     ();
     size_t Open_Buffer_Finalize ();
+    std::bitset<32> Open_NextPacket ();
     void Close ();
 
     //General information
     Ztring  Inform ();
-    Ztring  Inform (stream_t StreamKind, size_t StreamNumber=0); //All about only a specific stream
+    Ztring  Inform (stream_t StreamKind, size_t StreamNumber, bool IsDirect); //All about only a specific stream
 
     //Get
     Ztring Get (stream_t StreamKind, size_t StreamNumber, size_t Parameter, info_t InfoKind=Info_Text);
@@ -103,19 +110,29 @@ public :
     size_t State_Get ();
     size_t Count_Get (stream_t StreamKind, size_t StreamNumber=(size_t)-1);
 
+    //Position in a MediaInfoList class
+    bool    IsFirst;
+    bool    IsLast;
+    
     //Internal
     static bool LibraryIsModified(); //Is the library has been modified? (#defines...)
 
 private :
     friend class File_Bdmv;  //Theses classes need access to internal structure for optimization. There is recursivity with theses formats
     friend class File_Cdxa;  //Theses classes need access to internal structure for optimization. There is recursivity with theses formats
+    friend class File_Lxf;   //Theses classes need access to internal structure for optimization. There is recursivity with theses formats
     friend class File_Mpeg4; //Theses classes need access to internal structure for optimization. There is recursivity with theses formats
+    friend class File_MpegTs;//Theses classes need access to internal structure for optimization. There is recursivity with theses formats
+    friend class File_MpegPs;//Theses classes need access to internal structure for optimization. There is recursivity with theses formats
     friend class File_Mxf;   //Theses classes need access to internal structure for optimization. There is recursivity with theses formats
+    friend class File__ReferenceFilesHelper; //Theses classes need access to internal structure for optimization. There is recursivity with theses formats
 
     //Parsing handles
     File__Analyze*  Info;
     Internet__Base* Internet;
-    Ztring          File_Name;
+    #if !defined(MEDIAINFO_READER_NO)
+        Reader__Base*   Reader;
+    #endif //defined(MEDIAINFO_READER_NO)
 
     //Helpers
     void CreateDummy (const String& Value); //Create dummy Information
@@ -132,8 +149,16 @@ private :
 
 public :
     bool SelectFromExtension (const String &Parser); //Select File_* from the parser name
-    int  ListFormats(const String &File_Name=String());
+    #if !defined(MEDIAINFO_READER_NO)
+        int  ListFormats(const String &File_Name=String());
+    #else //!defined(MEDIAINFO_READER_NO)
+        int  ListFormats(const String &File_Name=String()) {return 0;}
+    #endif //!defined(MEDIAINFO_READER_NO)
     MediaInfo_Config_MediaInfo Config;
+
+    Ztring Xml_Name_Escape(const Ztring &Name);
+    Ztring Xml_Content_Escape(const Ztring &Content);
+    Ztring &Xml_Content_Escape_Modifying(Ztring &Content);
 
 private :
     //Threading

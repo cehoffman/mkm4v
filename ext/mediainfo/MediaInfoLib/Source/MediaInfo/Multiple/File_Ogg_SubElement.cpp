@@ -1,5 +1,5 @@
 // File_Ogg_SubElement - Info for OGG files
-// Copyright (C) 2007-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2007-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -18,11 +18,15 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //---------------------------------------------------------------------------
-// Compilation conditions
-#include "MediaInfo/Setup.h"
+// Pre-compilation
+#include "MediaInfo/PreComp.h"
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+#include "MediaInfo/Setup.h"
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
@@ -45,6 +49,9 @@
 #endif
 #if defined(MEDIAINFO_AC3_YES)
     #include "MediaInfo/Audio/File_Ac3.h"
+#endif
+#if defined(MEDIAINFO_CELT_YES)
+    #include "MediaInfo/Audio/File_Celt.h"
 #endif
 #if defined(MEDIAINFO_FLAC_YES)
     #include "MediaInfo/Audio/File_Flac.h"
@@ -82,7 +89,7 @@ namespace MediaInfoLib
 
 #elif defined(WINDOWS) //__BORLANDC__
     #define OGG_ID(NAME, PART1, PART2, COUNT) \
-        const int64u Identifier_##NAME=(int64u)0x##PART1##PART2##UL; \
+        const int64u Identifier_##NAME=(int64u)0x##PART1##PART2##ULL; \
         const size_t Identifier_##NAME##3=0x##COUNT; \
 
 #else //__BORLANDC__
@@ -259,10 +266,7 @@ bool File_Ogg_SubElement::Header_Begin()
 void File_Ogg_SubElement::Header_Parse()
 {
     //Parsing
-    int64u SamplesCount;
-    int32u SamplesCount4;
-    int16u SamplesCount2;
-    int8u  SamplesCount1, Type;
+    int8u  Type;
     bool lenbytes0, lenbytes1, lenbytes2;
     if (Identified && WithType)
     {
@@ -282,22 +286,16 @@ void File_Ogg_SubElement::Header_Parse()
                 if (lenbytes1)
                 {
                     if (lenbytes0)
-                        //Get_L7 (SamplesCount,                   "SamplesCount");
-                        Element_Offset+=7;
+                        Skip_L7(                                 "SamplesCount");
                     else
-                        //Get_L6 (SamplesCount,                   "SamplesCount");
-                        Element_Offset+=6;
+                        Skip_L6(                                "SamplesCount");
                 }
                 else
                 {
                     if (lenbytes0)
-                        //Get_L5 (SamplesCount,                   "SamplesCount");
-                        Element_Offset+=5;
+                        Skip_L5(                                "SamplesCount");
                     else
-                    {
-                        Get_L4 (SamplesCount4,                  "SamplesCount");
-                        SamplesCount=SamplesCount4;
-                    }
+                        Skip_L4(                                "SamplesCount");
                 }
             }
             else
@@ -305,25 +303,14 @@ void File_Ogg_SubElement::Header_Parse()
                 if (lenbytes1)
                 {
                     if (lenbytes0)
-                    {
-                        Get_L3 (SamplesCount4,                  "SamplesCount");
-                        SamplesCount=SamplesCount4;
-                    }
+                        Skip_L3 (                               "SamplesCount");
                     else
-                    {
-                        Get_L2 (SamplesCount2,                  "SamplesCount");
-                        SamplesCount=SamplesCount2;
-                    }
+                        Skip_L2 (                               "SamplesCount");
                 }
                 else
                 {
                     if (lenbytes0)
-                    {
-                        Get_L1 (SamplesCount1,                  "SamplesCount");
-                        SamplesCount=SamplesCount1;
-                    }
-                    //else
-                    //    Get_L0 (SamplesCount,                   "SamplesCount");
+                        Skip_L1 (                               "SamplesCount");
                 }
             }
         }
@@ -412,7 +399,7 @@ void File_Ogg_SubElement::Identification()
     ELEMENT_CASE(fisbone)
     else
     {
-        Skip_XX(Element_Size,                                   "Unkown");
+        Skip_XX(Element_Size,                                   "Unknown");
         Accept("OggSubElement");
         Finish("OggSubElement");
         return;
@@ -436,7 +423,7 @@ void File_Ogg_SubElement::Identification()
 //---------------------------------------------------------------------------
 void File_Ogg_SubElement::Identification_CELT()
 {
-    #if defined(MEDIAINFO__YES)
+    #if defined(MEDIAINFO_CELT_YES)
         StreamKind_Last=Stream_Audio;
         Parser=new File_Celt;
     #else
@@ -444,6 +431,7 @@ void File_Ogg_SubElement::Identification_CELT()
         Fill(Stream_Audio, 0, Audio_Format, "celt");
         Fill(Stream_Audio, 0, Audio_Codec, "celt");
     #endif
+    WithType=false;
 }
 
 //---------------------------------------------------------------------------
@@ -631,7 +619,7 @@ void File_Ogg_SubElement::Identification_YUV4MPEG()
 //---------------------------------------------------------------------------
 void File_Ogg_SubElement::Identification_video()
 {
-    Element_Info("Video");
+    Element_Info1("Video");
 
     //Parsing
     int64u TimeUnit;
@@ -674,7 +662,7 @@ void File_Ogg_SubElement::Identification_video()
 //---------------------------------------------------------------------------
 void File_Ogg_SubElement::Identification_audio()
 {
-    Element_Info("Audio");
+    Element_Info1("Audio");
 
     //Parsing
     int64u TimeUnit, SamplesPerUnit;
@@ -729,7 +717,7 @@ void File_Ogg_SubElement::Identification_audio()
 //---------------------------------------------------------------------------
 void File_Ogg_SubElement::Identification_text()
 {
-    Element_Info("Text");
+    Element_Info1("Text");
 
     //Parsing
     Skip_B1   (                                                 "Signature");
@@ -765,7 +753,7 @@ void File_Ogg_SubElement::Identification_fishead()
     if (Element_Offset==Element_Size)
         return;
 
-    Element_Info("Skeleton");
+    Element_Info1("Skeleton");
 
     //Parsing
     int16u VersionMajor;
@@ -793,7 +781,7 @@ void File_Ogg_SubElement::Identification_fisbone()
     if (Element_Offset==Element_Size)
         return;
 
-    Element_Info("Skeleton");
+    Element_Info1("Skeleton");
 
     //Parsing
     int32u Offset;

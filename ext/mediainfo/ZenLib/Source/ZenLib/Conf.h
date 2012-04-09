@@ -1,5 +1,5 @@
 // ZenLib::ZenTypes - To be independant of platform & compiler
-// Copyright (C) 2002-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2002-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -69,6 +69,9 @@
     #ifndef __WINDOWS__
         #define __WINDOWS__ 1
     #endif
+#endif
+#if !defined(ZENLIB_NO_WIN9X_SUPPORT) && (defined(_M_X64) || defined(_M_IA64))
+    #define ZENLIB_NO_WIN9X_SUPPORT
 #endif
 
 //---------------------------------------------------------------------------
@@ -183,17 +186,19 @@
 
 //---------------------------------------------------------------------------
 //Macro to cut down on compiler warnings
-#define UNUSED(Identifier)
-
+#ifndef UNUSED
+    #define UNUSED(Identifier)
+#endif
 //---------------------------------------------------------------------------
 //If we need size_t specific integer conversion
-#if defined(__LP64__) || defined(MACOSX)
-    #define NEED_SIZET
+#if !defined(SIZE_T_IS_LONG) && (defined(__LP64__) || defined(MACOSX))
+    #define SIZE_T_IS_LONG
 #endif
 
 //---------------------------------------------------------------------------
 //(-1) is known to be the MAX of an unsigned int but GCC complains about it
 #include <new>
+#include <cstring> //size_t
 namespace ZenLib
 {
     const std::size_t Error=((std::size_t)(-1));

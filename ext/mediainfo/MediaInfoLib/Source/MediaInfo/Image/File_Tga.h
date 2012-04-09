@@ -1,5 +1,5 @@
-// File_Aac - Info for AAC Audio files
-// Copyright (C) 2002-2010 MediaArea.net SARL, Info@MediaArea.net
+// File_Tga - Info for TGA files
+// Copyright (C) 2011-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -16,10 +16,14 @@
 //
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//
+// Information about TGA files
+//
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //---------------------------------------------------------------------------
-#ifndef MediaInfo_File_Mpeg4_AudioSpecificConfigH
-#define MediaInfo_File_Mpeg4_AudioSpecificConfigH
+#ifndef MediaInfo_File_TgaH
+#define MediaInfo_File_TgaH
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
@@ -30,36 +34,45 @@ namespace MediaInfoLib
 {
 
 //***************************************************************************
-// Class File_Mpeg4_AudioSpecificConfig
+// Class File_Tga
 //***************************************************************************
 
-class File_Mpeg4_AudioSpecificConfig : public File__Analyze
+class File_Tga : public File__Analyze
 {
 public :
-    //In
-    std::vector<int32u> ftyps;
-
-public :
     //Constructor/Destructor
-    File_Mpeg4_AudioSpecificConfig();
+    File_Tga();
 
 private :
+    //Streams management
+    void Streams_Fill();
+
+    //Buffer - File header
+    bool FileHeader_Begin();
+
     //Buffer - Global
     void Read_Buffer_Continue ();
 
     //Elements
-    void GASpecificConfig();
-    void SBR();
-    void PS();
-    void ALS();
+    void Tga_File_Header();
+    void Image_Color_Map_Data();
+    void Tga_File_Footer();
 
-    //Temp
-    int32u samplingFrequency;
-    int8u  channelConfiguration;
-    int8u  audioObjectType;
-    int8u  extensionAudioObjectType;
-    bool   sbrPresentFlag;
-    bool   psPresentFlag;
+    //Temp - File Header
+    int16u First_Entry_Index;
+    int16u Color_map_Length;
+    int16u Image_Width_;
+    int16u Image_Height_;
+    int8u  ID_Length;
+    int8u  Color_Map_Type;
+    int8u  Image_Type;
+    int8u  Color_map_Entry_Size;
+    int8u  Pixel_Depth;
+    int8u  Image_Descriptor;
+
+    //Temp - File Footer
+    Ztring Image_ID;
+    int8u Version;
 };
 
 } //NameSpace

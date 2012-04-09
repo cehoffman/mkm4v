@@ -1,5 +1,5 @@
 // Reader_libmms - All information about media files
-// Copyright (C) 2002-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2002-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -28,7 +28,7 @@
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
-#include "MediaInfo/MediaInfo_Internal.h"
+#include "MediaInfo/Reader/Reader__Base.h"
 //---------------------------------------------------------------------------
 
 namespace MediaInfoLib
@@ -38,11 +38,14 @@ namespace MediaInfoLib
 /// @brief Reader_libmms
 //***************************************************************************
 
-class Reader_libmms
+class Reader_libmms : public Reader__Base
 {
 public :
+    //Constructor/Destructor
+    virtual ~Reader_libmms() {}
+
     //Format testing
-    static int Format_Test(MediaInfo_Internal* MI, const String &File_Name);
+    size_t Format_Test(MediaInfo_Internal* MI, const String &File_Name);
 };
 
 } //NameSpace

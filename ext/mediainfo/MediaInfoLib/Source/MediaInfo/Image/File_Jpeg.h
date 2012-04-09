@@ -1,5 +1,5 @@
 // File_Jpeg - Info for JPEG files
-// Copyright (C) 2005-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2005-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -42,16 +42,37 @@ class File_Jpeg : public File__Analyze
 public :
     //In
     stream_t StreamKind;
+    bool     Interlaced;
 
     //Constructor/Destructor
     File_Jpeg();
 
 private :
+    //Streams management
+    void Streams_Accept();
+
     //Buffer - File header
     bool FileHeader_Begin();
 
+    //Buffer - Synchro
+    bool Synchronize();
+    bool Synched_Test();
+    void Synched_Init();
+
+    //Buffer - Demux
+    #if MEDIAINFO_DEMUX
+    bool Demux_UnpacketizeContainer_Test() {return Demux_UnpacketizeContainer_Test_OneFramePerFile();}
+    #endif //MEDIAINFO_DEMUX
+
+    //Buffer - Global
+    void Read_Buffer_Unsynched();
+    #if MEDIAINFO_SEEK
+    size_t Read_Buffer_Seek (size_t Method, int64u Value, int64u ID) {return Read_Buffer_Seek_OneFramePerFile(Method, Value, ID);}
+    #endif //MEDIAINFO_SEEK
+
     //Buffer - Per element
     void Header_Parse();
+    bool Header_Parser_Fill_Size();
     void Data_Parse();
 
     //Elements
@@ -60,10 +81,18 @@ private :
     void SIZ ();
     void COD ();
     void COC () {Skip_XX(Element_Size, "Data");}
+    void TLM () {Skip_XX(Element_Size, "Data");}
+    void PLM () {Skip_XX(Element_Size, "Data");}
+    void PLT () {Skip_XX(Element_Size, "Data");}
     void QCD ();
     void QCC () {Skip_XX(Element_Size, "Data");}
     void RGN () {Skip_XX(Element_Size, "Data");}
+    void PPM () {Skip_XX(Element_Size, "Data");}
+    void PPT () {Skip_XX(Element_Size, "Data");}
+    void CME () {Skip_XX(Element_Size, "Data");}
     void SOT () {Skip_XX(Element_Size, "Data");}
+    void SOP () {Skip_XX(Element_Size, "Data");}
+    void EPH () {Skip_XX(Element_Size, "Data");}
     void SOD ();
     void SOF_();
     void S0F0() {SOF_();};
@@ -139,6 +168,7 @@ private :
 
     //Temp
     int8u Height_Multiplier;
+    bool  SOS_SOD_Parsed;
 };
 
 } //NameSpace

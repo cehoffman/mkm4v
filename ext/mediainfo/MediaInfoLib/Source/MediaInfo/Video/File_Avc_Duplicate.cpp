@@ -1,5 +1,5 @@
 // File__Duplicate - Duplication of some formats
-// Copyright (C) 2007-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2007-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -22,11 +22,15 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //---------------------------------------------------------------------------
-// Compilation conditions
-#include "MediaInfo/Setup.h"
+// Pre-compilation
+#include "MediaInfo/PreComp.h"
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+#include "MediaInfo/Setup.h"
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
@@ -54,12 +58,14 @@ namespace MediaInfoLib
 //---------------------------------------------------------------------------
 void File_Avc::Option_Manage()
 {
-    //File__Duplicate configuration
-    if (File__Duplicate_HasChanged())
-    {
-        //Autorisation of other streams
-        Streams[0x07].ShouldDuplicate=true;
-    }
+    #if MEDIAINFO_DUPLICATE
+        //File__Duplicate configuration
+        if (File__Duplicate_HasChanged())
+        {
+            //Autorisation of other streams
+            Streams[0x07].ShouldDuplicate=true;
+        }
+    #endif //MEDIAINFO_DUPLICATE
 }
 
 //***************************************************************************
@@ -67,6 +73,7 @@ void File_Avc::Option_Manage()
 //***************************************************************************
 
 //---------------------------------------------------------------------------
+#if MEDIAINFO_DUPLICATE
 bool File_Avc::File__Duplicate_Set (const Ztring &Value)
 {
     ZtringList List(Value);
@@ -120,11 +127,13 @@ bool File_Avc::File__Duplicate_Set (const Ztring &Value)
 
     return true;
 }
+#endif //MEDIAINFO_DUPLICATE
 
 //***************************************************************************
 // Write
 //***************************************************************************
 
+#if MEDIAINFO_DUPLICATE
 void File_Avc::File__Duplicate_Write (int64u Element_Code, int32u frame_num)
 {
     const int8u* ToAdd=Buffer+Buffer_Offset-(size_t)Header_Size+3;
@@ -153,8 +162,8 @@ void File_Avc::File__Duplicate_Write (int64u Element_Code, int32u frame_num)
             else
                 Extra=0; //MPEG-4
             int8u Header[32];
-            int64u2BigEndian(Header+ 0, PTS);
-            int64u2BigEndian(Header+ 8, DTS);
+            int64u2BigEndian(Header+ 0, FrameInfo.PTS);
+            int64u2BigEndian(Header+ 8, FrameInfo.DTS);
             int64u2BigEndian(Header+16, 5+Extra+2+Duplicate_Buffer_Size+1+2+ToAdd_Size); //5+Extra for SPS_SQS header, 2 for SPS size, 1 for PPS count, 2 for PPS size
             Header[24]=1;
             int56u2BigEndian(Header+25, 0);
@@ -165,15 +174,15 @@ void File_Avc::File__Duplicate_Write (int64u Element_Code, int32u frame_num)
             if (Extra==1)
             {
                 SPS_SQS[0]=0x01; //Profile FLV
-                SPS_SQS[1]=profile_idc; //Compatible Profile
+                SPS_SQS[1]=(!seq_parameter_sets.empty() && seq_parameter_sets[0])?seq_parameter_sets[0]->profile_idc:0x00; //Compatible Profile. TODO: Handling more than 1 seq_parameter_set 
                 SPS_SQS[2]=0x00; //Reserved
             }
             else
             {
-                SPS_SQS[0]=profile_idc; //Profile MPEG-4
+                SPS_SQS[0]=(!seq_parameter_sets.empty() && seq_parameter_sets[0])?seq_parameter_sets[0]->profile_idc:0x00; //Profile MPEG-4. TODO: Handling more than 1 seq_parameter_set
                 SPS_SQS[1]=0x00; //Compatible Profile
             }
-            SPS_SQS[2+Extra]=level_idc; //Level
+            SPS_SQS[2+Extra]=(!seq_parameter_sets.empty() && seq_parameter_sets[0])?seq_parameter_sets[0]->level_idc:0x00; //Level. TODO: Handling more than 1 seq_parameter_set
             SPS_SQS[3+Extra]=0xFF; //Reserved + Size of NALU length minus 1
             SPS_SQS[4+Extra]=0xE1; //Reserved + seq_parameter_set count
             Writer.Write(SPS_SQS, 5+Extra);
@@ -215,8 +224,8 @@ void File_Avc::File__Duplicate_Write (int64u Element_Code, int32u frame_num)
             //  1 byte  : Type (0=Frame, 1=Header);
             //  7 bytes : Reserved
             int8u Header[32];
-            int64u2BigEndian(Header+ 0, PTS);
-            int64u2BigEndian(Header+ 8, DTS);
+            int64u2BigEndian(Header+ 0, FrameInfo.PTS);
+            int64u2BigEndian(Header+ 8, FrameInfo.DTS);
             int64u2BigEndian(Header+16, Duplicate_Buffer_Size);
             Header[24]=0;
             int56u2BigEndian(Header+25, 0);
@@ -236,24 +245,28 @@ void File_Avc::File__Duplicate_Write (int64u Element_Code, int32u frame_num)
         Duplicate_Buffer_Size+=ToAdd_Size;
         frame_num_Old=frame_num;
     }
-
 }
+#endif //MEDIAINFO_DUPLICATE
 
 //***************************************************************************
 // Output_Buffer
 //***************************************************************************
 
 //---------------------------------------------------------------------------
+#if MEDIAINFO_DUPLICATE
 size_t File_Avc::Output_Buffer_Get (const String &)
 {
     return Writer.Output_Buffer_Get();
 }
+#endif //MEDIAINFO_DUPLICATE
 
 //---------------------------------------------------------------------------
+#if MEDIAINFO_DUPLICATE
 size_t File_Avc::Output_Buffer_Get (size_t)
 {
     return Writer.Output_Buffer_Get();
 }
+#endif //MEDIAINFO_DUPLICATE
 
 } //NameSpace
 

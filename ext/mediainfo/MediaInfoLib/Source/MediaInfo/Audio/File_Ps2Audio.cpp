@@ -1,5 +1,5 @@
 // File_Ps2Audio - Info for PS2 Audio in MPEG files
-// Copyright (C) 2007-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2007-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -18,11 +18,15 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //---------------------------------------------------------------------------
-// Compilation conditions
-#include "MediaInfo/Setup.h"
+// Pre-compilation
+#include "MediaInfo/PreComp.h"
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+#include "MediaInfo/Setup.h"
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
@@ -52,7 +56,7 @@ void File_Ps2Audio::Read_Buffer_Continue()
         {
             case 0x53536264 :   SSbd(); break;
             case 0x53536864 :   SShd(); break;
-            default         :   Reject("PS2 Audio");
+            default         :   Element_Offset=Element_Size; Reject("PS2 Audio");
         }
     }
 }
@@ -66,12 +70,12 @@ void File_Ps2Audio::SSbd()
         return;
     }
 
-    Element_Begin("SSbd (Body)");
+    Element_Begin1("SSbd (Body)");
         int32u Size;
         Skip_C4(                                                "ID");
         Get_L4 (Size,                                           "Size");
         Skip_XX(Element_Size-Element_Offset,                    "Data (Partial)");
-    Element_End();
+    Element_End0();
 
     FILLING_BEGIN();
         Fill(Stream_Audio, 0, Audio_StreamSize, Size);
@@ -85,7 +89,7 @@ void File_Ps2Audio::SSbd()
 //---------------------------------------------------------------------------
 void File_Ps2Audio::SShd()
 {
-    Element_Begin("SShd (Header)", 0x18);
+    Element_Begin1("SShd (Header)");
         //Parsing
         int32u Size, Format, SamplingRate, Channels;
         Skip_C4(                                                "ID");
@@ -101,7 +105,7 @@ void File_Ps2Audio::SShd()
         Skip_L4(                                                "Bytes per channel");
         Skip_L4(                                                "Reserved");
         Skip_L4(                                                "Reserved");
-    Element_End();
+    Element_End0();
 
     FILLING_BEGIN();
         Accept("PS2 Audio");

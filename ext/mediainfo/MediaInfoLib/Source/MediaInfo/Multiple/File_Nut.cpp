@@ -1,5 +1,5 @@
 // File_Nut - Info for Nut files
-// Copyright (C) 2008-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2008-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -22,11 +22,15 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //---------------------------------------------------------------------------
-// Compilation conditions
-#include "MediaInfo/Setup.h"
+// Pre-compilation
+#include "MediaInfo/PreComp.h"
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+#include "MediaInfo/Setup.h"
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
@@ -96,10 +100,10 @@ void File_Nut::Header_Parse()
 void File_Nut::FileHeader_Parse()
 {
     //Parsing
-    Element_Begin("Nut header", 25);
+    Element_Begin1("Nut header");
     std::string file_id_string;
     Get_String(25, file_id_string,                               "file_id_string");
-    Element_End();
+    Element_End0();
 
     FILLING_BEGIN();
         //Integrity
@@ -147,11 +151,13 @@ void File_Nut::Data_Parse()
 
     Skip_B4(                                                    "cheksum");
 }
+*/
 
 //***************************************************************************
 // Elements
 //***************************************************************************
 
+/*
 //---------------------------------------------------------------------------
 void File_Nut::main()
 {

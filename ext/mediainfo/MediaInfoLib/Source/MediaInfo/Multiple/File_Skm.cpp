@@ -1,5 +1,5 @@
 // File_Skm - Info for Skm files
-// Copyright (C) 2006-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2006-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -18,11 +18,15 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //---------------------------------------------------------------------------
-// Compilation conditions
-#include "MediaInfo/Setup.h"
+// Pre-compilation
+#include "MediaInfo/PreComp.h"
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+#include "MediaInfo/Setup.h"
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
@@ -59,8 +63,11 @@ File_Skm::File_Skm()
 //---------------------------------------------------------------------------
 void File_Skm::Streams_Finish()
 {
-    Stream.Parser->Finish();
-    Merge(*Stream.Parser);
+    if (Stream.Parser)
+    {
+        Finish(Stream.Parser);
+        Merge(*Stream.Parser);
+    }
 }
 
 //***************************************************************************
@@ -124,7 +131,7 @@ void File_Skm::Header_Parse()
     Skip_B4(                                                    "PreviousTagSize");
     if (File_Offset+Buffer_Offset+4<File_Size)
     {
-        Get_B1 (Type,                                           "Type"); //Param_Info(Type<19?Flv_Type[Type]:_T("Unknown"));
+        Get_B1 (Type,                                           "Type"); //Param_Info1(Type<19?Flv_Type[Type]:_T("Unknown"));
         Get_B3 (BodyLength,                                     "BodyLength");
         Skip_B3(                                                "Timestamp_Base"); //in ms
         Skip_B1(                                                "Timestamp_Extended"); //TimeStamp = Timestamp_Extended*0x01000000+Timestamp_Base

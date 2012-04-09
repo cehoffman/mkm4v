@@ -1,5 +1,5 @@
 // File_Bdmv - Info for Blu-ray Movie files
-// Copyright (C) 2009-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2009-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -28,6 +28,7 @@
 
 //---------------------------------------------------------------------------
 #include "MediaInfo/File__Analyze.h"
+#include <set>
 //---------------------------------------------------------------------------
 
 namespace MediaInfoLib
@@ -50,10 +51,8 @@ private :
     void Read_Buffer_Continue ();
 
     //Elements
-    void Clpi_Streams();
-    void Clpi_Streams_Video();
-    void Clpi_Streams_Audio();
-    void Clpi_Streams_Text();
+    void Clpi_ProgramInfo();
+    void Clpi_ExtensionData();
     void Indx_AppInfoBDMV();
     void Indx_Indexes();
     void Indx_Indexes_Index(int8u object_type);
@@ -66,14 +65,26 @@ private :
     void Mobj_ExtensionData();
     void Mpls_AppInfoPlayList();
     void Mpls_PlayList();
-    void Mpls_PlayList_PlayItem_STN_Video();
-    void Mpls_PlayList_PlayItem_STN_Audio();
-    void Mpls_PlayList_PlayItem_STN_Text();
+    void Mpls_PlayList_PlayItem();
+    void Mpls_PlayList_PlayItem_STN_table();
+    void Mpls_PlayList_PlayItem_STN_table_Video();
+    void Mpls_PlayList_PlayItem_STN_table_Audio();
+    void Mpls_PlayList_PlayItem_STN_table_Text();
+    void Mpls_PlayList_SubPlayItem();
     void Mpls_PlayListMarks();
+    void Mpls_ExtensionData();
+    void Mpls_ExtensionData_SubPath_entries();
+    void StreamCodingInfo_Video();
+    void StreamCodingInfo_Audio();
+    void StreamCodingInfo_Text();
 
     //Temp
     int8u stream_type;
-    std::map<int32u, size_t> Types; //Key is the start adress
+    std::map<int32u, size_t> Types; //Key is the start address
+    int64u Mpls_PlayList_Duration;
+    int16u Mpls_PlayList_number_of_SubPaths;
+    bool   Mpls_PlayList_IsParsed;
+    std::set<Ztring> Clip_Information_file_names;
 };
 
 } //NameSpace

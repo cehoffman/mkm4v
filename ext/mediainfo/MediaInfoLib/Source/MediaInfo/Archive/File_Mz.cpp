@@ -1,5 +1,5 @@
 // File_Mz - Info for MZ files
-// Copyright (C) 2008-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2008-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -18,11 +18,15 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //---------------------------------------------------------------------------
-// Compilation conditions
-#include "MediaInfo/Setup.h"
+// Pre-compilation
+#include "MediaInfo/PreComp.h"
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+#include "MediaInfo/Setup.h"
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
@@ -88,7 +92,7 @@ void File_Mz::Read_Buffer_Continue()
 {
     //Parsing
     int32u lfanew;
-    Element_Begin("MZ");
+    Element_Begin1("MZ");
     Skip_C2(                                                    "magic");
     Skip_L2(                                                    "cblp");
     Skip_L2(                                                    "cp");
@@ -125,11 +129,11 @@ void File_Mz::Read_Buffer_Continue()
     if (lfanew>Element_Offset)
     {
         Skip_XX(lfanew-Element_Offset,                          "MZ data");
-        Element_End();
+        Element_End0();
     }
     if (Element_Offset>lfanew)
     {
-        Element_End();
+        Element_End0();
         Element_Offset=lfanew; //Multi usage off the first bytes
     }
 
@@ -139,16 +143,16 @@ void File_Mz::Read_Buffer_Continue()
     Peek_B4(Signature);
     if (Signature==0x50450000) //"PE"
     {
-        Element_Begin("PE");
+        Element_Begin1("PE");
         Skip_C4(                                                "Header");
-        Get_L2 (Machine,                                        "Machine"); Param_Info(Mz_Machine(Machine));
+        Get_L2 (Machine,                                        "Machine"); Param_Info1(Mz_Machine(Machine));
         Skip_L2(                                                "NumberOfSections");
-        Get_L4 (TimeDateStamp,                                  "TimeDateStamp"); Param_Info(Ztring().Date_From_Seconds_1970(TimeDateStamp));
+        Get_L4 (TimeDateStamp,                                  "TimeDateStamp"); Param_Info1(Ztring().Date_From_Seconds_1970(TimeDateStamp));
         Skip_L4(                                                "PointerToSymbolTable");
         Skip_L4(                                                "NumberOfSymbols");
         Skip_L2(                                                "SizeOfOptionalHeader");
         Get_L2 (Characteristics,                                "Characteristics");
-        Element_End("PE");
+        Element_End0();
     }
 
     FILLING_BEGIN();

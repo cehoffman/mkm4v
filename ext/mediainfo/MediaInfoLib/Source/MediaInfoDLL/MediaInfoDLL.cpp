@@ -1,5 +1,5 @@
 // MediaInfoDLL - All info about media files, for DLL
-// Copyright (C) 2002-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2002-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -46,8 +46,10 @@
 #include <map>
 #include <vector>
 #include <iostream>
+#include <clocale>
 using namespace MediaInfoLib;
 using namespace ZenLib;
+using namespace std;
 //---------------------------------------------------------------------------
 
 //***************************************************************************
@@ -85,7 +87,7 @@ const char* WC2MB(void* Handle, const wchar_t* Text)
     if (MI_Handle.find(Handle)==MI_Handle.end())
     {
         if (Handle==NULL && v07Mode)
-            MediaInfo_Info_Ansi="Note to developper : you must create an object before using this method";
+            MediaInfo_Info_Ansi="Note to developer : you must create an object before using this method";
         else
             MediaInfo_Info_Ansi="Your software uses an outdated interface, you must use MediaInfo.DLL 0.6 instead"; //Compatibility <0.7 : return a message
         return MediaInfo_Info_Ansi.c_str();
@@ -175,7 +177,7 @@ const wchar_t* MB2WC(void* Handle, const char* Text)
             MediaInfo_Info_Unicode=L"Your software uses an outdated interface, You must use MediaInfoList.DLL 0.6 instead"; \
             return MediaInfo_Info_Unicode.c_str(); \
         } \
-        MI_Handle[NULL]->Unicode==L"Note to developper : you must create an object before"; \
+        MI_Handle[NULL]->Unicode==L"Note to developer : you must create an object before"; \
         return MI_Handle[NULL]->Unicode.c_str(); \
     } \
 
@@ -298,6 +300,11 @@ size_t          __stdcall MediaInfoA_Open_Buffer_Finalize (void* Handle)
     return MediaInfo_Open_Buffer_Finalize(Handle);
 }
 
+size_t          __stdcall MediaInfoA_Open_NextPacket (void* Handle)
+{
+    return MediaInfo_Open_NextPacket(Handle);
+}
+
 size_t          __stdcall MediaInfoA_Save (void* Handle)
 {
     return MediaInfo_Save(Handle);
@@ -332,6 +339,16 @@ size_t          __stdcall MediaInfoA_SetI (void* Handle, const char* ToSet, Medi
 size_t          __stdcall MediaInfoA_Set (void* Handle, const char* ToSet, MediaInfo_stream_t StreamKind, size_t StreamNumber, const char* Parameter, const char* OldParameter)
 {
     return MediaInfo_Set(Handle, MB2WC(Handle, ToSet), StreamKind, StreamNumber, MB2WC(Handle, Parameter), MB2WC(Handle, OldParameter));
+}
+
+size_t          __stdcall MediaInfoA_Output_Buffer_Get (void* Handle, const char* Value)
+{
+    return MediaInfo_Output_Buffer_Get(Handle, MB2WC(Handle, Value));
+}
+
+size_t          __stdcall MediaInfoA_Output_Buffer_GetI (void* Handle, size_t Pos)
+{
+    return MediaInfo_Output_Buffer_GetI(Handle, Pos);
 }
 
 const char*     __stdcall MediaInfoA_Option (void* Handle, const char* Option, const char* Value)
@@ -558,6 +575,13 @@ size_t          __stdcall MediaInfo_Open_Buffer_Finalize (void* Handle)
     EXECUTE_SIZE_T(MediaInfo, Open_Buffer_Finalize(), Debug+="MediaInfo_Open_Buffer_Finalize, will return ";Debug+=ZenLib::Ztring::ToZtring((size_t)ToReturn).To_Local().c_str();Debug+="\r\n";)
 }
 
+size_t          __stdcall MediaInfo_Open_NextPacket (void* Handle)
+{
+    INTEGRITY_SIZE_T(Debug+="MediaInfo_Open_NextPacket, Handle=";Debug+=ZenLib::Ztring::ToZtring((size_t)Handle).To_Local().c_str();Debug+=", ";Debug+="\r\n";)
+
+    EXECUTE_SIZE_T(MediaInfo, Open_NextPacket(), Debug+="MediaInfo_Open_NextPacket, will return ";Debug+=ZenLib::Ztring::ToZtring((size_t)ToReturn).To_Local().c_str();Debug+="\r\n";)
+}
+
 size_t          __stdcall MediaInfo_Save (void* Handle)
 {
     MANAGE_INT(MediaInfo, Save(), Debug+="Save, Handle=";Debug+=ZenLib::Ztring::ToZtring((size_t)Handle).To_Local().c_str();Debug+="\r\n";, Debug+="Save, will return ";Debug+=ZenLib::Ztring::ToZtring((size_t)ToReturn).To_Local().c_str();Debug+="\r\n";)
@@ -600,6 +624,16 @@ size_t          __stdcall MediaInfo_Set (void* Handle, const wchar_t* ToSet, Med
     MANAGE_INT(MediaInfo, Set(ToSet, (stream_t)StreamKind, StreamNumber, Parameter, OldParameter), Debug+="Set, Handle=";Debug+=ZenLib::Ztring::ToZtring((size_t)Handle).To_Local().c_str();Debug+="\r\n";, Debug+="Set, will return ";Debug+=ZenLib::Ztring::ToZtring((size_t)ToReturn).To_Local().c_str();Debug+="\r\n";)
 }
 
+size_t          __stdcall MediaInfo_Output_Buffer_Get (void* Handle, const wchar_t* Value)
+{
+    MANAGE_INT(MediaInfo, Output_Buffer_Get(Value), ;, ;)
+}
+
+size_t          __stdcall MediaInfo_Output_Buffer_GetI (void* Handle, size_t Pos)
+{
+    MANAGE_INT(MediaInfo, Output_Buffer_Get(Pos), ;, ;)
+}
+
 const wchar_t*     __stdcall MediaInfo_Option (void* Handle, const wchar_t* Option, const wchar_t* Value)
 {
     MEDIAINFO_DEBUG(Debug+="Option, Handle=";Debug+=ZenLib::Ztring::ToZtring((size_t)Handle).To_Local().c_str();Debug+=", Option=";Debug+=ZenLib::Ztring(Option).To_Local().c_str();Debug+="\r\n";)
@@ -635,7 +669,7 @@ const wchar_t*     __stdcall MediaInfo_Option (void* Handle, const wchar_t* Opti
                 MediaInfo_Info_Unicode=L"Your software uses an outdated interface, You must use MediaInfoList.DLL 0.6 instead";
                 return MediaInfo_Info_Unicode.c_str();
             }
-              MI_Handle[NULL]->Unicode==L"Note to developper : you must create an object before";
+              MI_Handle[NULL]->Unicode==L"Note to developer : you must create an object before";
             return MI_Handle[NULL]->Unicode.c_str();
         }
         EXECUTE_STRING(MediaInfo, Option(Option, Value), Debug+="Option, will return ";Debug+=ToReturn.To_Local().c_str();Debug+="\r\n";)
@@ -833,7 +867,7 @@ const wchar_t*     __stdcall MediaInfoList_Option (void* Handle, const wchar_t* 
                 MediaInfo_Info_Unicode=L"Your software uses an outdated interface, You must use MediaInfoList.DLL 0.6 instead";
                 return MediaInfo_Info_Unicode.c_str();
             }
-            MI_Handle[NULL]->Unicode==L"Note to developper : you must create an object before";
+            MI_Handle[NULL]->Unicode==L"Note to developer : you must create an object before";
             return MI_Handle[NULL]->Unicode.c_str();
         }
         EXECUTE_STRING(MediaInfoList, Option(Option, Value), Debug+="Option(L), will return ";Debug+=ToReturn.To_Local().c_str();Debug+="\r\n";)

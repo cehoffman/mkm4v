@@ -1,5 +1,5 @@
 // File_Tar - Info for Tar files
-// Copyright (C) 2007-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2007-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -18,11 +18,15 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //---------------------------------------------------------------------------
-// Compilation conditions
-#include "MediaInfo/Setup.h"
+// Pre-compilation
+#include "MediaInfo/PreComp.h"
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+#include "MediaInfo/Setup.h"
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
@@ -43,6 +47,14 @@ namespace MediaInfoLib
 //---------------------------------------------------------------------------
 void File_Tar::Read_Buffer_Continue()
 {
+    if (File_Size<257)
+    {
+        Reject();
+        return;
+    }
+    if (Buffer_Size<257)
+        return; //Wait for more data
+
     //Parsing
     Ztring ChecksumO;
     Skip_Local(100,                                             "File name");

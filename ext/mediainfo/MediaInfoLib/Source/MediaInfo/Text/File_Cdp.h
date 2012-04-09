@@ -1,5 +1,5 @@
 // File_Cdp - Info for CDP files
-// Copyright (C) 2010-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2010-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -41,19 +41,28 @@ namespace MediaInfoLib
 class File_Cdp : public File__Analyze
 {
 public :
+    //In
+    bool    WithAppleHeader;
+    float64 AspectRatio;
+
     //Constructor/Destructor
     File_Cdp();
     ~File_Cdp();
 
 private :
     //Streams management
-    void Streams_Fill();
+    void Streams_Accept();
+    void Streams_Update();
+    void Streams_Update_PerStream(size_t Pos);
     void Streams_Finish();
+
+    //Synchro
+    void Read_Buffer_Unsynched();
 
     //Buffer - Global
     void Read_Buffer_Continue();
 
-    //Functions
+    //Elements
     void cdp_header();
     void time_code_section();
     void ccdata_section();
@@ -62,20 +71,26 @@ private :
     void future_section();
 
     //Stream
-    struct cc_data_
+    struct stream
     {
-        int8u cc_type;
-        int8u cc_data[2];
-        bool  cc_valid;
+        File__Analyze*  Parser;
+        size_t          StreamPos;
+        bool            IsFilled;
 
-        cc_data_()
+        stream()
         {
-            cc_valid=false;
+            Parser=NULL;
+            StreamPos=(size_t)-1;
+            IsFilled=false;
+        }
+
+        ~stream()
+        {
+            delete Parser; //Parser=NULL;
         }
     };
-    std::vector<File__Analyze*> CC_Parsers;
-    size_t CC_Parsers_Count;
-    std::vector<size_t> CC_Parsers_StreamPos;
+    std::vector<stream*> Streams;
+    size_t               Streams_Count;
 };
 
 } //NameSpace

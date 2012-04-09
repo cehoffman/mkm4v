@@ -1,5 +1,5 @@
 // File_Tta - Info for TTA  files
-// Copyright (C) 2007-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2007-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -22,11 +22,15 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //---------------------------------------------------------------------------
-// Compilation conditions
-#include "MediaInfo/Setup.h"
+// Pre-compilation
+#include "MediaInfo/PreComp.h"
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+#include "MediaInfo/Setup.h"
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
@@ -64,7 +68,7 @@ void File_Tta::Streams_Finish()
     float32 CompressionRatio=((float32)UncompressedSize)/CompressedSize;
 
     Fill(Stream_Audio, 0, Audio_StreamSize, CompressedSize);
-    Fill(Stream_Audio, 0, Audio_CompressionRatio, CompressionRatio);
+    Fill(Stream_Audio, 0, Audio_Compression_Ratio, CompressionRatio);
     Fill(Stream_Audio, 0, Audio_BitRate_Mode, "VBR");
 
     File__Tags_Helper::Streams_Finish();
@@ -122,7 +126,7 @@ void File_Tta::FileHeader_Parse()
         File__Tags_Helper::Stream_Prepare(Stream_Audio);
         Fill(Stream_Audio, 0, Audio_Format, "TTA");
         Fill(Stream_Audio, 0, Audio_Codec, "TTA ");
-        Fill(Stream_Audio, 0, Audio_Resolution, BitsPerSample);
+        Fill(Stream_Audio, 0, Audio_BitDepth, BitsPerSample);
         Fill(Stream_Audio, StreamPos_Last, Audio_Channel_s_, Channels);
         Fill(Stream_Audio, StreamPos_Last, Audio_SamplingRate, SampleRate);
         Fill(Stream_Audio, 0, Audio_Duration, Duration);

@@ -1,6 +1,6 @@
 // File_Ape - Info for Ape files
 // Copyright (C) 2003-2009 Jasper van de Gronde, th.v.d.gronde@hccnet.nl
-// Copyright (C) 2003-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2003-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -19,11 +19,15 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //---------------------------------------------------------------------------
-// Compilation conditions
-#include "MediaInfo/Setup.h"
+// Pre-compilation
+#include "MediaInfo/PreComp.h"
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+#include "MediaInfo/Setup.h"
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
@@ -94,7 +98,7 @@ void File_Ape::Streams_Finish()
     float32 CompressionRatio=((float32)UncompressedSize)/CompressedSize;
     int64u BitRate=Duration?(CompressedSize*8*1000/Duration):0;
 
-    Fill(Stream_Audio, 0, Audio_CompressionRatio, CompressionRatio);
+    Fill(Stream_Audio, 0, Audio_Compression_Ratio, CompressionRatio);
     Fill(Stream_Audio, 0, Audio_BitRate, BitRate);
 
     File__Tags_Helper::Streams_Finish();
@@ -133,7 +137,7 @@ void File_Ape::FileHeader_Parse()
     Get_L2 (Version,                                            "Version");
     if (Version<3980) //<3.98
     {
-        Get_L2 (CompressionLevel,                               "CompressionLevel"); Param_Info(Ape_Codec_Settings(CompressionLevel));
+        Get_L2 (CompressionLevel,                               "CompressionLevel"); Param_Info1(Ape_Codec_Settings(CompressionLevel));
         Get_L2 (Flags,                                          "FormatFlags");
             Get_Flags (Flags, 0, Resolution8,                   "8-bit");
             Skip_Flags(Flags, 1,                                "crc-32");
@@ -171,7 +175,7 @@ void File_Ape::FileHeader_Parse()
         Skip_L4(                                                "APEFrameDataBytesHigh");
         Skip_L4(                                                "WavTerminatingDataBytes");
         Skip_L16(                                               "FileMD5");
-        Get_L2 (CompressionLevel,                               "CompressionLevel"); Param_Info(Ape_Codec_Settings(CompressionLevel));
+        Get_L2 (CompressionLevel,                               "CompressionLevel"); Param_Info1(Ape_Codec_Settings(CompressionLevel));
         Get_L2 (Flags,                                          "FormatFlags");
         Get_L4 (SamplesPerFrame,                                "BlocksPerFrame");
         Get_L4 (FinalFrameSamples,                              "FinalFrameBlocks");
@@ -201,7 +205,7 @@ void File_Ape::FileHeader_Parse()
         Fill(Stream_Audio, 0, Audio_Format, "Monkey's Audio");
         Fill(Stream_Audio, 0, Audio_Encoded_Library_Settings, Ape_Codec_Settings(CompressionLevel));
         Fill(Stream_Audio, 0, Audio_Codec, "APE");
-        Fill(Stream_Audio, 0, Audio_Resolution, Resolution);
+        Fill(Stream_Audio, 0, Audio_BitDepth, Resolution);
         Fill(Stream_Audio, 0, Audio_Channel_s_, Channels);
         Fill(Stream_Audio, 0, Audio_SamplingRate, SampleRate);
         Fill(Stream_Audio, 0, Audio_Duration, Duration);

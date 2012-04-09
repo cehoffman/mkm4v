@@ -1,5 +1,5 @@
 // File_Mpega - Info for MPEG Audio files
-// Copyright (C) 2002-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2002-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -39,8 +39,9 @@ class File_Mpega : public File__Analyze, public File__Tags_Helper
 {
 public :
     //In
-    size_t Frame_Count_Valid;
+    int64u Frame_Count_Valid;
     bool   FrameIsAlwaysComplete;
+    bool   CalculateDelay;
 
     //Constructor/Destructor
     File_Mpega();
@@ -56,6 +57,9 @@ private :
     //Buffer - Synchro
     bool Synchronize();
     bool Synched_Test();
+
+    //Buffer - Demux
+    bool Demux_UnpacketizeContainer_Test();
 
     //Buffer - Per element
     void Header_Parse();
@@ -83,8 +87,6 @@ private :
     size_t Channels_Count[4]; //Stereo, Join Stereo, Dual mono, mono
     size_t Extension_Count[4]; //No, IS, MS, IS+MS
     size_t Emphasis_Count[4]; //No, 50/15ms, Reserved, CCITT
-    size_t Frame_Count;
-    size_t Frame_Count_Consecutive;
     size_t Scfsi; //Total
     size_t Scalefac; //Total
     size_t Reservoir; //Total
@@ -105,6 +107,7 @@ private :
     bool   padding_bit;
     bool   copyright;
     bool   original_home;
+    size_t MpegPsPattern_Count;
 
     //Helpers
     bool Element_Name_IsOK();

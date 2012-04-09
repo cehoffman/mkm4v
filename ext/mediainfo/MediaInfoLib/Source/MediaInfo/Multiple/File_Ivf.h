@@ -1,5 +1,6 @@
-// File_Latm - Info for LATM files
-// Copyright (C) 2007-2010 MediaArea.net SARL, Info@MediaArea.net
+// File_Ivf - Info for Ivf files
+// Copyright (C) 2004-2011 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2010 Lionel DUCHATEAU, kurtnoise at free dot fr
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -16,10 +17,14 @@
 //
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//
+// Information about IVF files
+//
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //---------------------------------------------------------------------------
-#ifndef MediaInfo_LatmH
-#define MediaInfo_LatmH
+#ifndef MediaInfo_IvfH
+#define MediaInfo_IvfH
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
@@ -30,32 +35,21 @@ namespace MediaInfoLib
 {
 
 //***************************************************************************
-// Class File_Latm
+// Class File_Ivf
 //***************************************************************************
 
-class File_Latm : public File__Analyze
+class File_Ivf : public File__Analyze
 {
 public :
     //In
-    bool audioMuxVersionA;
-
-    //Constructor/Destructor
-    File_Latm();
-
+    int64u Frame_Count_Valid;
 private :
-    //Buffer - Synchro
-    bool Synchronize();
-    bool Synched_Test();
-
-    //Buffer - Per element
-    void Header_Parse();
-    void Data_Parse();
-
-    //Elements
-    void AudioMuxElement(bool muxConfigPresent);
-    void StreamMuxConfig();
+    //Buffer
+    bool FileHeader_Begin();
+    void FileHeader_Parse();
 };
 
 } //NameSpace
 
 #endif
+

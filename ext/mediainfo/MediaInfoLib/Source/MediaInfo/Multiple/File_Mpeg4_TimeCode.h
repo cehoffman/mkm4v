@@ -1,5 +1,5 @@
 // File_Mpeg4_TimeCode - Info for MPEG-4 TimeCode files
-// Copyright (C) 2009-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2009-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -38,12 +38,20 @@ class File_Mpeg4_TimeCode : public File__Analyze
 public :
     //In
     float64 FrameRate;
-    stream_t StreamKind;
-    bool     NegativeTimes;
+    bool    NegativeTimes;
+
+    //Out
+    int64s  Pos;
+
+    //Constructor/Destructor
+    File_Mpeg4_TimeCode();
 
 protected :
+    //Streams management
+    void Streams_Fill();
+
     //Buffer - Global
-    void FileHeader_Parse ();
+    void Read_Buffer_Continue();
 };
 
 } //NameSpace

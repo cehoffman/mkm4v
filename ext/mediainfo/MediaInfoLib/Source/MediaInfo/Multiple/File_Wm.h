@@ -1,5 +1,5 @@
 // File_Wm - Info for Windows Media files
-// Copyright (C) 2002-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2002-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -170,6 +170,8 @@ private :
     size_t Codec_Description_Count;
     size_t Packet_Count;
     size_t Streams_Count;
+    int64u Header_ExtendedContentDescription_AspectRatioX;
+    int64u Header_ExtendedContentDescription_AspectRatioY;
     int64u Data_AfterTheDataChunk;
     int32u SizeOfMediaObject_BytesAlreadyParsed;
     int32u FileProperties_Preroll;

@@ -1,5 +1,5 @@
 // File_Dummy - Fill with Name of tags
-// Copyright (C) 2005-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2005-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -18,11 +18,15 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //---------------------------------------------------------------------------
-// Compilation conditions
-#include "MediaInfo/Setup.h"
+// Pre-compilation
+#include "MediaInfo/PreComp.h"
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+#include "MediaInfo/Setup.h"
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
@@ -88,7 +92,7 @@ void File_Dummy::FileHeader_Parse()
         Fill(Stream_Video, 0, Video_Width, "720");
         Fill(Stream_Video, 0, Video_Height, "320");
         Fill(Stream_Video, 0, Video_FrameRate, "24.976");
-        Fill(Stream_Video, 0, Video_Resolution, "8");
+        Fill(Stream_Video, 0, Video_BitDepth, "8");
         Fill(Stream_Video, 0, Video_Language, "en");
         Stream_Prepare(Stream_Audio);
         Fill(Stream_Audio, 0, Audio_Format, "AC-3");
@@ -253,7 +257,7 @@ void File_Dummy::Fill_Dummy_Video()
         Fill(Stream_Video, 0, Video_DisplayAspectRatio, "2");
         Fill(Stream_Video, 0, Video_FrameRate, "24.976");
         Fill(Stream_Video, 0, Video_FrameCount, "FrameCount");
-        Fill(Stream_Video, 0, Video_Resolution, "8");
+        Fill(Stream_Video, 0, Video_BitDepth, "8");
         Fill(Stream_Video, 0, Video_Bits__Pixel_Frame_, "Bits/(Pixel*Frame)");
         Fill(Stream_Video, 0, Video_Delay, "100");
         Fill(Stream_Video, 0, Video_Duration, "990000");
@@ -283,7 +287,7 @@ void File_Dummy::Fill_Dummy_Audio()
     Fill(Stream_Audio, 0, Audio_ChannelPositions, "ChannelPositions");
     Fill(Stream_Audio, 0, Audio_SamplingRate, "48000");
     Fill(Stream_Audio, 0, Audio_SamplingCount, "SamplingCount");
-    Fill(Stream_Audio, 0, Audio_Resolution, "Resolution");
+    Fill(Stream_Audio, 0, Audio_BitDepth, "BitDepth");
     Fill(Stream_Audio, 0, Audio_Delay, "10");
     Fill(Stream_Audio, 0, Audio_Duration, "100000");
     Fill(Stream_Audio, 0, Audio_Language, "fre");

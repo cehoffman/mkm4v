@@ -1,5 +1,6 @@
 // File_La - Info for LA files
-// Copyright (C) 2009-2009 Lionel Duchateau, kurtnoise@free.fr
+// Copyright (C) 2009-2011 Lionel Duchateau, kurtnoise@free.fr
+// Copyright (C) 2009-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -21,11 +22,15 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //---------------------------------------------------------------------------
-// Compilation conditions
-#include "MediaInfo/Setup.h"
+// Pre-compilation
+#include "MediaInfo/PreComp.h"
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+#include "MediaInfo/Setup.h"
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
@@ -63,7 +68,7 @@ void File_La::Streams_Finish()
     float32 CompressionRatio=((float32)UncompressedSize)/CompressedSize;
 
     Fill(Stream_Audio, 0, Audio_StreamSize, CompressedSize);
-    Fill(Stream_Audio, 0, Audio_CompressionRatio, CompressionRatio);
+    Fill(Stream_Audio, 0, Audio_Compression_Ratio, CompressionRatio);
 
     File__Tags_Helper::Streams_Finish();
 }
@@ -79,9 +84,9 @@ bool File_La::FileHeader_Begin()
         return false;
 
     //Synchro
-    if (Buffer_Offset+4>Buffer_Size)
+    if (Buffer_Offset+2>Buffer_Size)
         return false;
-    if (CC4(Buffer+Buffer_Offset)!=0x4C413034) //"LA04"
+    if (CC3(Buffer+Buffer_Offset)!=0x4C4130) //"LA0"
     {
         File__Tags_Helper::Reject("LA");
         return false;
@@ -94,17 +99,20 @@ bool File_La::FileHeader_Begin()
 void File_La::FileHeader_Parse()
 {
     //Parsing
+    Ztring Major, Minor;
     int32u SampleRate, Samples, BytesPerSecond, UnCompSize, WAVEChunk, FmtSize, FmtChunk, CRC32;
     int16u RawFormat, Channels, BytesPerSample, BitsPerSample;
 
-    Skip_C4(                                                    "signature");
+    Skip_Local(2,                                               "signature");
+    Get_Local (1, Major,                                        "major_version");
+    Get_Local (1, Minor,                                        "minor_version");
     Get_L4 (UnCompSize,                                         "uncompressed_size");
     Get_L4 (WAVEChunk,                                          "chunk");
     Skip_L4(                                                    "fmt_size");
     Get_L4 (FmtChunk,                                           "fmt_chunk");
     Get_L4 (FmtSize,                                            "fmt_size");
     Get_L2 (RawFormat,                                          "raw_format");
-    Get_L2 (Channels,                                           "channels"); Param_Info(Channels, " channel(s)");
+    Get_L2 (Channels,                                           "channels"); Param_Info2(Channels, " channel(s)");
     Get_L4 (SampleRate,                                         "sample_rate");
     Get_L4 (BytesPerSecond,                                     "bytes_per_second");
     Get_L2 (BytesPerSample,                                     "bytes_per_sample");
@@ -124,11 +132,13 @@ void File_La::FileHeader_Parse()
             return;
 
         File__Tags_Helper::Accept("LA");
+        Fill(Stream_General, 0, General_Format_Version, Major+_T('.')+Minor);
 
         File__Tags_Helper::Stream_Prepare(Stream_Audio);
         Fill(Stream_Audio, 0, Audio_Format, "LA");
         Fill(Stream_Audio, 0, Audio_Codec, "LA");
-        Fill(Stream_Audio, 0, Audio_Resolution, BitsPerSample);
+        Fill(Stream_Audio, 0, Audio_Format_Version, Major+_T('.')+Minor);
+        Fill(Stream_Audio, 0, Audio_BitDepth, BitsPerSample);
         Fill(Stream_Audio, 0, Audio_Channel_s_, Channels);
         Fill(Stream_Audio, 0, Audio_SamplingRate, SampleRate);
         Fill(Stream_Audio, 0, Audio_Duration, Duration);

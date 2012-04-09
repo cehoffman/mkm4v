@@ -1,5 +1,5 @@
 // File__Duplicate_MpegTs - Duplication of some formats
-// Copyright (C) 2007-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2007-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -22,11 +22,15 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //---------------------------------------------------------------------------
-// Compilation conditions
-#include "MediaInfo/Setup.h"
+// Pre-compilation
+#include "MediaInfo/PreComp.h"
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+#include "MediaInfo/Setup.h"
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
@@ -240,7 +244,7 @@ bool File__Duplicate_MpegTs::Manage_PMT (const int8u* ToAdd, size_t ToAdd_Size)
     if (Wanted_program_numbers.find(StreamID)==Wanted_program_numbers.end()
      && Wanted_program_map_PIDs.find(elementary_PIDs_program_map_PIDs[StreamID])==Wanted_program_numbers.end())
     {
-        delete PMT[StreamID].Buffer; PMT[StreamID].Buffer=NULL;
+        delete[] PMT[StreamID].Buffer; PMT[StreamID].Buffer=NULL;
         return false;
     }
 
@@ -310,8 +314,14 @@ bool File__Duplicate_MpegTs::Parsing_Begin (const int8u* ToAdd, size_t ToAdd_Siz
     FromTS.Offset+=4+adaptation_field_length;
     int8u pointer_field=CC1(FromTS.Buffer+FromTS.Offset);
 
+    //table_id
+    FromTS.Offset+=1+pointer_field;
+    int8u table_id=FromTS.Buffer[FromTS.Offset];
+    if (table_id!=0x00 && table_id!=0x02) //Currently only PAT and PMT are handled
+        return false;
+
     //section_length
-    FromTS.Offset+=1+pointer_field+1;
+    FromTS.Offset++;
     if (FromTS.Offset+2>FromTS.Size)
         return false;
     FromTS.Begin=FromTS.Offset-1;

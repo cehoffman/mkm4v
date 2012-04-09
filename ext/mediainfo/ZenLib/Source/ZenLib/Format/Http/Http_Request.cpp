@@ -1,5 +1,5 @@
 // ZenLib::Server::Http::Request - A HTTP request
-// Copyright (C) 2008-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2008-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -21,11 +21,16 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //---------------------------------------------------------------------------
-#include "ZenLib/Conf_Internal.h"
+#include "ZenLib/PreComp.h"
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
 //---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+#include "ZenLib/Conf_Internal.h"
+//---------------------------------------------------------------------------
+
 //---------------------------------------------------------------------------
 #include "ZenLib/Format/Http/Http_Request.h"
 #include "ZenLib/Format/Http/Http_Utils.h"
@@ -154,8 +159,8 @@ bool Request::Http_Begin(std::istream &In, std::ostream &Out)
     while (!Line.empty());
 
     //Info
-    if (Method.size()==3 && Method[0]=='G' && Method[1]=='E' && Method[2]=='T'
-     || Method.size()==4 && Method[0]=='P' && Method[1]=='O' && Method[2]=='S' && Method[3]=='T')
+    if ((Method.size()==3 && Method[0]=='G' && Method[1]=='E' && Method[2]=='T')
+     || (Method.size()==4 && Method[0]=='P' && Method[1]=='O' && Method[2]=='S' && Method[3]=='T'))
     {
         do
         {

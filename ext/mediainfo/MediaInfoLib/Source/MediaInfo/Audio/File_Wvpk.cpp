@@ -1,5 +1,5 @@
 // File_Wvpk - Info for WavPack files
-// Copyright (C) 2007-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2007-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -22,11 +22,15 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //---------------------------------------------------------------------------
-// Compilation conditions
-#include "MediaInfo/Setup.h"
+// Pre-compilation
+#include "MediaInfo/PreComp.h"
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+#include "MediaInfo/Setup.h"
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
@@ -121,9 +125,6 @@ File_Wvpk::File_Wvpk()
     FromMKV=false;
     FromMKV_CodecPrivateParsed=false;
 
-    //Temp - Global
-    Frame_Count=0;
-
     //Temp - Technical info
     total_samples_FirstFrame=(int32u)-1;
     block_index_FirstFrame=0;
@@ -155,7 +156,7 @@ void File_Wvpk::Streams_Finish()
         float32 CompressionRatio=((float32)UncompressedSize)/CompressedSize;
         Fill(Stream_Audio, 0, Audio_StreamSize, CompressedSize, 3, true);
         Fill(Stream_Audio, 0, Audio_Duration, Duration, 10, true);
-        Fill(Stream_Audio, 0, Audio_CompressionRatio, CompressionRatio, 3, true);
+        Fill(Stream_Audio, 0, Audio_Compression_Ratio, CompressionRatio, 3, true);
     }
 
     File__Tags_Helper::Streams_Finish();
@@ -201,46 +202,36 @@ bool File_Wvpk::Synchronize()
         return true;
 
     //Synchronizing
-    while (Buffer_Offset+8<=Buffer_Size)
+    while (Buffer_Offset+4<=Buffer_Size)
     {
-        while (Buffer_Offset+8<=Buffer_Size
-            && CC4(Buffer+Buffer_Offset)!=CC4("wvpk"))
-        {
+        while (Buffer_Offset+4<=Buffer_Size && (Buffer[Buffer_Offset  ]!=0x77
+                                             || Buffer[Buffer_Offset+1]!=0x76
+                                             || Buffer[Buffer_Offset+2]!=0x70
+                                             || Buffer[Buffer_Offset+3]!=0x6B)) //"wvpk"
             Buffer_Offset++;
-        }
 
-        if (Buffer_Offset+8<=Buffer_Size)//Testing if size is coherant
+        if (Buffer_Offset+4<=Buffer_Size)//Testing if size is coherant
         {
             //Testing next start, to be sure
             size_t Size=LittleEndian2int32u(Buffer+Buffer_Offset+4)+8;
-            if (1)//File_Offset+Buffer_Offset+Size!=File_Size-File_EndTagSize)
-            {
-                if (Buffer_Offset+Size+8>Buffer_Size)
-                    return false; //Need more data
+            if (Buffer_Offset+Size+4>Buffer_Size)
+                return false; //Need more data
 
-                //Testing
-                if (CC4(Buffer+Buffer_Offset+Size)!=CC4("wvpk"))
-                    Buffer_Offset++;
-                else
-                    break; //while()
-            }
-            else
+            //Testing
+            if (Buffer[Buffer_Offset+Size  ]!=0x77
+             || Buffer[Buffer_Offset+Size+1]!=0x76
+             || Buffer[Buffer_Offset+Size+2]!=0x70
+             || Buffer[Buffer_Offset+Size+3]!=0x6B) //"wvpk"
                 Buffer_Offset++;
+            else
+                break; //while()
         }
     }
 
     //Parsing last bytes if needed
-    if (Buffer_Offset+8>Buffer_Size)
+    if (Buffer_Offset+4>Buffer_Size)
     {
-        if (Buffer_Offset+7==Buffer_Size && CC4(Buffer+Buffer_Offset)!=0x7776706B) //"wvpk"
-            Buffer_Offset++;
-        if (Buffer_Offset+6==Buffer_Size && CC4(Buffer+Buffer_Offset)!=0x7776706B) //"wvpk"
-            Buffer_Offset++;
-        if (Buffer_Offset+5==Buffer_Size && CC4(Buffer+Buffer_Offset)!=0x7776706B) //"wvpk"
-            Buffer_Offset++;
-        if (Buffer_Offset+4==Buffer_Size && CC4(Buffer+Buffer_Offset)!=0x7776706B) //"wvpk"
-            Buffer_Offset++;
-        if (Buffer_Offset+3==Buffer_Size && CC3(Buffer+Buffer_Offset)!=0x777670)   //"wv"
+        if (Buffer_Offset+3==Buffer_Size && CC3(Buffer+Buffer_Offset)!=0x777670)   //"wvp"
             Buffer_Offset++;
         if (Buffer_Offset+2==Buffer_Size && CC2(Buffer+Buffer_Offset)!=0x7776)     //"wv"
             Buffer_Offset++;
@@ -269,7 +260,10 @@ bool File_Wvpk::Synched_Test()
         return false;
 
     //Quick test of synchro
-    if (CC4(Buffer+Buffer_Offset)!=CC4("wvpk"))
+    if (Buffer[Buffer_Offset  ]!=0x77
+     || Buffer[Buffer_Offset+1]!=0x76
+     || Buffer[Buffer_Offset+2]!=0x70
+     || Buffer[Buffer_Offset+3]!=0x6B) //"wvpk"
         Synched=false;
 
     //We continue
@@ -332,7 +326,7 @@ void File_Wvpk::Data_Parse()
     Frame_Count++;
 
     //Parsing
-    Element_Begin("Block Header");
+    Element_Begin1("Block Header");
     if (!FromMKV)
         Get_L2 (version,                                        "version");
     if (version/0x100==0x4)
@@ -388,7 +382,7 @@ void File_Wvpk::Data_Parse()
                     Skip_Flags(flags, 23,                           "sampling rate");
                     Skip_Flags(flags, 24,                           "sampling rate");
                     Skip_Flags(flags, 25,                           "sampling rate");
-                    Skip_Flags(flags, 26,                           "sampling rate"); SamplingRate=(int8u)(((flags>>23)&0xF)); Param_Info(Wvpk_SamplingRate[SamplingRate]);
+                    Skip_Flags(flags, 26,                           "sampling rate"); SamplingRate=(int8u)(((flags>>23)&0xF)); Param_Info1(Wvpk_SamplingRate[SamplingRate]);
                     Skip_Flags(flags, 27,                           "reserved");
                     Skip_Flags(flags, 28,                           "reserved");
                     Skip_Flags(flags, 29,                           "use IIR for negative hybrid noise shaping");
@@ -403,7 +397,7 @@ void File_Wvpk::Data_Parse()
                 Frame_Count--; //This is not a real frame
             }
             Skip_L4(                                                "crc");
-            Element_End();
+            Element_End0();
 
             int64u End=Element_Size;
             if (FromMKV && !(initial_block && final_block))
@@ -418,13 +412,13 @@ void File_Wvpk::Data_Parse()
             int8u id;
             while (Element_Offset<End)
             {
-                Element_Begin();
+                Element_Begin0();
                 int32u word_size;
                 bool large, odd_size;
                 BS_Begin();
                 Get_SB (large,                                      "large");
                 Get_SB (odd_size,                                   "odd_size");
-                Get_S1 (6, id,                                      "id"); Element_Info(Wvpk_id(id));
+                Get_S1 (6, id,                                      "id"); Element_Info1(Wvpk_id(id));
                 BS_End();
                 if (large)
                 {
@@ -443,6 +437,7 @@ void File_Wvpk::Data_Parse()
                 Element_Name(Ztring().From_CC1(id));
                 switch (id)
                 {
+                    case 0x07 : id_07(); break;
                     case 0x0D : id_0D(); break;
                     case 0x25 : id_25(); break;
                     default   : if (word_size)
@@ -450,7 +445,7 @@ void File_Wvpk::Data_Parse()
                 }
                 if (odd_size)
                     Skip_XX(1,                                      "padding");
-                Element_End();
+                Element_End0();
             }
         }
     }
@@ -471,10 +466,10 @@ void File_Wvpk::Data_Parse_Fill()
     Fill(Stream_Audio, 0, Audio_Format, "WavPack");
     Ztring Version_Minor=Ztring::ToZtring(version%0x100);
     if (Version_Minor.size()==1)
-        Version_Minor.insert(Version_Minor.begin(), _T('0'));
+        Version_Minor.insert(0, 1, _T('0'));
     Fill(Stream_Audio, 0, Audio_Format_Profile, Ztring::ToZtring(version/0x100)+_T('.')+Version_Minor);
     Fill(Stream_Audio, 0, Audio_Codec, "Wavpack");
-    Fill(Stream_Audio, 0, Audio_Resolution, Wvpk_Resolution[(resolution1?1:0)*2+(resolution0?1:0)]);
+    Fill(Stream_Audio, 0, Audio_BitDepth, Wvpk_Resolution[(resolution1?1:0)*2+(resolution0?1:0)]);
     Fill(Stream_Audio, StreamPos_Last, Audio_Channel_s_, num_channels?num_channels:(mono?1:2));
     if (channel_mask)
     {
@@ -583,6 +578,18 @@ void File_Wvpk::Data_Parse_Fill()
 //***************************************************************************
 // Elements
 //***************************************************************************
+
+//---------------------------------------------------------------------------
+void File_Wvpk::id_07()
+{
+    //Parsing
+    Skip_XX(Size,                                               "Data (Not decoded yet)");
+
+    FILLING_BEGIN();
+        if (Retrieve(Stream_Audio, 0, Audio_Compression_Mode).empty())
+            Fill(Stream_Audio, 0, Audio_Compression_Mode, "Lossless");
+    FILLING_END();
+}
 
 //---------------------------------------------------------------------------
 void File_Wvpk::id_0D()

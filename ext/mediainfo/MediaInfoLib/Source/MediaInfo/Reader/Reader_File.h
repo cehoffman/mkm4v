@@ -1,5 +1,5 @@
 // Reader_File - All information about media files
-// Copyright (C) 2002-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2002-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -28,7 +28,9 @@
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
-#include "MediaInfo/MediaInfo_Internal.h"
+#include "MediaInfo/Reader/Reader__Base.h"
+#include "ZenLib/File.h"
+using namespace ZenLib;
 //---------------------------------------------------------------------------
 
 namespace MediaInfoLib
@@ -38,12 +40,22 @@ namespace MediaInfoLib
 /// @brief Reader_File
 //***************************************************************************
 
-class Reader_File
+class Reader_File : public Reader__Base
 {
 public :
+    //Constructor/Destructor
+    virtual ~Reader_File() {}
+
     //Format testing
-    static size_t Format_Test(MediaInfo_Internal* MI, const String &File_Name);
-    static size_t Format_Test_PerParser(MediaInfo_Internal* MI, const String &File_Name);
+    size_t Format_Test(MediaInfo_Internal* MI, const String &File_Name);
+    size_t Format_Test_PerParser(MediaInfo_Internal* MI, const String &File_Name);
+    size_t Format_Test_PerParser_Continue (MediaInfo_Internal* MI);
+    size_t Format_Test_PerParser_Seek (MediaInfo_Internal* MI, size_t Method, int64u Value, int64u ID);
+
+    ZenLib::File F;
+    std::bitset<32> Status;
+    int64u          Partial_Begin;
+    int64u          Partial_End;
 };
 
 } //NameSpace

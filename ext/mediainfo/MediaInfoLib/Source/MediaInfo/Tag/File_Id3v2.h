@@ -1,5 +1,5 @@
 // File_Id3v2 - Info for ID3v2 tagged files
-// Copyright (C) 2005-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2005-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -48,7 +48,7 @@ public :
 
 private :
     //Streams management
-    void Streams_Finish();
+    void Streams_Fill();
 
     //Buffer - File header
     void FileHeader_Parse ();
@@ -95,7 +95,7 @@ private :
     void SYTC()   {Skip_XX(Element_Size, "Data");}
     void TALB()   {T___();}
     void TBPM()   {T___();}
-    void TCMP()   {Skip_XX(Element_Size, "Data");}
+    void TCMP()   {T___();}
     void TCOM()   {T___();}
     void TCON()   {T___();}
     void TCOP()   {T___();}
@@ -235,6 +235,7 @@ private :
     int8u  Id3v2_Version;
     bool   Unsynchronisation_Global;
     bool   Unsynchronisation_Frame;
+    bool   DataLengthIndicator;
 
     //Helpers
     void Fill_Name();

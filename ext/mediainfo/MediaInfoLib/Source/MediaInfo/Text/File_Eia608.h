@@ -1,5 +1,5 @@
 // File_Eia608 - Info for EIA-608 files
-// Copyright (C) 2009-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2009-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -40,10 +40,13 @@ namespace MediaInfoLib
 // Class File_Eia608
 //***************************************************************************
 
+static const int8u Eia608_Rows=15; //Screen size, specified by the standard
+static const int8u Eia608_Columns=32; //Screen size, specified by the standard
 class File_Eia608 : public File__Analyze
 {
 public :
     //In
+    int8u   cc_type;
 
     //Constructor/Destructor
     File_Eia608();
@@ -53,17 +56,23 @@ private :
     void Streams_Fill();
     void Streams_Finish();
 
+    //Synchro
+    void Read_Buffer_Unsynched();
+
     //Buffer - Global
+    void Read_Buffer_Init();
     void Read_Buffer_Continue();
+    void Read_Buffer_AfterParsing();
 
     //Function
     void Standard (int8u Character);
 
-    std::vector<int8u> XDS_Data;
+    std::vector<std::vector<int8u> > XDS_Data;
+    size_t XDS_Level;
     bool TextMode; //CC or T
     bool DataChannelMode; //if true, CC2/CC4/T2/T4
-    bool InBack; //The back buffer is written
 
+    void XDS(int8u cc_data_1, int8u cc_data_2);
     void XDS();
     void XDS_Current();
     void XDS_Current_ProgramName();
@@ -109,16 +118,32 @@ private :
     void Character_Fill(wchar_t Character);
     void HasChanged();
     void Illegal(int8u cc_data_1, int8u cc_data_2);
-    vector<vector<character> > CC_Displayed;
-    vector<vector<character> > CC_NonDisplayed;
-    vector<vector<character> > Text_Displayed;
-    int8u Attribute_Current;
+    struct stream
+    {
+        vector<vector<character> > CC_Displayed;
+        vector<vector<character> > CC_NonDisplayed;
+        bool    InBack; //The back buffer is written
+        size_t  x;
+        size_t  y;
+        int8u   Attribute_Current;
+        size_t  RollUpLines;
+        bool    Synched;
 
-    size_t x;
-    size_t y;
-    size_t RollUpLines;
+        stream()
+        {
+            InBack=false;
+            x=0;
+            y=Eia608_Rows-1;
+            Attribute_Current=0;
+            RollUpLines=0;
+            Synched=false;
+        }
+    };
+    std::vector<stream*> Streams;
+
     int8u cc_data_1_Old;
     int8u cc_data_2_Old;
+    bool   HasContent;
 };
 
 } //NameSpace

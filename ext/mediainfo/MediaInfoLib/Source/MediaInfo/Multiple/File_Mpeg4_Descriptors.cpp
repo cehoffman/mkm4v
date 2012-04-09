@@ -1,5 +1,5 @@
 // File_Mpeg4 - Info for MPEG-4 files
-// Copyright (C) 2005-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2005-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -22,11 +22,15 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //---------------------------------------------------------------------------
-// Compilation conditions
-#include "MediaInfo/Setup.h"
+// Pre-compilation
+#include "MediaInfo/PreComp.h"
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+#include "MediaInfo/Setup.h"
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
@@ -38,9 +42,6 @@
 #include <cstring>
 #if defined(MEDIAINFO_OGG_YES)
     #include "MediaInfo/Multiple/File_Ogg.h"
-#endif
-#if defined(MEDIAINFO_MPEG4_YES)
-    #include "MediaInfo/Audio/File_Mpeg4_AudioSpecificConfig.h"
 #endif
 #if defined(MEDIAINFO_AVC_YES)
     #include "MediaInfo/Video/File_Avc.h"
@@ -63,11 +64,11 @@
 #if defined(MEDIAINFO_PNG_YES)
     #include "MediaInfo/Image/File_Png.h"
 #endif
+#if defined(MEDIAINFO_AAC_YES)
+    #include "MediaInfo/Audio/File_Aac.h"
+#endif
 #if defined(MEDIAINFO_AC3_YES)
     #include "MediaInfo/Audio/File_Ac3.h"
-#endif
-#if defined(MEDIAINFO_ADTS_YES)
-    #include "MediaInfo/Audio/File_Adts.h"
 #endif
 #if defined(MEDIAINFO_DTS_YES)
     #include "MediaInfo/Audio/File_Dts.h"
@@ -75,6 +76,9 @@
 #if defined(MEDIAINFO_MPEGA_YES)
     #include "MediaInfo/Audio/File_Mpega.h"
 #endif
+#if MEDIAINFO_DEMUX
+    #include "base64.h"
+#endif //MEDIAINFO_DEMUX
 //---------------------------------------------------------------------------
 
 namespace MediaInfoLib
@@ -132,7 +136,7 @@ const char* Mpeg4_Descriptors_ObjectTypeIndication(int8u ID)
         case 0x69 : return "Audio ISO/IEC 13818-3 (MPEG Audio)";
         case 0x6A : return "Visual ISO/IEC 11172-2 (MPEG Video)";
         case 0x6B : return "Audio ISO/IEC 11172-3 (MPEG Audio)";
-        case 0x6C : return "Visual ISO/IEC 10918-1 (M-JPEG)";
+        case 0x6C : return "Visual ISO/IEC 10918-1 (JPEG)";
         case 0x6D : return "PNG";
         case 0xA0 : return "EVRC";
         case 0xA1 : return "SMV";
@@ -144,6 +148,7 @@ const char* Mpeg4_Descriptors_ObjectTypeIndication(int8u ID)
         case 0xA9 : return "DTS";
         case 0xAA : return "DTS-HD High Resolution";
         case 0xAB : return "DTS-HD Master Audio";
+        case 0xAC : return "DTS-HD Express";
         case 0xD1 : return "Private - EVRC";
         case 0xD3 : return "Private - AC-3";
         case 0xD4 : return "Private - DTS";
@@ -177,12 +182,9 @@ const char* Mpeg4_Descriptors_StreamType(int8u ID)
 }
 
 //---------------------------------------------------------------------------
-const char* Mpeg4_Descriptors_ODProfileLevelIndication(int8u ID)
+const char* Mpeg4_Descriptors_ODProfileLevelIndication(int8u /*ID*/)
 {
-    switch (ID)
-    {
-        default   : return "";
-    }
+    return "";
 }
 
 //---------------------------------------------------------------------------
@@ -290,16 +292,22 @@ const char* Mpeg4_Descriptors_GraphicsProfileLevelIndication(int8u ID)
 File_Mpeg4_Descriptors::File_Mpeg4_Descriptors()
 :File__Analyze()
 {
+    //Configuration
+    ParserName=_T("MPEG-4 Descriptor");
+    #if MEDIAINFO_EVENTS
+        ParserIDs[0]=MediaInfo_Parser_Mpeg4_Desc;
+        StreamIDs_Width[0]=0;
+    #endif //MEDIAINFO_EVENTS
+    IsRawStream=true;
+
     //In
     KindOfStream=Stream_Max;
     Parser_DoNotFreeIt=false;
-    DecSpecificInfoTag_DoNotFreeIt=false;
     SLConfig_DoNotFreeIt=false;
 
     //Out
     Parser=NULL;
     ES_ID=0x0000;
-    DecSpecificInfoTag=NULL;
     SLConfig=NULL;
 
     //Temp
@@ -311,8 +319,6 @@ File_Mpeg4_Descriptors::~File_Mpeg4_Descriptors()
 {
     if (!Parser_DoNotFreeIt)
         delete Parser;// Parser=NULL;
-    if (!DecSpecificInfoTag_DoNotFreeIt)
-        delete DecSpecificInfoTag; //DecSpecificInfoTag=NULL
     if (!SLConfig_DoNotFreeIt)
         delete SLConfig;// SLConfig=NULL;
 }
@@ -354,8 +360,6 @@ void File_Mpeg4_Descriptors::Data_Parse()
 {
     //Preparing
     Status[IsAccepted]=true;
-    if (Count_Get(KindOfStream)==0)
-        Stream_Prepare(KindOfStream);
 
     #define ELEMENT_CASE(_NAME, _DETAIL) \
         case 0x##_NAME : Element_Name(_DETAIL); Descriptor_##_NAME(); break;
@@ -421,7 +425,7 @@ void File_Mpeg4_Descriptors::Data_Parse()
 //***************************************************************************
 
 //---------------------------------------------------------------------------
-void File_Mpeg4_Descriptors::Descriptor_02()
+void File_Mpeg4_Descriptors::Descriptor_01()
 {
     //Parsing
     bool URL_Flag;
@@ -437,11 +441,14 @@ void File_Mpeg4_Descriptors::Descriptor_02()
         Get_B1 (URLlength,                                      "URLlength");
         Skip_UTF8(URLlength,                                    "URLstring");
     }
-    Info_B1(ODProfileLevel,                                     "ODProfileLevelIndication"); Param_Info(Mpeg4_Descriptors_ODProfileLevelIndication(ODProfileLevel));
-    Info_B1(SceneProfileLevel,                                  "sceneProfileLevelIndication"); Param_Info(Mpeg4_Descriptors_SceneProfileLevelIndication(SceneProfileLevel));
-    Info_B1(AudioProfileLevel,                                  "audioProfileLevelIndication"); Param_Info(Mpeg4_Descriptors_AudioProfileLevelIndication(AudioProfileLevel));
-    Info_B1(VisualProfileLevel,                                 "visualProfileLevelIndication"); Param_Info(Mpeg4v_Profile_Level(VisualProfileLevel));
-    Info_B1(GraphicsProfileLevel,                               "graphicsProfileLevelIndication"); Param_Info(Mpeg4_Descriptors_GraphicsProfileLevelIndication(GraphicsProfileLevel));
+    if (Element_Code==0x02 || Element_Code==0x10)
+    {
+        Info_B1(ODProfileLevel,                                 "ODProfileLevelIndication"); Param_Info1(Mpeg4_Descriptors_ODProfileLevelIndication(ODProfileLevel));
+        Info_B1(SceneProfileLevel,                              "sceneProfileLevelIndication"); Param_Info1(Mpeg4_Descriptors_SceneProfileLevelIndication(SceneProfileLevel));
+        Info_B1(AudioProfileLevel,                              "audioProfileLevelIndication"); Param_Info1(Mpeg4_Descriptors_AudioProfileLevelIndication(AudioProfileLevel));
+        Info_B1(VisualProfileLevel,                             "visualProfileLevelIndication"); Param_Info1(Mpeg4v_Profile_Level(VisualProfileLevel));
+        Info_B1(GraphicsProfileLevel,                           "graphicsProfileLevelIndication"); Param_Info1(Mpeg4_Descriptors_GraphicsProfileLevelIndication(GraphicsProfileLevel));
+    }
 
     FILLING_BEGIN();
         Element_ThisIsAList();
@@ -481,9 +488,10 @@ void File_Mpeg4_Descriptors::Descriptor_04()
 {
     //Parsing
     int32u bufferSizeDB, MaxBitrate, AvgBitrate;
-    Get_B1 (ObjectTypeId,                                       "objectTypeIndication"); Param_Info(Mpeg4_Descriptors_ObjectTypeIndication(ObjectTypeId));
+    int8u  streamType;
+    Get_B1 (ObjectTypeId,                                       "objectTypeIndication"); Param_Info1(Mpeg4_Descriptors_ObjectTypeIndication(ObjectTypeId));
     BS_Begin();
-    Info_S1(6, streamType,                                      "streamType"); Param_Info(Mpeg4_Descriptors_StreamType(streamType));
+    Get_S1 (6, streamType,                                      "streamType"); Param_Info1(Mpeg4_Descriptors_StreamType(streamType));
     Skip_SB(                                                    "upStream");
     Skip_SB(                                                    "reserved");
     BS_End();
@@ -492,6 +500,49 @@ void File_Mpeg4_Descriptors::Descriptor_04()
     Get_B4 (AvgBitrate,                                         "avgBitrate");
 
     FILLING_BEGIN();
+        if (KindOfStream==Stream_Max)
+            switch (ObjectTypeId)
+            {
+                case 0x20 :
+                case 0x21 :
+                case 0x60 :
+                case 0x61 :
+                case 0x62 :
+                case 0x63 :
+                case 0x64 :
+                case 0x65 :
+                case 0x6A :
+                case 0x6C :
+                case 0x6D :
+                case 0x6E :
+                case 0xA3 :
+                case 0xA4 :
+                            KindOfStream=Stream_Video; break;
+                case 0x40 :
+                case 0x66 :
+                case 0x67 :
+                case 0x68 :
+                case 0x69 :
+                case 0x6B :
+                case 0xA0 :
+                case 0xA1 :
+                case 0xA5 :
+                case 0xA6 :
+                case 0xA9 :
+                case 0xAA :
+                case 0xAB :
+                case 0xAC :
+                case 0xD1 :
+                case 0xD3 :
+                case 0xD4 :
+                case 0xE1 :
+                            KindOfStream=Stream_Audio; break;
+                case 0x08 :
+                            KindOfStream=Stream_Text; break;
+                default: ;
+            }
+        if (Count_Get(KindOfStream)==0)
+            Stream_Prepare(KindOfStream);
         switch (ObjectTypeId)
         {
             case 0x01 : Fill(StreamKind_Last, StreamPos_Last, Fill_Parameter(StreamKind_Last, Generic_Format), "System", Error, false, true); break;
@@ -517,7 +568,7 @@ void File_Mpeg4_Descriptors::Descriptor_04()
             case 0x69 : Fill(Stream_Audio   , StreamPos_Last, Audio_Format, "MPEG Audio", Error, false, true); Fill(Stream_Audio, StreamPos_Last, Audio_Format_Version, "Version 2", Error, false, true); Fill(Stream_Audio, StreamPos_Last, Audio_Format_Profile, "Layer 3", Error, false, true); break;
             case 0x6A : Fill(Stream_Video   , StreamPos_Last, Video_Format, "MPEG Video", Error, false, true); Fill(Stream_Video, StreamPos_Last, Video_Format_Version, "Version 1", Error, false, true); break;
             case 0x6B : Fill(Stream_Audio   , StreamPos_Last, Audio_Format, "MPEG Audio", Error, false, true); Fill(Stream_Audio, StreamPos_Last, Audio_Format_Version, "Version 1", Error, false, true); break;
-            case 0x6C : Fill(Stream_Video   , StreamPos_Last, Video_Format, "M-JPEG", Error, false, true); break;
+            case 0x6C : Fill(Stream_Video   , StreamPos_Last, Video_Format, "JPEG", Error, false, true); break;
             case 0x6D : Fill(Stream_Video   , StreamPos_Last, Video_Format, "PNG", Error, false, true); break;
             case 0x6E : Fill(Stream_Video   , StreamPos_Last, Video_Format, "MPEG Video", Error, false, true); break;
             case 0xA0 : Fill(Stream_Audio   , StreamPos_Last, Audio_Format, "EVRC", Error, false, true); Fill(Stream_Audio, StreamPos_Last, Audio_SamplingRate, 8000, 10, true); Fill(Stream_Audio, StreamPos_Last, Audio_Channel_s_, 1, 10, true); break;
@@ -530,6 +581,7 @@ void File_Mpeg4_Descriptors::Descriptor_04()
             case 0xA9 : Fill(Stream_Audio   , StreamPos_Last, Audio_Format, "DTS", Error, false, true); break;
             case 0xAA : Fill(Stream_Audio   , StreamPos_Last, Audio_Format, "DTS", Error, false, true); Fill(Stream_Audio, StreamPos_Last, Audio_Format_Profile, "HRA", Error, false, true); break; // DTS-HD High Resolution
             case 0xAB : Fill(Stream_Audio   , StreamPos_Last, Audio_Format, "DTS", Error, false, true); Fill(Stream_Audio, StreamPos_Last, Audio_Format_Profile, "MA", Error, false, true); break;  // DTS-HD Master Audio
+            case 0xAC : Fill(Stream_Audio   , StreamPos_Last, Audio_Format, "DTS", Error, false, true); Fill(Stream_Audio, StreamPos_Last, Audio_Format_Profile, "Express", Error, false, true); break;  // DTS Express a.k.a. LBR
             case 0xD1 : Fill(Stream_Audio   , StreamPos_Last, Audio_Format, "EVRC", Error, false, true); Fill(Stream_Audio, StreamPos_Last, Audio_SamplingRate, 8000, 10, true); Fill(Stream_Audio, StreamPos_Last, Audio_Channel_s_, 1, 10, true);  break;
             case 0xD3 : Fill(Stream_Audio   , StreamPos_Last, Audio_Format, "AC-3", Error, false, true); break;
             case 0xD4 : Fill(Stream_Audio   , StreamPos_Last, Audio_Format, "DTS", Error, false, true); break;
@@ -557,7 +609,7 @@ void File_Mpeg4_Descriptors::Descriptor_04()
             case 0x69 : Fill(Stream_Audio   , StreamPos_Last, Audio_Codec, "MPEG-2A L3", Error, false, true); break;
             case 0x6A : Fill(Stream_Video   , StreamPos_Last, Video_Codec, "MPEG-1V", Error, false, true); break;
             case 0x6B : Fill(Stream_Audio   , StreamPos_Last, Audio_Codec, "MPEG-1A", Error, false, true); break;
-            case 0x6C : Fill(Stream_Video   , StreamPos_Last, Video_Codec, "M-JPEG", Error, false, true); break;
+            case 0x6C : Fill(Stream_Video   , StreamPos_Last, Video_Codec, "JPEG", Error, false, true); break;
             case 0x6D : Fill(Stream_Video   , StreamPos_Last, Video_Codec, "PNG", Error, false, true); break;
             case 0x6E : Fill(Stream_Video   , StreamPos_Last, Video_Codec, "MPEG-4V", Error, false, true); break;
             case 0xA0 : Fill(Stream_Video   , StreamPos_Last, Video_Codec, "EVRC", Error, false, true); break;
@@ -570,6 +622,7 @@ void File_Mpeg4_Descriptors::Descriptor_04()
             case 0xA9 : Fill(Stream_Audio   , StreamPos_Last, Audio_Codec, "DTS", Error, false, true); break;
             case 0xAA : 
             case 0xAB : Fill(Stream_Audio   , StreamPos_Last, Audio_Codec, "DTS-HD", Error, false, true); break;
+            case 0xAC : Fill(Stream_Audio   , StreamPos_Last, Audio_Codec, "DTS Express", Error, false, true); break;
             case 0xD1 : Fill(Stream_Audio   , StreamPos_Last, Audio_Codec, "EVRC", Error, false, true); break;
             case 0xD3 : Fill(Stream_Audio   , StreamPos_Last, Audio_Codec, "AC3", Error, false, true); break;
             case 0xD4 : Fill(Stream_Audio   , StreamPos_Last, Audio_Codec, "DTS", Error, false, true); break;
@@ -599,6 +652,12 @@ void File_Mpeg4_Descriptors::Descriptor_04()
         delete Parser; Parser=NULL;
         switch (ObjectTypeId)
         {
+            case 0x01 : switch (streamType)
+                        {
+                            case 0x01 : Parser=new File_Mpeg4_Descriptors; break;
+                            default   : ;
+                        }
+                        break;
             case 0x20 : //MPEG-4 Visual
                         #if defined(MEDIAINFO_MPEG4V_YES)
                             Parser=new File_Mpeg4v;
@@ -614,9 +673,14 @@ void File_Mpeg4_Descriptors::Descriptor_04()
                             ((File_Avc*)Parser)->SizedBlocks=true;
                         #endif
                         break;
-            case 0x40 :
-                        #if defined(MEDIAINFO_ADTS_YES)
-                            Parser=new File_Adts; //This is often File_Mpeg4_AudioSpecificConfig, but this will be changed in DecSpecific if needed
+            case 0x40 : //MPEG-4 AAC
+            case 0x66 :
+            case 0x67 :
+            case 0x68 : //MPEG-2 AAC
+                        #if defined(MEDIAINFO_AAC_YES)
+                            Parser=new File_Aac;
+                            ((File_Aac*)Parser)->Mode=File_Aac::Mode_AudioSpecificConfig;
+                            ((File_Aac*)Parser)->FrameIsAlwaysComplete=true;
                         #endif
                         break;
             case 0x60 :
@@ -628,15 +692,7 @@ void File_Mpeg4_Descriptors::Descriptor_04()
             case 0x6A : //MPEG Video
                         #if defined(MEDIAINFO_MPEGV_YES)
                             Parser=new File_Mpegv;
-                            ((File_Mpegv*)Parser)->Frame_Count_Valid=30; //For searching Pulldown
                             ((File_Mpegv*)Parser)->FrameIsAlwaysComplete=true;
-                        #endif
-                        break;
-            case 0x66 :
-            case 0x67 :
-            case 0x68 : //MPEG-2 AAC
-                        #if defined(MEDIAINFO_MPEG4_YES)
-                            Parser=new File_Mpeg4_AudioSpecificConfig; //Should be ADIF, but the only sample I have is AudioSpecificConfig
                         #endif
                         break;
             case 0x69 :
@@ -645,7 +701,7 @@ void File_Mpeg4_Descriptors::Descriptor_04()
                             Parser=new File_Mpega;
                         #endif
                         break;
-            case 0x6C : //M-JPEG
+            case 0x6C : //JPEG
                         #if defined(MEDIAINFO_JPEG_YES)
                             Parser=new File_Jpeg;
                             ((File_Jpeg*)Parser)->StreamKind=Stream_Video;
@@ -676,6 +732,7 @@ void File_Mpeg4_Descriptors::Descriptor_04()
             case 0xA9 : //DTS
             case 0xAA : //DTS HRA
             case 0xAB : //DTS MA
+            case 0xAC : //DTS Express
             case 0xD4 : //DTS
                         #if defined(MEDIAINFO_DTS_YES)
                             Parser=new File_Dts;
@@ -692,6 +749,7 @@ void File_Mpeg4_Descriptors::Descriptor_04()
             default: ;
         }
 
+        Element_Code=(int64u)-1;
         Open_Buffer_Init(Parser);
 
         Element_ThisIsAList();
@@ -708,18 +766,19 @@ void File_Mpeg4_Descriptors::Descriptor_05()
             case Stream_Video :
                                 #if defined(MEDIAINFO_MPEG4V_YES)
                                     delete Parser; Parser=new File_Mpeg4v;
-                                    ((File_Mpeg4v*)Parser)->Frame_Count_Valid=1;
                                     ((File_Mpeg4v*)Parser)->FrameIsAlwaysComplete=true;
                                 #endif
                                 break;
             case Stream_Audio :
-                                #if defined(MEDIAINFO_MPEG4_YES)
-                                    delete Parser; Parser=new File_Mpeg4_AudioSpecificConfig;
-                                    ((File_Mpeg4_AudioSpecificConfig*)Parser)->ftyps=ftyps;
+                                #if defined(MEDIAINFO_AAC_YES)
+                                    delete Parser; Parser=new File_Aac;
+                                    ((File_Aac*)Parser)->Mode=File_Aac::Mode_AudioSpecificConfig;
                                 #endif
                                 break;
             default: ;
         }
+
+        Element_Code=(int64u)-1;
         Open_Buffer_Init(Parser);
     }
 
@@ -746,34 +805,27 @@ void File_Mpeg4_Descriptors::Descriptor_05()
         default: ;
     }
 
-    //Specific cases
-    if (ObjectTypeId==0x40) //Audio ISO/IEC 14496-3 (AAC)
-    {
-        //IOD backup
-        delete DecSpecificInfoTag; DecSpecificInfoTag=new decspecificinfotag;
-        DecSpecificInfoTag->Buffer=new int8u[(size_t)Element_Size];
-        DecSpecificInfoTag->Buffer_Size=(size_t)Element_Size;
-        std::memcpy(DecSpecificInfoTag->Buffer, Buffer+Buffer_Offset, (size_t)Element_Size);
-
-        //There is an IOD, not ADTS
-        #ifdef MEDIAINFO_MPEG4_YES
-            delete Parser; Parser=new File_Mpeg4_AudioSpecificConfig;
-            ((File_Mpeg4_AudioSpecificConfig*)Parser)->ftyps=ftyps;
-            Open_Buffer_Init(Parser);
-        #endif //MEDIAINFO_MPEG4_YES
-    }
-
     //Parsing
     Open_Buffer_Continue(Parser);
-    if (!Parser_DoNotFreeIt
-     || StreamKind_Last==Stream_Audio && ObjectTypeId==0x40) //Audio ISO/IEC 14496-3 (AAC), File_Mpeg4_AudioSpecificConfig is only for DecConfig
-    {                                                        //StreamKind_Last==Stream_Audio because this may be in an IOD, and in this case the descriptor is not merged, so the Parser is kept until stream is detected
-        //Filling
-        Finish(Parser);
-        Merge(*Parser, StreamKind_Last, 0, StreamPos_Last);
 
-        delete Parser; Parser=NULL;
-    }
+    //Demux
+    #if MEDIAINFO_DEMUX
+        switch (Config->Demux_InitData_Get())
+        {
+            case 0 :    //In demux event
+                        Demux_Level=2; //Container
+                        Demux(Buffer+Buffer_Offset, (size_t)Element_Size, ContentType_Header);
+                        break;
+            case 1 :    //In field
+                        {
+                        std::string Data_Raw((const char*)(Buffer+Buffer_Offset), (size_t)Element_Size);
+                        std::string Data_Base64(Base64::encode(Data_Raw));
+                        Parser->Fill(KindOfStream, 0, "Demux_InitBytes", Data_Base64);
+                        }
+                        break;
+            default :   ;
+        }
+    #endif //MEDIAINFO_DEMUX
 
     //Parser configuration after the parsing
     switch (ObjectTypeId)
@@ -803,7 +855,7 @@ void File_Mpeg4_Descriptors::Descriptor_06()
 
     //Parsing
     int8u predefined;
-    Get_B1 (predefined,                                         "predefined"); Param_Info(Mpeg4_Descriptors_Predefined(predefined));
+    Get_B1 (predefined,                                         "predefined"); Param_Info1(Mpeg4_Descriptors_Predefined(predefined));
     switch (predefined)
     {
         case 0x00 :
@@ -821,9 +873,9 @@ void File_Mpeg4_Descriptors::Descriptor_06()
                     Get_B4 (SLConfig->timeStampResolution,      "timeStampResolution");
                     Get_B4( SLConfig->OCRResolution,            "OCRResolution");
                     Get_B1 (SLConfig->timeStampLength,          "timeStampLength");
-                    Get_B1 (SLConfig->AU_Length,                "OCRLength");
-                    Get_B1 (SLConfig->instantBitrateLength,     "AU_Length");
-                    Get_B1 (SLConfig->degradationPriorityLength,"instantBitrateLength");
+                    Get_B1 (SLConfig->OCRLength,                "OCRLength");
+                    Get_B1 (SLConfig->AU_Length,                "AU_Length");
+                    Get_B1 (SLConfig->instantBitrateLength,     "instantBitrateLength");
                     BS_Begin();
                     Get_S1 (4, SLConfig->degradationPriorityLength, "degradationPriorityLength");
                     Get_S1 (5, SLConfig->AU_seqNumLength,       "AU_seqNumLength");
@@ -833,85 +885,72 @@ void File_Mpeg4_Descriptors::Descriptor_06()
             }
             break;
         case 0x01 :
-                    SLConfig->useAccessUnitStartFlag          =false;
-                    SLConfig->useAccessUnitEndFlag            =false;
-                    SLConfig->useRandomAccessPointFlag        =false;
-                    SLConfig->hasRandomAccessUnitsOnlyFlag    =false;
-                    SLConfig->usePaddingFlag                  =false;
-                    SLConfig->useTimeStampsFlag               =false;
-                    SLConfig->useIdleFlag                     =false;
-                    SLConfig->durationFlag                    =false; //-
-                    SLConfig->timeStampResolution             =1000;
-                    SLConfig->OCRResolution                   =0; //-
-                    SLConfig->timeStampLength                 =32;
-                    SLConfig->AU_Length                       =0;
-                    SLConfig->instantBitrateLength            =0; //-
-                    SLConfig->degradationPriorityLength       =0;
-                    SLConfig->AU_seqNumLength                 =0;
-                    SLConfig->packetSeqNumLength              =0;
-
-                    SLConfig->timeScale                       =0; //-
-                    SLConfig->accessUnitDuration              =0; //-
-                    SLConfig->compositionUnitDuration         =0; //-
-
-                    SLConfig->startDecodingTimeStamp          =0; //-
-                    SLConfig->startCompositionTimeStamp       =0; //-
+                    SLConfig->useAccessUnitStartFlag            =false;
+                    SLConfig->useAccessUnitEndFlag              =false;
+                    SLConfig->useRandomAccessPointFlag          =false;
+                    SLConfig->hasRandomAccessUnitsOnlyFlag      =false;
+                    SLConfig->usePaddingFlag                    =false;
+                    SLConfig->useTimeStampsFlag                 =false;
+                    SLConfig->useIdleFlag                       =false;
+                    SLConfig->durationFlag                      =false; //-
+                    SLConfig->timeStampResolution               =1000;
+                    SLConfig->OCRResolution                     =0; //-
+                    SLConfig->timeStampLength                   =32;
+                    SLConfig->OCRLength                         =0; //-
+                    SLConfig->AU_Length                         =0;
+                    SLConfig->instantBitrateLength              =0; //-
+                    SLConfig->degradationPriorityLength         =0;
+                    SLConfig->AU_seqNumLength                   =0;
+                    SLConfig->packetSeqNumLength                =0;
                     break;
         case 0x02 :
-                    SLConfig->useAccessUnitStartFlag          =false;
-                    SLConfig->useAccessUnitEndFlag            =false;
-                    SLConfig->useRandomAccessPointFlag        =false;
-                    SLConfig->hasRandomAccessUnitsOnlyFlag    =false;
-                    SLConfig->usePaddingFlag                  =false;
-                    SLConfig->useTimeStampsFlag               =true;
-                    SLConfig->useIdleFlag                     =false;
-                    SLConfig->durationFlag                    =false;
-                    SLConfig->timeStampResolution             =0; //-
-                    SLConfig->OCRResolution                   =0; //-
-                    SLConfig->timeStampLength                 =32;
-                    SLConfig->AU_Length                       =0;
-                    SLConfig->instantBitrateLength            =0;
-                    SLConfig->degradationPriorityLength       =0;
-                    SLConfig->AU_seqNumLength                 =0;
-                    SLConfig->packetSeqNumLength              =0;
-
-                    SLConfig->timeScale                       =0; //-
-                    SLConfig->accessUnitDuration              =0; //-
-                    SLConfig->compositionUnitDuration         =0; //-
-
-                    SLConfig->startDecodingTimeStamp          =0; //-
-                    SLConfig->startCompositionTimeStamp       =0; //-
+                    SLConfig->useAccessUnitStartFlag            =false;
+                    SLConfig->useAccessUnitEndFlag              =false;
+                    SLConfig->useRandomAccessPointFlag          =false;
+                    SLConfig->hasRandomAccessUnitsOnlyFlag      =false;
+                    SLConfig->usePaddingFlag                    =false;
+                    SLConfig->useTimeStampsFlag                 =true;
+                    SLConfig->useIdleFlag                       =false;
+                    SLConfig->durationFlag                      =false;
+                    SLConfig->timeStampResolution               =0; //-
+                    SLConfig->OCRResolution                     =0; //-
+                    SLConfig->timeStampLength                   =0;
+                    SLConfig->OCRLength                         =0;
+                    SLConfig->AU_Length                         =0;
+                    SLConfig->instantBitrateLength              =0;
+                    SLConfig->degradationPriorityLength         =0;
+                    SLConfig->AU_seqNumLength                   =0;
+                    SLConfig->packetSeqNumLength                =0;
                     break;
         default   :
-                    SLConfig->useAccessUnitStartFlag          =false;
-                    SLConfig->useAccessUnitEndFlag            =false;
-                    SLConfig->useRandomAccessPointFlag        =false;
-                    SLConfig->hasRandomAccessUnitsOnlyFlag    =false;
-                    SLConfig->usePaddingFlag                  =false;
-                    SLConfig->useTimeStampsFlag               =false;
-                    SLConfig->useIdleFlag                     =false;
-                    SLConfig->durationFlag                    =false;
-                    SLConfig->timeStampResolution             =0;
-                    SLConfig->OCRResolution                   =0;
-                    SLConfig->timeStampLength                 =0;
-                    SLConfig->AU_Length                       =0;
-                    SLConfig->instantBitrateLength            =0;
-                    SLConfig->degradationPriorityLength       =0;
-                    SLConfig->AU_seqNumLength                 =0;
-                    SLConfig->packetSeqNumLength              =0;
-
-                    SLConfig->timeScale                       =0;
-                    SLConfig->accessUnitDuration              =0;
-                    SLConfig->compositionUnitDuration         =0;
-
-                    SLConfig->startDecodingTimeStamp          =0;
-                    SLConfig->startCompositionTimeStamp       =0;
+                    SLConfig->useAccessUnitStartFlag            =false;
+                    SLConfig->useAccessUnitEndFlag              =false;
+                    SLConfig->useRandomAccessPointFlag          =false;
+                    SLConfig->hasRandomAccessUnitsOnlyFlag      =false;
+                    SLConfig->usePaddingFlag                    =false;
+                    SLConfig->useTimeStampsFlag                 =false;
+                    SLConfig->useIdleFlag                       =false;
+                    SLConfig->durationFlag                      =false;
+                    SLConfig->timeStampResolution               =0;
+                    SLConfig->OCRResolution                     =0;
+                    SLConfig->timeStampLength                   =0;
+                    SLConfig->AU_Length                         =0;
+                    SLConfig->instantBitrateLength              =0;
+                    SLConfig->degradationPriorityLength         =0;
+                    SLConfig->AU_seqNumLength                   =0;
+                    SLConfig->packetSeqNumLength                =0;
     }
     if (SLConfig->durationFlag)
     {
         Get_B4 (SLConfig->timeScale,                            "timeScale");
         Get_B2 (SLConfig->accessUnitDuration,                   "accessUnitDuration");
         Get_B2 (SLConfig->compositionUnitDuration,              "compositionUnitDuration");
+    }
+    else
+    {
+                SLConfig->timeScale                             =0; //-
+                SLConfig->accessUnitDuration                    =0; //-
+                SLConfig->compositionUnitDuration               =0; //-
     }
     if (!SLConfig->useTimeStampsFlag)
     {
@@ -920,6 +959,18 @@ void File_Mpeg4_Descriptors::Descriptor_06()
         Get_S8 (SLConfig->timeStampLength, SLConfig->startCompositionTimeStamp, "startCompositionTimeStamp");
         BS_End();
     }
+    else
+    {
+                SLConfig->startDecodingTimeStamp                =0; //-
+                SLConfig->startCompositionTimeStamp             =0; //-
+    }
+}
+
+//---------------------------------------------------------------------------
+void File_Mpeg4_Descriptors::Descriptor_09()
+{
+    //Parsing
+    Skip_B2(                                                    "IPI_ES_Id");
 }
 
 //---------------------------------------------------------------------------

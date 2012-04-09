@@ -1,5 +1,5 @@
-// File_Aac_Adts - Info for AAC (ADTS) Audio files
-// Copyright (C) 2007-2010 MediaArea.net SARL, Info@MediaArea.net
+// File_Dxw - Info for DXW files
+// Copyright (C) 2010-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -16,58 +16,54 @@
 //
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//
+// Information about DXW files
+//
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //---------------------------------------------------------------------------
-#ifndef MediaInfo_File_AdtsH
-#define MediaInfo_File_AdtsH
+#ifndef MediaInfo_File_DxwH
+#define MediaInfo_File_DxwH
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
 #include "MediaInfo/File__Analyze.h"
-#include "MediaInfo/Tag/File__Tags.h"
 #include <vector>
 //---------------------------------------------------------------------------
 
 namespace MediaInfoLib
 {
 
+class File__ReferenceFilesHelper;
+
 //***************************************************************************
-// Class File_Aac_Adts
+// Class File_Dxw
 //***************************************************************************
 
-class File_Adts : public File__Analyze, public File__Tags_Helper
+class File_Dxw : public File__Analyze
 {
 public :
-    //In
-    size_t Frame_Count_Valid;
-
     //Constructor/Destructor
-    File_Adts();
+    File_Dxw();
+    ~File_Dxw();
 
 private :
     //Streams management
-    void Streams_Fill();
-    void Streams_Finish()                                                       {File__Tags_Helper::Streams_Finish();}
+    void Streams_Finish ();
 
-    //Buffer - Synchro
-    bool Synchronize();
-    bool Synched_Test();
+    //Buffer - Global
+    #if MEDIAINFO_SEEK
+    size_t Read_Buffer_Seek (size_t Method, int64u Value, int64u ID);
+    #endif //MEDIAINFO_SEEK
 
-    //Buffer - Per element
-    void Header_Parse();
-    void Data_Parse();
+    //Buffer - File header
+    bool FileHeader_Begin();
 
     //Temp
-    std::vector<int16u> aac_frame_lengths;
-    size_t Frame_Count;
-    int16u adts_buffer_fullness;
-    int16u aac_frame_length;
-    int8u  profile_ObjectType;
-    int8u  sampling_frequency_index;
-    int8u  channel_configuration;
-    bool   id;
+    File__ReferenceFilesHelper*     ReferenceFiles;
 };
 
 } //NameSpace
 
 #endif
+

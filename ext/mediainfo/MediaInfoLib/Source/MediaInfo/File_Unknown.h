@@ -1,5 +1,5 @@
 // File_Unknown - Empty container
-// Copyright (C) 2005-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2005-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -44,8 +44,10 @@ class File_Unknown : public File__Analyze
 protected :
     //Buffer - Global
     void Read_Buffer_Init ();
+    void Read_Buffer_Continue ();
 };
 
 } //NameSpace
 
 #endif
+

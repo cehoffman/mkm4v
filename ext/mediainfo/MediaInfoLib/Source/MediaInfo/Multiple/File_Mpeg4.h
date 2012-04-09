@@ -1,5 +1,5 @@
 // File_Mpeg4 - Info for MPEG-4 files
-// Copyright (C) 2004-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2004-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -24,12 +24,15 @@
 
 //---------------------------------------------------------------------------
 #include "MediaInfo/File__Analyze.h"
+#include "MediaInfo/MediaInfo_Internal.h"
 #include <map>
 class File_MpegPs;
 //---------------------------------------------------------------------------
 
 namespace MediaInfoLib
 {
+
+class File__ReferenceFilesHelper;
 
 //***************************************************************************
 // Class File_Mpeg4
@@ -39,12 +42,21 @@ class File_Mpeg4 : public File__Analyze
 {
 protected :
     //Streams management
+    void Streams_Accept();
     void Streams_Finish();
+    void Streams_Finish_CommercialNames ();
 
 public :
     File_Mpeg4();
+    ~File_Mpeg4();
 
 private :
+    //Buffer - Global
+    void Read_Buffer_Unsynched();
+    #if MEDIAINFO_SEEK
+    size_t Read_Buffer_Seek (size_t Method, int64u Value, int64u ID);
+    #endif //MEDIAINFO_SEEK
+
     //Buffer
     bool Header_Begin();
     void Header_Parse();
@@ -52,6 +64,8 @@ private :
     bool BookMark_Needed();
 
     //Elements
+    void cdat();
+    void cdt2() {cdat();}
     void free();
     void ftyp();
     void idat();
@@ -62,7 +76,6 @@ private :
     void jp2h_colr();
     void mdat();
     void mdat_xxxx();
-    void mdat_StreamClear();
     void mdat_StreamJump();
     void mfra();
     void mfra_mfro();
@@ -109,6 +122,9 @@ private :
     void moov_trak_mdia_imap_sean___in_obid();
     void moov_trak_mdia_mdhd();
     void moov_trak_mdia_minf();
+    void moov_trak_mdia_minf_code();
+    void moov_trak_mdia_minf_code_sean();
+    void moov_trak_mdia_minf_code_sean_RU_A();
     void moov_trak_mdia_minf_dinf();
     void moov_trak_mdia_minf_dinf_url_();
     void moov_trak_mdia_minf_dinf_urn_();
@@ -142,6 +158,8 @@ private :
     void moov_trak_mdia_minf_stbl_stsd_tx3g_ftab();
     void moov_trak_mdia_minf_stbl_stsd_xxxx();
     void moov_trak_mdia_minf_stbl_stsd_xxxxSound();
+    void moov_trak_mdia_minf_stbl_stsd_xxxxStream();
+    void moov_trak_mdia_minf_stbl_stsd_xxxxText();
     void moov_trak_mdia_minf_stbl_stsd_xxxxVideo();
     void moov_trak_mdia_minf_stbl_stsd_xxxx_avcC();
     void moov_trak_mdia_minf_stbl_stsd_xxxx_alac();
@@ -153,10 +171,21 @@ private :
     void moov_trak_mdia_minf_stbl_stsd_xxxx_d263();
     void moov_trak_mdia_minf_stbl_stsd_xxxx_dac3();
     void moov_trak_mdia_minf_stbl_stsd_xxxx_dec3();
+    void moov_trak_mdia_minf_stbl_stsd_xxxx_ddts();
     void moov_trak_mdia_minf_stbl_stsd_xxxx_damr();
     void moov_trak_mdia_minf_stbl_stsd_xxxx_esds();
+    void moov_trak_mdia_minf_stbl_stsd_xxxx_fiel();
+    void moov_trak_mdia_minf_stbl_stsd_xxxx_glbl();
     void moov_trak_mdia_minf_stbl_stsd_xxxx_idfm();
+    void moov_trak_mdia_minf_stbl_stsd_xxxx_jp2h() {jp2h();}
+    void moov_trak_mdia_minf_stbl_stsd_xxxx_jp2h_colr() {jp2h_colr();}
+    void moov_trak_mdia_minf_stbl_stsd_xxxx_jp2h_ihdr() {jp2h_ihdr();}
     void moov_trak_mdia_minf_stbl_stsd_xxxx_pasp();
+    void moov_trak_mdia_minf_stbl_stsd_xxxx_sinf();
+    void moov_trak_mdia_minf_stbl_stsd_xxxx_sinf_frma();
+    void moov_trak_mdia_minf_stbl_stsd_xxxx_sinf_imif();
+    void moov_trak_mdia_minf_stbl_stsd_xxxx_sinf_schm();
+    void moov_trak_mdia_minf_stbl_stsd_xxxx_sinf_schi();
     void moov_trak_mdia_minf_stbl_stsd_xxxx_wave();
     void moov_trak_mdia_minf_stbl_stsd_xxxx_wave_acbf();
     void moov_trak_mdia_minf_stbl_stsd_xxxx_wave_enda();
@@ -168,6 +197,19 @@ private :
     void moov_trak_mdia_minf_stbl_stss();
     void moov_trak_mdia_minf_stbl_stsz();
     void moov_trak_mdia_minf_stbl_stts();
+    void moov_trak_mdia_minf_stbl_stts_Common(int32u SampleCount, int32u SampleDuration, int32u Pos=0, int32u NumberOfEntries=1);
+    void moov_trak_mdia_minf_stbl_stz2() {moov_trak_mdia_minf_stbl_stsz();}
+    void moov_trak_meta() {moov_meta();}
+    void moov_trak_meta_hdlr() {moov_meta_hdlr();}
+    void moov_trak_meta_bxml() {moov_meta_bxml();}
+    void moov_trak_meta_keys() {moov_meta_keys();}
+    void moov_trak_meta_keys_mdta() {moov_meta_keys_mdta();}
+    void moov_trak_meta_ilst() {moov_meta_ilst();}
+    void moov_trak_meta_ilst_xxxx() {moov_meta_ilst_xxxx();}
+    void moov_trak_meta_ilst_xxxx_data() {moov_meta_ilst_xxxx_data();}
+    void moov_trak_meta_ilst_xxxx_mean() {moov_meta_ilst_xxxx_mean();}
+    void moov_trak_meta_ilst_xxxx_name() {moov_meta_ilst_xxxx_name();}
+    void moov_trak_meta_xml() {moov_meta_xml();}
     void moov_trak_tapt();
     void moov_trak_tapt_clef();
     void moov_trak_tapt_prof();
@@ -226,6 +268,14 @@ private :
     void PICT();
     void pckg();
     void pnot();
+    void RDAO();
+    void RDAS();
+    void RDVO();
+    void RDVS();
+    void RED1();
+    void REDA();
+    void REDV();
+    void REOB();
     void skip();
     void wide();
 
@@ -246,16 +296,15 @@ private :
     method Metadata_Get(std::string &Parameter, int64u Meta);
     method Metadata_Get(std::string &Parameter, const std::string &Meta);
     void Descriptors();
+    void TimeCode_Associate(int32u TrackID);
 
     //Temp
     bool List;
     bool                                    mdat_MustParse;
-    bool                                    moov_Done;
     int32u                                  moov_cmov_dcom_Compressor;
     int32u                                  moov_meta_hdlr_Type;
     std::string                             moov_meta_ilst_xxxx_name_Name;
-    int32u                                  moov_trak_mdia_mdhd_Duration;
-    int32u                                  moov_trak_mdia_mdhd_TimeScale;
+    size_t                                  moov_trak_mdia_minf_stbl_stsd_Pos;
     int32u                                  moov_trak_tkhd_TrackID;
     float32                                 moov_trak_tkhd_Width;
     float32                                 moov_trak_tkhd_Height;
@@ -263,18 +312,44 @@ private :
     float32                                 moov_trak_tkhd_Rotation;
     std::vector<std::string>                moov_udta_meta_keys_List;
     size_t                                  moov_udta_meta_keys_ilst_Pos;
-    std::vector<int32u>                     ftyps;
     int32u                                  TimeScale;
     int32u                                  Vendor;
     Ztring                                  Vendor_Version;
+    int64u                                  FirstMdatPos;
+    int64u                                  FirstMoovPos;
+    int64u                                  moof_base_data_offset;
+    int64u                                  moof_traf_base_data_offset;
+    int32u                                  moof_traf_default_sample_duration;
+    int32u                                  moof_traf_default_sample_size;
+    int32u                                  MajorBrand;
+    bool                                    IsSecondPass;
+    bool                                    IsParsing_mdat;
+    bool                                    IsFragmented;
 
     //Data
     struct stream
     {
         Ztring                  File_Name;
         File__Analyze*          Parser;
+        MediaInfo_Internal*     MI;
+        struct timecode
+        {
+            int32u TimeScale;
+            int32u FrameDuration;
+            bool   DropFrame;
+            bool   H24;
+            bool   NegativeTimes;
+        };
+        timecode* TimeCode;
         stream_t                StreamKind;
         size_t                  StreamPos;
+        struct edts_struct
+        {
+            int32u  Duration;
+            int32u  Delay;
+            int32u  Rate;
+        };
+        std::vector<edts_struct> edts;            
         std::vector<int64u>     stco;
         struct stsc_struct
         {
@@ -283,24 +358,106 @@ private :
         };
         std::vector<stsc_struct> stsc;
         std::vector<int64u>     stsz;
+        std::vector<int64u>     stsz_Total; //TODO: merge with stsz
+        int64u                  stsz_StreamSize; //TODO: merge with stsz
+        std::vector<int64u>     stss; //Sync Sample, base=0
+        struct stts_struct
+        {
+            int32u SampleCount;
+            int32u SampleDuration;
+        };
+        std::vector<stts_struct> stts;
+        int64u                  stsz_Sample_Size;
+        int64u                  stsz_Sample_Multiplier;
+        int64u                  stsz_Sample_Count;
+        int64u                  tkhd_Duration;
+        int32u                  mdhd_TimeScale;
+        int64u                  mdhd_Duration;
+        int32u                  stts_Min;
+        int32u                  stts_Max;
+        int64u                  stts_FrameCount;
+        int64u                  stts_Duration;
+        int64u                  stts_Duration_FirstFrame;
+        int64u                  stts_Duration_LastFrame;
+        int64u                  stts_SampleDuration;
+        int32u                  mvex_trex_default_sample_duration;
+        int32u                  mvex_trex_default_sample_size;
         int32u                  TimeCode_TrackID;
         bool                    TimeCode_IsVisual;
+        bool                    IsPcmMono;
+        bool                    IsPriorityStream;
+        bool                    IsFilled;
+        float32                 CleanAperture_Width;
+        float32                 CleanAperture_Height;
+        float32                 CleanAperture_PixelAspectRatio;
+        #if MEDIAINFO_DEMUX || MEDIAINFO_SEEK
+            int8u               Demux_Level;
+
+            struct stts_duration
+            {
+                int64u Pos_Begin;
+                int64u Pos_End;
+                int64u DTS_Begin;
+                int64u DTS_End;
+                int32u SampleDuration;
+            };
+            typedef std::vector<stts_duration> stts_durations;
+            stts_durations  stts_Durations;
+            size_t          stts_Durations_Pos;
+            int64u          stts_FramePos;
+        #endif //MEDIAINFO_DEMUX || MEDIAINFO_SEEK
 
         stream()
         {
             Parser=NULL;
+            MI=NULL;
+            TimeCode=NULL;
             StreamKind=Stream_Max;
             StreamPos=0;
+            stsz_StreamSize=0;
+            stsz_Sample_Size=0;
+            stsz_Sample_Multiplier=1;
+            stsz_Sample_Count=0;
+            tkhd_Duration=0;
+            mdhd_TimeScale=0;
+            mdhd_Duration=0;
+            stts_Min=(int32u)-1;
+            stts_Max=0;
+            stts_FrameCount=0;
+            stts_Duration=0;
+            stts_Duration_FirstFrame=0;
+            stts_Duration_LastFrame=0;
+            mvex_trex_default_sample_duration=0;
+            mvex_trex_default_sample_size=0;
             TimeCode_TrackID=(int32u)-1;
             TimeCode_IsVisual=false;
+            IsPcmMono=false;
+            IsPriorityStream=false;
+            IsFilled=false;
+            CleanAperture_Width=0;
+            CleanAperture_Height=0;
+            CleanAperture_PixelAspectRatio=0;
+            #if MEDIAINFO_DEMUX
+                Demux_Level=2; //Container
+                stts_Durations_Pos=0;
+                stts_FramePos=0;
+            #endif //MEDIAINFO_DEMUX
         }
 
         ~stream()
         {
             delete Parser; //Parser=NULL;
+            delete MI; //MI=NULL;
+            delete TimeCode; //TimeCode=NULL;
         }
     };
-    std::map<int32u, stream> Stream;
+    typedef std::map<int32u, stream> streams;
+    streams             Streams;
+    streams::iterator   Stream;
+    File__ReferenceFilesHelper* ReferenceFiles;
+    #if MEDIAINFO_NEXTPACKET
+        bool                    ReferenceFiles_IsParsing;
+    #endif //MEDIAINFO_NEXTPACKET
 
     //Positions
     struct mdat_Pos_Type
@@ -308,8 +465,16 @@ private :
         int32u StreamID;
         int64u Size;
     };
-    std::map<int64u, mdat_Pos_Type> mdat_Pos;
-    bool IsParsing_mdat;
+    typedef std::map<int64u, mdat_Pos_Type> mdat_pos;
+    mdat_pos mdat_Pos;
+    mdat_pos::iterator mdat_Pos_Temp;
+    std::vector<int32u> mdat_Pos_ToParseInPriority_StreamIDs;
+    bool                mdat_Pos_NormalParsing;
+
+    #if MEDIAINFO_DEMUX
+        int64u          TimeCode_FrameOffset;
+        int64u          TimeCode_DtsOffset;
+    #endif //MEDIAINFO_DEMUX
 };
 
 } //NameSpace

@@ -1,5 +1,5 @@
 // File_AvsV - Info for AVS Video files
-// Copyright (C) 2008-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2008-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -42,7 +42,7 @@ class File_AvsV : public File__Analyze
 {
 public :
     //In
-    size_t Frame_Count_Valid;
+    int64u Frame_Count_Valid;
     bool   FrameIsAlwaysComplete;
 
     //constructor/Destructor
@@ -78,7 +78,6 @@ private :
     void reserved();
     
     //Count of a Packets
-    size_t Frame_Count;
     size_t progressive_frame_Count;
     size_t Interlaced_Top;
     size_t Interlaced_Bottom;

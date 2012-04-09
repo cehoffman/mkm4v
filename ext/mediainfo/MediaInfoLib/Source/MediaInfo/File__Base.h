@@ -1,5 +1,5 @@
 // File__Base - Base for other files
-// Copyright (C) 2002-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2002-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -27,6 +27,7 @@
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
+#include "MediaInfo/Setup.h"
 #include "MediaInfo/MediaInfo_Config.h"
 #include "ZenLib/ZtringListList.h"
 using namespace ZenLib;
@@ -47,18 +48,18 @@ public :
     //Constructor/Destructor
     File__Base();
     virtual ~File__Base();
-    #ifndef MEDIAINFO_MINIMIZESIZE
+    #if MEDIAINFO_TRACE
         void Init(MediaInfo_Config_MediaInfo * Config, Ztring* Details, std::vector<std::vector<ZtringList> > * Stream_=NULL, std::vector<std::vector<ZtringListList> > * Stream_More=NULL);
-    #else //MEDIAINFO_MINIMIZESIZE
+    #else //MEDIAINFO_TRACE
         void Init(MediaInfo_Config_MediaInfo * Config, std::vector<std::vector<ZtringList> > * Stream_=NULL, std::vector<std::vector<ZtringListList> > * Stream_More=NULL);
-    #endif //MEDIAINFO_MINIMIZESIZE
+    #endif //MEDIAINFO_TRACE
 
     //Save
     int     Save ();
 
     //Get information
     const Ztring &Get (stream_t StreamKind, size_t StreamNumber, size_t Parameter, info_t KindOfInfo=Info_Text);
-    const Ztring &Get (stream_t StreamKind, size_t StreamNumber, const Ztring &Parameter, info_t KindOfInfo=Info_Text, info_t KindOfSearch=Info_Name);
+    virtual const Ztring &Get (stream_t StreamKind, size_t StreamNumber, const Ztring &Parameter, info_t KindOfInfo=Info_Text, info_t KindOfSearch=Info_Name);
 
     //Set information
     int           Set (stream_t StreamKind, size_t StreamNumber, size_t Parameter, const Ztring &ToSet, const Ztring &OldValue=_T(""));
@@ -96,21 +97,14 @@ protected :
     MediaInfo_Config_MediaInfo* Config;
 
     //Details
-    #ifndef MEDIAINFO_MINIMIZESIZE
+    #if MEDIAINFO_TRACE
         Ztring* Details;
-    #endif //MEDIAINFO_MINIMIZESIZE
-
-    //Demux
-    #ifndef MEDIAINFO_MINIMIZESIZE
-        void Demux (const int8u* Buffer, size_t Buffer_Size, const Ztring& StreamName);
-    #else //MEDIAINFO_MINIMIZESIZE
-        #define Demux(_A, _B, _C)
-    #endif //MEDIAINFO_MINIMIZESIZE
+    #endif //MEDIAINFO_TRACE
 
 public :
-    #ifndef MEDIAINFO_MINIMIZESIZE
+    #if MEDIAINFO_TRACE
         void   Details_Add(const char* Parameter);
-    #endif //MEDIAINFO_MINIMIZESIZE
+    #endif //MEDIAINFO_TRACE
     virtual void Option_Manage() {};
 
     //File

@@ -1,5 +1,5 @@
 // File_Cdxa - Info for CDXA files
-// Copyright (C) 2004-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2004-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -18,11 +18,15 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //---------------------------------------------------------------------------
-// Compilation conditions
-#include "MediaInfo/Setup.h"
+// Pre-compilation
+#include "MediaInfo/PreComp.h"
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+#include "MediaInfo/Setup.h"
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
@@ -33,6 +37,9 @@
 #include "MediaInfo/Multiple/File_Cdxa.h"
 #include "ZenLib/Utils.h"
 #include "MediaInfo/MediaInfo_Internal.h"
+#if MEDIAINFO_EVENTS
+    #include "MediaInfo/MediaInfo_Events.h"
+#endif //MEDIAINFO_EVENTS
 using namespace ZenLib;
 //---------------------------------------------------------------------------
 
@@ -64,6 +71,11 @@ File_Cdxa::File_Cdxa()
 :File__Analyze()
 {
     //Configuration
+    ParserName=_T("CDXA");
+    #if MEDIAINFO_EVENTS
+        ParserIDs[0]=MediaInfo_Parser_Cdxa;
+        StreamIDs_Width[0]=0;
+    #endif //MEDIAINFO_EVENTS
     MustSynchronize=true;
 
     //Temp
@@ -291,16 +303,16 @@ void File_Cdxa::Data_Parse()
         Info("CDXA, Jumping to end of file");
 
     //Details
-    #ifndef MEDIAINFO_MINIMIZESIZE
-    if (MediaInfoLib::Config.DetailsLevel_Get())
+    #if MEDIAINFO_TRACE
+    if (Config_Trace_Level)
     {
         if (!MI->Inform().empty())
             Element_Show_Add(MI->Inform());
     }
-    #endif //MEDIAINFO_MINIMIZESIZE
+    #endif //MEDIAINFO_TRACE
 
     //Demux
-    Demux(Buffer+Buffer_Offset, (size_t)(Element_Size-CRC_Size), _T("xxx"));
+    Demux(Buffer+Buffer_Offset, (size_t)(Element_Size-CRC_Size), ContentType_MainStream);
 }
 
 } //NameSpace

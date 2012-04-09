@@ -1,5 +1,5 @@
 // File_Ico - Info for Icon files
-// Copyright (C) 2005-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2005-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -18,11 +18,15 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //---------------------------------------------------------------------------
-// Compilation conditions
-#include "MediaInfo/Setup.h"
+// Pre-compilation
+#include "MediaInfo/PreComp.h"
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+#include "MediaInfo/Setup.h"
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
@@ -61,7 +65,7 @@ void File_Ico::Streams_Fill()
         Fill(Stream_Image, StreamPos_Last, Image_Width, Streams[Pos].Width?Streams[Pos].Width:256);
         Fill(Stream_Image, StreamPos_Last, Image_Height, Streams[Pos].Height?Streams[Pos].Height:256);
         if (Type==1)
-            Fill(Stream_Image, StreamPos_Last, Image_Resolution,Streams[Pos].BitsPerPixel);
+            Fill(Stream_Image, StreamPos_Last, Image_BitDepth, Streams[Pos].BitsPerPixel);
         Fill(Stream_Image, StreamPos_Last, Image_StreamSize, Streams[Pos].Size);
     }
 }

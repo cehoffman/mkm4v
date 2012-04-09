@@ -36,6 +36,11 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
+@COMPILE_TINYXML_TRUE@am__append_1 = \
+@COMPILE_TINYXML_TRUE@                       ../../../Source/ThirdParty/tinyxml/tinyxml.cpp \
+@COMPILE_TINYXML_TRUE@                       ../../../Source/ThirdParty/tinyxml/tinyxmlerror.cpp \
+@COMPILE_TINYXML_TRUE@                       ../../../Source/ThirdParty/tinyxml/tinyxmlparser.cpp
+
 DIST_COMMON = $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(srcdir)/libmediainfo-config.in \
 	$(srcdir)/libmediainfo.pc.in $(top_srcdir)/configure \
@@ -59,6 +64,181 @@ am__installdirs = "$(DESTDIR)$(libdir)"
 libLTLIBRARIES_INSTALL = $(INSTALL)
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libmediainfo_la_LIBADD =
+am__libmediainfo_la_SOURCES_DIST =  \
+	../../../Source/MediaInfo/File__Analyze.cpp \
+	../../../Source/MediaInfo/File__Analyze_Buffer.cpp \
+	../../../Source/MediaInfo/File__Analyze_Buffer_MinimizeSize.cpp \
+	../../../Source/MediaInfo/File__Analyze_Streams.cpp \
+	../../../Source/MediaInfo/File__Analyze_Streams_Finish.cpp \
+	../../../Source/MediaInfo/File__Base.cpp \
+	../../../Source/MediaInfo/File__MultipleParsing.cpp \
+	../../../Source/MediaInfo/File__Duplicate.cpp \
+	../../../Source/MediaInfo/File_Dummy.cpp \
+	../../../Source/MediaInfo/File_Other.cpp \
+	../../../Source/MediaInfo/File_Unknown.cpp \
+	../../../Source/MediaInfo/MediaInfo.cpp \
+	../../../Source/MediaInfo/MediaInfo_Config.cpp \
+	../../../Source/MediaInfo/MediaInfo_Config_Automatic.cpp \
+	../../../Source/MediaInfo/MediaInfo_Config_MediaInfo.cpp \
+	../../../Source/MediaInfo/MediaInfo_File.cpp \
+	../../../Source/MediaInfo/MediaInfo_Inform.cpp \
+	../../../Source/MediaInfo/MediaInfo_Internal.cpp \
+	../../../Source/MediaInfo/MediaInfoList.cpp \
+	../../../Source/MediaInfo/MediaInfoList_Internal.cpp \
+	../../../Source/MediaInfo/TimeCode.cpp \
+	../../../Source/MediaInfo/Archive/File_7z.cpp \
+	../../../Source/MediaInfo/Archive/File_Ace.cpp \
+	../../../Source/MediaInfo/Archive/File_Bzip2.cpp \
+	../../../Source/MediaInfo/Archive/File_Elf.cpp \
+	../../../Source/MediaInfo/Archive/File_Gzip.cpp \
+	../../../Source/MediaInfo/Archive/File_Iso9660.cpp \
+	../../../Source/MediaInfo/Archive/File_Mz.cpp \
+	../../../Source/MediaInfo/Archive/File_Rar.cpp \
+	../../../Source/MediaInfo/Archive/File_Tar.cpp \
+	../../../Source/MediaInfo/Archive/File_Zip.cpp \
+	../../../Source/MediaInfo/Audio/File_Aac.cpp \
+	../../../Source/MediaInfo/Audio/File_Aac_GeneralAudio.cpp \
+	../../../Source/MediaInfo/Audio/File_Aac_GeneralAudio_Sbr.cpp \
+	../../../Source/MediaInfo/Audio/File_Aac_GeneralAudio_Sbr_Ps.cpp \
+	../../../Source/MediaInfo/Audio/File_Aac_Main.cpp \
+	../../../Source/MediaInfo/Audio/File_Aac_Others.cpp \
+	../../../Source/MediaInfo/Audio/File_Ac3.cpp \
+	../../../Source/MediaInfo/Audio/File_Adpcm.cpp \
+	../../../Source/MediaInfo/Audio/File_Aes3.cpp \
+	../../../Source/MediaInfo/Audio/File_Als.cpp \
+	../../../Source/MediaInfo/Audio/File_Amr.cpp \
+	../../../Source/MediaInfo/Audio/File_Amv.cpp \
+	../../../Source/MediaInfo/Audio/File_Ape.cpp \
+	../../../Source/MediaInfo/Audio/File_Au.cpp \
+	../../../Source/MediaInfo/Audio/File_Celt.cpp \
+	../../../Source/MediaInfo/Audio/File_ChannelGrouping.cpp \
+	../../../Source/MediaInfo/Audio/File_Dts.cpp \
+	../../../Source/MediaInfo/Audio/File_DolbyE.cpp \
+	../../../Source/MediaInfo/Audio/File_ExtendedModule.cpp \
+	../../../Source/MediaInfo/Audio/File_Flac.cpp \
+	../../../Source/MediaInfo/Audio/File_ImpulseTracker.cpp \
+	../../../Source/MediaInfo/Audio/File_La.cpp \
+	../../../Source/MediaInfo/Audio/File_Midi.cpp \
+	../../../Source/MediaInfo/Audio/File_Module.cpp \
+	../../../Source/MediaInfo/Audio/File_Mpc.cpp \
+	../../../Source/MediaInfo/Audio/File_MpcSv8.cpp \
+	../../../Source/MediaInfo/Audio/File_Mpega.cpp \
+	../../../Source/MediaInfo/Audio/File_Pcm.cpp \
+	../../../Source/MediaInfo/Audio/File_Ps2Audio.cpp \
+	../../../Source/MediaInfo/Audio/File_Rkau.cpp \
+	../../../Source/MediaInfo/Audio/File_ScreamTracker3.cpp \
+	../../../Source/MediaInfo/Audio/File_Speex.cpp \
+	../../../Source/MediaInfo/Audio/File_Tak.cpp \
+	../../../Source/MediaInfo/Audio/File_Tta.cpp \
+	../../../Source/MediaInfo/Audio/File_TwinVQ.cpp \
+	../../../Source/MediaInfo/Audio/File_Vorbis.cpp \
+	../../../Source/MediaInfo/Audio/File_Wvpk.cpp \
+	../../../Source/MediaInfo/Duplicate/File__Duplicate__Base.cpp \
+	../../../Source/MediaInfo/Duplicate/File__Duplicate__Writer.cpp \
+	../../../Source/MediaInfo/Duplicate/File__Duplicate_MpegTs.cpp \
+	../../../Source/MediaInfo/Export/Export_Mpeg7.cpp \
+	../../../Source/MediaInfo/Export/Export_PBCore.cpp \
+	../../../Source/MediaInfo/Export/Export_reVTMD.cpp \
+	../../../Source/MediaInfo/Image/File_Bmp.cpp \
+	../../../Source/MediaInfo/Image/File_Dpx.cpp \
+	../../../Source/MediaInfo/Image/File_Exr.cpp \
+	../../../Source/MediaInfo/Image/File_Gif.cpp \
+	../../../Source/MediaInfo/Image/File_Ico.cpp \
+	../../../Source/MediaInfo/Image/File_Jpeg.cpp \
+	../../../Source/MediaInfo/Image/File_Png.cpp \
+	../../../Source/MediaInfo/Image/File_Rle.cpp \
+	../../../Source/MediaInfo/Image/File_Tiff.cpp \
+	../../../Source/MediaInfo/Image/File_Tga.cpp \
+	../../../Source/MediaInfo/Multiple/File__ReferenceFilesHelper.cpp \
+	../../../Source/MediaInfo/Multiple/File_Ancillary.cpp \
+	../../../Source/MediaInfo/Multiple/File_Bdmv.cpp \
+	../../../Source/MediaInfo/Multiple/File_Cdxa.cpp \
+	../../../Source/MediaInfo/Multiple/File_Dcp.cpp \
+	../../../Source/MediaInfo/Multiple/File_Dpg.cpp \
+	../../../Source/MediaInfo/Multiple/File_DvDif.cpp \
+	../../../Source/MediaInfo/Multiple/File_DvDif_Analysis.cpp \
+	../../../Source/MediaInfo/Multiple/File_Dvdv.cpp \
+	../../../Source/MediaInfo/Multiple/File_Dxw.cpp \
+	../../../Source/MediaInfo/Multiple/File_Flv.cpp \
+	../../../Source/MediaInfo/Multiple/File_Gxf.cpp \
+	../../../Source/MediaInfo/Multiple/File_Gxf_TimeCode.cpp \
+	../../../Source/MediaInfo/Multiple/File_Hls.cpp \
+	../../../Source/MediaInfo/Multiple/File_Ibi.cpp \
+	../../../Source/MediaInfo/Multiple/File_Ibi_Creation.cpp \
+	../../../Source/MediaInfo/Multiple/File_Ism.cpp \
+	../../../Source/MediaInfo/Multiple/File_Ivf.cpp \
+	../../../Source/MediaInfo/Multiple/File_Lxf.cpp \
+	../../../Source/MediaInfo/Multiple/File_Mk.cpp \
+	../../../Source/MediaInfo/Multiple/File_Mpeg4.cpp \
+	../../../Source/MediaInfo/Multiple/File_Mpeg4_Descriptors.cpp \
+	../../../Source/MediaInfo/Multiple/File_Mpeg4_Elements.cpp \
+	../../../Source/MediaInfo/Multiple/File_Mpeg4_TimeCode.cpp \
+	../../../Source/MediaInfo/Multiple/File_Mpeg_Descriptors.cpp \
+	../../../Source/MediaInfo/Multiple/File_Mpeg_Psi.cpp \
+	../../../Source/MediaInfo/Multiple/File_MpegPs.cpp \
+	../../../Source/MediaInfo/Multiple/File_MpegTs.cpp \
+	../../../Source/MediaInfo/Multiple/File_MpegTs_Duplicate.cpp \
+	../../../Source/MediaInfo/Multiple/File_Mxf.cpp \
+	../../../Source/MediaInfo/Multiple/File_Nut.cpp \
+	../../../Source/MediaInfo/Multiple/File_Ogg.cpp \
+	../../../Source/MediaInfo/Multiple/File_Ogg_SubElement.cpp \
+	../../../Source/MediaInfo/Multiple/File_P2_Clip.cpp \
+	../../../Source/MediaInfo/Multiple/File_Riff.cpp \
+	../../../Source/MediaInfo/Multiple/File_Riff_Elements.cpp \
+	../../../Source/MediaInfo/Multiple/File_Rm.cpp \
+	../../../Source/MediaInfo/Multiple/File_SequenceInfo.cpp \
+	../../../Source/MediaInfo/Multiple/File_Skm.cpp \
+	../../../Source/MediaInfo/Multiple/File_Swf.cpp \
+	../../../Source/MediaInfo/Multiple/File_Umf.cpp \
+	../../../Source/MediaInfo/Multiple/File_Wm.cpp \
+	../../../Source/MediaInfo/Multiple/File_Wm_Elements.cpp \
+	../../../Source/MediaInfo/Multiple/File_Xdcam_Clip.cpp \
+	../../../Source/MediaInfo/Reader/Reader_Directory.cpp \
+	../../../Source/MediaInfo/Reader/Reader_File.cpp \
+	../../../Source/MediaInfo/Reader/Reader_libcurl.cpp \
+	../../../Source/MediaInfo/Reader/Reader_libmms.cpp \
+	../../../Source/MediaInfo/Tag/File__Tags.cpp \
+	../../../Source/MediaInfo/Tag/File_ApeTag.cpp \
+	../../../Source/MediaInfo/Tag/File_Id3.cpp \
+	../../../Source/MediaInfo/Tag/File_Id3v2.cpp \
+	../../../Source/MediaInfo/Tag/File_Lyrics3.cpp \
+	../../../Source/MediaInfo/Tag/File_Lyrics3v2.cpp \
+	../../../Source/MediaInfo/Tag/File_VorbisCom.cpp \
+	../../../Source/MediaInfo/Text/File_Cdp.cpp \
+	../../../Source/MediaInfo/Text/File_Cmml.cpp \
+	../../../Source/MediaInfo/Text/File_DvbSubtitle.cpp \
+	../../../Source/MediaInfo/Text/File_DtvccTransport.cpp \
+	../../../Source/MediaInfo/Text/File_Kate.cpp \
+	../../../Source/MediaInfo/Text/File_Eia608.cpp \
+	../../../Source/MediaInfo/Text/File_Eia708.cpp \
+	../../../Source/MediaInfo/Text/File_N19.cpp \
+	../../../Source/MediaInfo/Text/File_OtherText.cpp \
+	../../../Source/MediaInfo/Text/File_Pgs.cpp \
+	../../../Source/MediaInfo/Text/File_Scc.cpp \
+	../../../Source/MediaInfo/Text/File_Scte20.cpp \
+	../../../Source/MediaInfo/Text/File_Teletext.cpp \
+	../../../Source/MediaInfo/Video/File_Avc.cpp \
+	../../../Source/MediaInfo/Video/File_Avc_Duplicate.cpp \
+	../../../Source/MediaInfo/Video/File_AvsV.cpp \
+	../../../Source/MediaInfo/Video/File_AfdBarData.cpp \
+	../../../Source/MediaInfo/Video/File_Dirac.cpp \
+	../../../Source/MediaInfo/Video/File_Flic.cpp \
+	../../../Source/MediaInfo/Video/File_Fraps.cpp \
+	../../../Source/MediaInfo/Video/File_Lagarith.cpp \
+	../../../Source/MediaInfo/Video/File_H263.cpp \
+	../../../Source/MediaInfo/Video/File_Mpeg4v.cpp \
+	../../../Source/MediaInfo/Video/File_Mpegv.cpp \
+	../../../Source/MediaInfo/Video/File_Theora.cpp \
+	../../../Source/MediaInfo/Video/File_Vc1.cpp \
+	../../../Source/MediaInfo/Video/File_Vc3.cpp \
+	../../../Source/MediaInfo/Video/File_Vp8.cpp \
+	../../../Source/MediaInfo/Video/File_Y4m.cpp \
+	../../../Source/MediaInfoDLL/MediaInfoDLL.cpp \
+	../../../Source/ThirdParty/tinyxml/tinyxml.cpp \
+	../../../Source/ThirdParty/tinyxml/tinyxmlerror.cpp \
+	../../../Source/ThirdParty/tinyxml/tinyxmlparser.cpp
+@COMPILE_TINYXML_TRUE@am__objects_1 = tinyxml.lo tinyxmlerror.lo \
+@COMPILE_TINYXML_TRUE@	tinyxmlparser.lo
 am_libmediainfo_la_OBJECTS = File__Analyze.lo File__Analyze_Buffer.lo \
 	File__Analyze_Buffer_MinimizeSize.lo File__Analyze_Streams.lo \
 	File__Analyze_Streams_Finish.lo File__Base.lo \
@@ -66,38 +246,49 @@ am_libmediainfo_la_OBJECTS = File__Analyze.lo File__Analyze_Buffer.lo \
 	File_Other.lo File_Unknown.lo MediaInfo.lo MediaInfo_Config.lo \
 	MediaInfo_Config_Automatic.lo MediaInfo_Config_MediaInfo.lo \
 	MediaInfo_File.lo MediaInfo_Inform.lo MediaInfo_Internal.lo \
-	MediaInfoList.lo MediaInfoList_Internal.lo File_7z.lo \
-	File_Ace.lo File_Bzip2.lo File_Elf.lo File_Gzip.lo File_Mz.lo \
-	File_Rar.lo File_Tar.lo File_Zip.lo File_Aac.lo File_Ac3.lo \
-	File_Adif.lo File_Adpcm.lo File_Adts.lo File_Aes3.lo \
-	File_Als.lo File_Amr.lo File_Amv.lo File_Ape.lo File_Au.lo \
-	File_Dts.lo File_ExtendedModule.lo File_Flac.lo \
-	File_ImpulseTracker.lo File_La.lo File_Latm.lo File_Midi.lo \
-	File_Module.lo File_Mpc.lo File_MpcSv8.lo \
-	File_Mpeg4_AudioSpecificConfig.lo File_Mpega.lo File_Pcm.lo \
-	File_Ps2Audio.lo File_ScreamTracker3.lo File_Speex.lo \
-	File_Tak.lo File_Tta.lo File_TwinVQ.lo File_Vorbis.lo \
-	File_Wvpk.lo File__Duplicate__Base.lo \
+	MediaInfoList.lo MediaInfoList_Internal.lo TimeCode.lo \
+	File_7z.lo File_Ace.lo File_Bzip2.lo File_Elf.lo File_Gzip.lo \
+	File_Iso9660.lo File_Mz.lo File_Rar.lo File_Tar.lo File_Zip.lo \
+	File_Aac.lo File_Aac_GeneralAudio.lo \
+	File_Aac_GeneralAudio_Sbr.lo File_Aac_GeneralAudio_Sbr_Ps.lo \
+	File_Aac_Main.lo File_Aac_Others.lo File_Ac3.lo File_Adpcm.lo \
+	File_Aes3.lo File_Als.lo File_Amr.lo File_Amv.lo File_Ape.lo \
+	File_Au.lo File_Celt.lo File_ChannelGrouping.lo File_Dts.lo \
+	File_DolbyE.lo File_ExtendedModule.lo File_Flac.lo \
+	File_ImpulseTracker.lo File_La.lo File_Midi.lo File_Module.lo \
+	File_Mpc.lo File_MpcSv8.lo File_Mpega.lo File_Pcm.lo \
+	File_Ps2Audio.lo File_Rkau.lo File_ScreamTracker3.lo \
+	File_Speex.lo File_Tak.lo File_Tta.lo File_TwinVQ.lo \
+	File_Vorbis.lo File_Wvpk.lo File__Duplicate__Base.lo \
 	File__Duplicate__Writer.lo File__Duplicate_MpegTs.lo \
-	Export_Mpeg7.lo Export_PBCore.lo File_Bmp.lo File_Gif.lo \
-	File_Ico.lo File_Jpeg.lo File_Png.lo File_Rle.lo File_Tiff.lo \
-	File_Bdmv.lo File_Cdxa.lo File_Dpg.lo File_DvDif.lo \
-	File_DvDif_Analysis.lo File_Dvdv.lo File_Flv.lo File_Gxf.lo \
+	Export_Mpeg7.lo Export_PBCore.lo Export_reVTMD.lo File_Bmp.lo \
+	File_Dpx.lo File_Exr.lo File_Gif.lo File_Ico.lo File_Jpeg.lo \
+	File_Png.lo File_Rle.lo File_Tiff.lo File_Tga.lo \
+	File__ReferenceFilesHelper.lo File_Ancillary.lo File_Bdmv.lo \
+	File_Cdxa.lo File_Dcp.lo File_Dpg.lo File_DvDif.lo \
+	File_DvDif_Analysis.lo File_Dvdv.lo File_Dxw.lo File_Flv.lo \
+	File_Gxf.lo File_Gxf_TimeCode.lo File_Hls.lo File_Ibi.lo \
+	File_Ibi_Creation.lo File_Ism.lo File_Ivf.lo File_Lxf.lo \
 	File_Mk.lo File_Mpeg4.lo File_Mpeg4_Descriptors.lo \
 	File_Mpeg4_Elements.lo File_Mpeg4_TimeCode.lo \
 	File_Mpeg_Descriptors.lo File_Mpeg_Psi.lo File_MpegPs.lo \
 	File_MpegTs.lo File_MpegTs_Duplicate.lo File_Mxf.lo \
-	File_Nut.lo File_Ogg.lo File_Ogg_SubElement.lo File_Riff.lo \
-	File_Riff_Elements.lo File_Rm.lo File_Skm.lo File_Swf.lo \
-	File_Umf.lo File_Wm.lo File_Wm_Elements.lo Reader_Directory.lo \
-	Reader_File.lo Reader_libcurl.lo Reader_libmms.lo \
-	File__Tags.lo File_ApeTag.lo File_Id3.lo File_Id3v2.lo \
-	File_Lyrics3.lo File_Lyrics3v2.lo File_VorbisCom.lo \
-	File_Cdp.lo File_Cmml.lo File_Kate.lo File_Eia608.lo \
+	File_Nut.lo File_Ogg.lo File_Ogg_SubElement.lo File_P2_Clip.lo \
+	File_Riff.lo File_Riff_Elements.lo File_Rm.lo \
+	File_SequenceInfo.lo File_Skm.lo File_Swf.lo File_Umf.lo \
+	File_Wm.lo File_Wm_Elements.lo File_Xdcam_Clip.lo \
+	Reader_Directory.lo Reader_File.lo Reader_libcurl.lo \
+	Reader_libmms.lo File__Tags.lo File_ApeTag.lo File_Id3.lo \
+	File_Id3v2.lo File_Lyrics3.lo File_Lyrics3v2.lo \
+	File_VorbisCom.lo File_Cdp.lo File_Cmml.lo File_DvbSubtitle.lo \
+	File_DtvccTransport.lo File_Kate.lo File_Eia608.lo \
 	File_Eia708.lo File_N19.lo File_OtherText.lo File_Pgs.lo \
-	File_Avc.lo File_Avc_Duplicate.lo File_AvsV.lo File_Dirac.lo \
-	File_Flic.lo File_Mpeg4v.lo File_Mpegv.lo File_Theora.lo \
-	File_Vc1.lo MediaInfoDLL.lo
+	File_Scc.lo File_Scte20.lo File_Teletext.lo File_Avc.lo \
+	File_Avc_Duplicate.lo File_AvsV.lo File_AfdBarData.lo \
+	File_Dirac.lo File_Flic.lo File_Fraps.lo File_Lagarith.lo \
+	File_H263.lo File_Mpeg4v.lo File_Mpegv.lo File_Theora.lo \
+	File_Vc1.lo File_Vc3.lo File_Vp8.lo File_Y4m.lo \
+	MediaInfoDLL.lo $(am__objects_1)
 libmediainfo_la_OBJECTS = $(am_libmediainfo_la_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -111,7 +302,7 @@ CXXLD = $(CXX)
 CXXLINK = $(LIBTOOL) --tag=CXX --mode=link $(CXXLD) $(AM_CXXFLAGS) \
 	$(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 SOURCES = $(libmediainfo_la_SOURCES)
-DIST_SOURCES = $(libmediainfo_la_SOURCES)
+DIST_SOURCES = $(am__libmediainfo_la_SOURCES_DIST)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -138,6 +329,8 @@ AWK = @AWK@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
+COMPILE_TINYXML_FALSE = @COMPILE_TINYXML_FALSE@
+COMPILE_TINYXML_TRUE = @COMPILE_TINYXML_TRUE@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CXX = @CXX@
@@ -180,11 +373,14 @@ PACKAGE_STRING = @PACKAGE_STRING@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
+PKG_CONFIG = @PKG_CONFIG@
 RANLIB = @RANLIB@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
+TINYXML_CFLAGS = @TINYXML_CFLAGS@
+TINYXML_LIBS = @TINYXML_LIBS@
 VERSION = @VERSION@
 ac_ct_AR = @ac_ct_AR@
 ac_ct_AS = @ac_ct_AS@
@@ -195,6 +391,7 @@ ac_ct_F77 = @ac_ct_F77@
 ac_ct_OBJDUMP = @ac_ct_OBJDUMP@
 ac_ct_RANLIB = @ac_ct_RANLIB@
 ac_ct_STRIP = @ac_ct_STRIP@
+ac_pt_PKG_CONFIG = @ac_pt_PKG_CONFIG@
 am__fastdepCC_FALSE = @am__fastdepCC_FALSE@
 am__fastdepCC_TRUE = @am__fastdepCC_TRUE@
 am__fastdepCXX_FALSE = @am__fastdepCXX_FALSE@
@@ -234,140 +431,175 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 AUTOMAKE_OPTIONS = foreign
 lib_LTLIBRARIES = libmediainfo.la
-libmediainfo_la_SOURCES = \
-                       ../../../Source/MediaInfo/File__Analyze.cpp \
-                       ../../../Source/MediaInfo/File__Analyze_Buffer.cpp \
-                       ../../../Source/MediaInfo/File__Analyze_Buffer_MinimizeSize.cpp \
-                       ../../../Source/MediaInfo/File__Analyze_Streams.cpp \
-                       ../../../Source/MediaInfo/File__Analyze_Streams_Finish.cpp \
-                       ../../../Source/MediaInfo/File__Base.cpp \
-                       ../../../Source/MediaInfo/File__MultipleParsing.cpp \
-                       ../../../Source/MediaInfo/File__Duplicate.cpp \
-                       ../../../Source/MediaInfo/File_Dummy.cpp \
-                       ../../../Source/MediaInfo/File_Other.cpp \
-                       ../../../Source/MediaInfo/File_Unknown.cpp \
-                       ../../../Source/MediaInfo/MediaInfo.cpp \
-                       ../../../Source/MediaInfo/MediaInfo_Config.cpp \
-                       ../../../Source/MediaInfo/MediaInfo_Config_Automatic.cpp \
-                       ../../../Source/MediaInfo/MediaInfo_Config_MediaInfo.cpp \
-                       ../../../Source/MediaInfo/MediaInfo_File.cpp \
-                       ../../../Source/MediaInfo/MediaInfo_Inform.cpp \
-                       ../../../Source/MediaInfo/MediaInfo_Internal.cpp \
-                       ../../../Source/MediaInfo/MediaInfoList.cpp \
-                       ../../../Source/MediaInfo/MediaInfoList_Internal.cpp \
-                       ../../../Source/MediaInfo/Archive/File_7z.cpp \
-                       ../../../Source/MediaInfo/Archive/File_Ace.cpp \
-                       ../../../Source/MediaInfo/Archive/File_Bzip2.cpp \
-                       ../../../Source/MediaInfo/Archive/File_Elf.cpp \
-                       ../../../Source/MediaInfo/Archive/File_Gzip.cpp \
-                       ../../../Source/MediaInfo/Archive/File_Mz.cpp \
-                       ../../../Source/MediaInfo/Archive/File_Rar.cpp \
-                       ../../../Source/MediaInfo/Archive/File_Tar.cpp \
-                       ../../../Source/MediaInfo/Archive/File_Zip.cpp \
-                       ../../../Source/MediaInfo/Audio/File_Aac.cpp \
-                       ../../../Source/MediaInfo/Audio/File_Ac3.cpp \
-                       ../../../Source/MediaInfo/Audio/File_Adif.cpp \
-                       ../../../Source/MediaInfo/Audio/File_Adpcm.cpp \
-                       ../../../Source/MediaInfo/Audio/File_Adts.cpp \
-                       ../../../Source/MediaInfo/Audio/File_Aes3.cpp \
-                       ../../../Source/MediaInfo/Audio/File_Als.cpp \
-                       ../../../Source/MediaInfo/Audio/File_Amr.cpp \
-                       ../../../Source/MediaInfo/Audio/File_Amv.cpp \
-                       ../../../Source/MediaInfo/Audio/File_Ape.cpp \
-                       ../../../Source/MediaInfo/Audio/File_Au.cpp \
-                       ../../../Source/MediaInfo/Audio/File_Dts.cpp \
-                       ../../../Source/MediaInfo/Audio/File_ExtendedModule.cpp \
-                       ../../../Source/MediaInfo/Audio/File_Flac.cpp \
-                       ../../../Source/MediaInfo/Audio/File_ImpulseTracker.cpp \
-                       ../../../Source/MediaInfo/Audio/File_La.cpp \
-                       ../../../Source/MediaInfo/Audio/File_Latm.cpp \
-                       ../../../Source/MediaInfo/Audio/File_Midi.cpp \
-                       ../../../Source/MediaInfo/Audio/File_Module.cpp \
-                       ../../../Source/MediaInfo/Audio/File_Mpc.cpp \
-                       ../../../Source/MediaInfo/Audio/File_MpcSv8.cpp \
-                       ../../../Source/MediaInfo/Audio/File_Mpeg4_AudioSpecificConfig.cpp \
-                       ../../../Source/MediaInfo/Audio/File_Mpega.cpp \
-                       ../../../Source/MediaInfo/Audio/File_Pcm.cpp \
-                       ../../../Source/MediaInfo/Audio/File_Ps2Audio.cpp \
-                       ../../../Source/MediaInfo/Audio/File_ScreamTracker3.cpp \
-                       ../../../Source/MediaInfo/Audio/File_Speex.cpp \
-                       ../../../Source/MediaInfo/Audio/File_Tak.cpp \
-                       ../../../Source/MediaInfo/Audio/File_Tta.cpp \
-                       ../../../Source/MediaInfo/Audio/File_TwinVQ.cpp \
-                       ../../../Source/MediaInfo/Audio/File_Vorbis.cpp \
-                       ../../../Source/MediaInfo/Audio/File_Wvpk.cpp \
-                       ../../../Source/MediaInfo/Duplicate/File__Duplicate__Base.cpp \
-                       ../../../Source/MediaInfo/Duplicate/File__Duplicate__Writer.cpp \
-                       ../../../Source/MediaInfo/Duplicate/File__Duplicate_MpegTs.cpp \
-                       ../../../Source/MediaInfo/Export/Export_Mpeg7.cpp \
-                       ../../../Source/MediaInfo/Export/Export_PBCore.cpp \
-                       ../../../Source/MediaInfo/Image/File_Bmp.cpp \
-                       ../../../Source/MediaInfo/Image/File_Gif.cpp \
-                       ../../../Source/MediaInfo/Image/File_Ico.cpp \
-                       ../../../Source/MediaInfo/Image/File_Jpeg.cpp \
-                       ../../../Source/MediaInfo/Image/File_Png.cpp \
-                       ../../../Source/MediaInfo/Image/File_Rle.cpp \
-                       ../../../Source/MediaInfo/Image/File_Tiff.cpp \
-                       ../../../Source/MediaInfo/Multiple/File_Bdmv.cpp \
-                       ../../../Source/MediaInfo/Multiple/File_Cdxa.cpp \
-                       ../../../Source/MediaInfo/Multiple/File_Dpg.cpp \
-                       ../../../Source/MediaInfo/Multiple/File_DvDif.cpp \
-                       ../../../Source/MediaInfo/Multiple/File_DvDif_Analysis.cpp \
-                       ../../../Source/MediaInfo/Multiple/File_Dvdv.cpp \
-                       ../../../Source/MediaInfo/Multiple/File_Flv.cpp \
-                       ../../../Source/MediaInfo/Multiple/File_Gxf.cpp \
-                       ../../../Source/MediaInfo/Multiple/File_Mk.cpp \
-                       ../../../Source/MediaInfo/Multiple/File_Mpeg4.cpp \
-                       ../../../Source/MediaInfo/Multiple/File_Mpeg4_Descriptors.cpp \
-                       ../../../Source/MediaInfo/Multiple/File_Mpeg4_Elements.cpp \
-                       ../../../Source/MediaInfo/Multiple/File_Mpeg4_TimeCode.cpp \
-                       ../../../Source/MediaInfo/Multiple/File_Mpeg_Descriptors.cpp \
-                       ../../../Source/MediaInfo/Multiple/File_Mpeg_Psi.cpp \
-                       ../../../Source/MediaInfo/Multiple/File_MpegPs.cpp \
-                       ../../../Source/MediaInfo/Multiple/File_MpegTs.cpp \
-                       ../../../Source/MediaInfo/Multiple/File_MpegTs_Duplicate.cpp \
-                       ../../../Source/MediaInfo/Multiple/File_Mxf.cpp \
-                       ../../../Source/MediaInfo/Multiple/File_Nut.cpp \
-                       ../../../Source/MediaInfo/Multiple/File_Ogg.cpp \
-                       ../../../Source/MediaInfo/Multiple/File_Ogg_SubElement.cpp \
-                       ../../../Source/MediaInfo/Multiple/File_Riff.cpp \
-                       ../../../Source/MediaInfo/Multiple/File_Riff_Elements.cpp \
-                       ../../../Source/MediaInfo/Multiple/File_Rm.cpp \
-                       ../../../Source/MediaInfo/Multiple/File_Skm.cpp \
-                       ../../../Source/MediaInfo/Multiple/File_Swf.cpp \
-                       ../../../Source/MediaInfo/Multiple/File_Umf.cpp \
-                       ../../../Source/MediaInfo/Multiple/File_Wm.cpp \
-                       ../../../Source/MediaInfo/Multiple/File_Wm_Elements.cpp \
-                       ../../../Source/MediaInfo/Reader/Reader_Directory.cpp \
-                       ../../../Source/MediaInfo/Reader/Reader_File.cpp \
-                       ../../../Source/MediaInfo/Reader/Reader_libcurl.cpp \
-                       ../../../Source/MediaInfo/Reader/Reader_libmms.cpp \
-                       ../../../Source/MediaInfo/Tag/File__Tags.cpp \
-                       ../../../Source/MediaInfo/Tag/File_ApeTag.cpp \
-                       ../../../Source/MediaInfo/Tag/File_Id3.cpp \
-                       ../../../Source/MediaInfo/Tag/File_Id3v2.cpp \
-                       ../../../Source/MediaInfo/Tag/File_Lyrics3.cpp \
-                       ../../../Source/MediaInfo/Tag/File_Lyrics3v2.cpp \
-                       ../../../Source/MediaInfo/Tag/File_VorbisCom.cpp \
-                       ../../../Source/MediaInfo/Text/File_Cdp.cpp \
-                       ../../../Source/MediaInfo/Text/File_Cmml.cpp \
-                       ../../../Source/MediaInfo/Text/File_Kate.cpp \
-                       ../../../Source/MediaInfo/Text/File_Eia608.cpp \
-                       ../../../Source/MediaInfo/Text/File_Eia708.cpp \
-                       ../../../Source/MediaInfo/Text/File_N19.cpp \
-                       ../../../Source/MediaInfo/Text/File_OtherText.cpp \
-                       ../../../Source/MediaInfo/Text/File_Pgs.cpp \
-                       ../../../Source/MediaInfo/Video/File_Avc.cpp \
-                       ../../../Source/MediaInfo/Video/File_Avc_Duplicate.cpp \
-                       ../../../Source/MediaInfo/Video/File_AvsV.cpp \
-                       ../../../Source/MediaInfo/Video/File_Dirac.cpp \
-                       ../../../Source/MediaInfo/Video/File_Flic.cpp \
-                       ../../../Source/MediaInfo/Video/File_Mpeg4v.cpp \
-                       ../../../Source/MediaInfo/Video/File_Mpegv.cpp \
-                       ../../../Source/MediaInfo/Video/File_Theora.cpp \
-                       ../../../Source/MediaInfo/Video/File_Vc1.cpp \
-                       ../../../Source/MediaInfoDLL/MediaInfoDLL.cpp
-
+libmediainfo_la_SOURCES = ../../../Source/MediaInfo/File__Analyze.cpp \
+	../../../Source/MediaInfo/File__Analyze_Buffer.cpp \
+	../../../Source/MediaInfo/File__Analyze_Buffer_MinimizeSize.cpp \
+	../../../Source/MediaInfo/File__Analyze_Streams.cpp \
+	../../../Source/MediaInfo/File__Analyze_Streams_Finish.cpp \
+	../../../Source/MediaInfo/File__Base.cpp \
+	../../../Source/MediaInfo/File__MultipleParsing.cpp \
+	../../../Source/MediaInfo/File__Duplicate.cpp \
+	../../../Source/MediaInfo/File_Dummy.cpp \
+	../../../Source/MediaInfo/File_Other.cpp \
+	../../../Source/MediaInfo/File_Unknown.cpp \
+	../../../Source/MediaInfo/MediaInfo.cpp \
+	../../../Source/MediaInfo/MediaInfo_Config.cpp \
+	../../../Source/MediaInfo/MediaInfo_Config_Automatic.cpp \
+	../../../Source/MediaInfo/MediaInfo_Config_MediaInfo.cpp \
+	../../../Source/MediaInfo/MediaInfo_File.cpp \
+	../../../Source/MediaInfo/MediaInfo_Inform.cpp \
+	../../../Source/MediaInfo/MediaInfo_Internal.cpp \
+	../../../Source/MediaInfo/MediaInfoList.cpp \
+	../../../Source/MediaInfo/MediaInfoList_Internal.cpp \
+	../../../Source/MediaInfo/TimeCode.cpp \
+	../../../Source/MediaInfo/Archive/File_7z.cpp \
+	../../../Source/MediaInfo/Archive/File_Ace.cpp \
+	../../../Source/MediaInfo/Archive/File_Bzip2.cpp \
+	../../../Source/MediaInfo/Archive/File_Elf.cpp \
+	../../../Source/MediaInfo/Archive/File_Gzip.cpp \
+	../../../Source/MediaInfo/Archive/File_Iso9660.cpp \
+	../../../Source/MediaInfo/Archive/File_Mz.cpp \
+	../../../Source/MediaInfo/Archive/File_Rar.cpp \
+	../../../Source/MediaInfo/Archive/File_Tar.cpp \
+	../../../Source/MediaInfo/Archive/File_Zip.cpp \
+	../../../Source/MediaInfo/Audio/File_Aac.cpp \
+	../../../Source/MediaInfo/Audio/File_Aac_GeneralAudio.cpp \
+	../../../Source/MediaInfo/Audio/File_Aac_GeneralAudio_Sbr.cpp \
+	../../../Source/MediaInfo/Audio/File_Aac_GeneralAudio_Sbr_Ps.cpp \
+	../../../Source/MediaInfo/Audio/File_Aac_Main.cpp \
+	../../../Source/MediaInfo/Audio/File_Aac_Others.cpp \
+	../../../Source/MediaInfo/Audio/File_Ac3.cpp \
+	../../../Source/MediaInfo/Audio/File_Adpcm.cpp \
+	../../../Source/MediaInfo/Audio/File_Aes3.cpp \
+	../../../Source/MediaInfo/Audio/File_Als.cpp \
+	../../../Source/MediaInfo/Audio/File_Amr.cpp \
+	../../../Source/MediaInfo/Audio/File_Amv.cpp \
+	../../../Source/MediaInfo/Audio/File_Ape.cpp \
+	../../../Source/MediaInfo/Audio/File_Au.cpp \
+	../../../Source/MediaInfo/Audio/File_Celt.cpp \
+	../../../Source/MediaInfo/Audio/File_ChannelGrouping.cpp \
+	../../../Source/MediaInfo/Audio/File_Dts.cpp \
+	../../../Source/MediaInfo/Audio/File_DolbyE.cpp \
+	../../../Source/MediaInfo/Audio/File_ExtendedModule.cpp \
+	../../../Source/MediaInfo/Audio/File_Flac.cpp \
+	../../../Source/MediaInfo/Audio/File_ImpulseTracker.cpp \
+	../../../Source/MediaInfo/Audio/File_La.cpp \
+	../../../Source/MediaInfo/Audio/File_Midi.cpp \
+	../../../Source/MediaInfo/Audio/File_Module.cpp \
+	../../../Source/MediaInfo/Audio/File_Mpc.cpp \
+	../../../Source/MediaInfo/Audio/File_MpcSv8.cpp \
+	../../../Source/MediaInfo/Audio/File_Mpega.cpp \
+	../../../Source/MediaInfo/Audio/File_Pcm.cpp \
+	../../../Source/MediaInfo/Audio/File_Ps2Audio.cpp \
+	../../../Source/MediaInfo/Audio/File_Rkau.cpp \
+	../../../Source/MediaInfo/Audio/File_ScreamTracker3.cpp \
+	../../../Source/MediaInfo/Audio/File_Speex.cpp \
+	../../../Source/MediaInfo/Audio/File_Tak.cpp \
+	../../../Source/MediaInfo/Audio/File_Tta.cpp \
+	../../../Source/MediaInfo/Audio/File_TwinVQ.cpp \
+	../../../Source/MediaInfo/Audio/File_Vorbis.cpp \
+	../../../Source/MediaInfo/Audio/File_Wvpk.cpp \
+	../../../Source/MediaInfo/Duplicate/File__Duplicate__Base.cpp \
+	../../../Source/MediaInfo/Duplicate/File__Duplicate__Writer.cpp \
+	../../../Source/MediaInfo/Duplicate/File__Duplicate_MpegTs.cpp \
+	../../../Source/MediaInfo/Export/Export_Mpeg7.cpp \
+	../../../Source/MediaInfo/Export/Export_PBCore.cpp \
+	../../../Source/MediaInfo/Export/Export_reVTMD.cpp \
+	../../../Source/MediaInfo/Image/File_Bmp.cpp \
+	../../../Source/MediaInfo/Image/File_Dpx.cpp \
+	../../../Source/MediaInfo/Image/File_Exr.cpp \
+	../../../Source/MediaInfo/Image/File_Gif.cpp \
+	../../../Source/MediaInfo/Image/File_Ico.cpp \
+	../../../Source/MediaInfo/Image/File_Jpeg.cpp \
+	../../../Source/MediaInfo/Image/File_Png.cpp \
+	../../../Source/MediaInfo/Image/File_Rle.cpp \
+	../../../Source/MediaInfo/Image/File_Tiff.cpp \
+	../../../Source/MediaInfo/Image/File_Tga.cpp \
+	../../../Source/MediaInfo/Multiple/File__ReferenceFilesHelper.cpp \
+	../../../Source/MediaInfo/Multiple/File_Ancillary.cpp \
+	../../../Source/MediaInfo/Multiple/File_Bdmv.cpp \
+	../../../Source/MediaInfo/Multiple/File_Cdxa.cpp \
+	../../../Source/MediaInfo/Multiple/File_Dcp.cpp \
+	../../../Source/MediaInfo/Multiple/File_Dpg.cpp \
+	../../../Source/MediaInfo/Multiple/File_DvDif.cpp \
+	../../../Source/MediaInfo/Multiple/File_DvDif_Analysis.cpp \
+	../../../Source/MediaInfo/Multiple/File_Dvdv.cpp \
+	../../../Source/MediaInfo/Multiple/File_Dxw.cpp \
+	../../../Source/MediaInfo/Multiple/File_Flv.cpp \
+	../../../Source/MediaInfo/Multiple/File_Gxf.cpp \
+	../../../Source/MediaInfo/Multiple/File_Gxf_TimeCode.cpp \
+	../../../Source/MediaInfo/Multiple/File_Hls.cpp \
+	../../../Source/MediaInfo/Multiple/File_Ibi.cpp \
+	../../../Source/MediaInfo/Multiple/File_Ibi_Creation.cpp \
+	../../../Source/MediaInfo/Multiple/File_Ism.cpp \
+	../../../Source/MediaInfo/Multiple/File_Ivf.cpp \
+	../../../Source/MediaInfo/Multiple/File_Lxf.cpp \
+	../../../Source/MediaInfo/Multiple/File_Mk.cpp \
+	../../../Source/MediaInfo/Multiple/File_Mpeg4.cpp \
+	../../../Source/MediaInfo/Multiple/File_Mpeg4_Descriptors.cpp \
+	../../../Source/MediaInfo/Multiple/File_Mpeg4_Elements.cpp \
+	../../../Source/MediaInfo/Multiple/File_Mpeg4_TimeCode.cpp \
+	../../../Source/MediaInfo/Multiple/File_Mpeg_Descriptors.cpp \
+	../../../Source/MediaInfo/Multiple/File_Mpeg_Psi.cpp \
+	../../../Source/MediaInfo/Multiple/File_MpegPs.cpp \
+	../../../Source/MediaInfo/Multiple/File_MpegTs.cpp \
+	../../../Source/MediaInfo/Multiple/File_MpegTs_Duplicate.cpp \
+	../../../Source/MediaInfo/Multiple/File_Mxf.cpp \
+	../../../Source/MediaInfo/Multiple/File_Nut.cpp \
+	../../../Source/MediaInfo/Multiple/File_Ogg.cpp \
+	../../../Source/MediaInfo/Multiple/File_Ogg_SubElement.cpp \
+	../../../Source/MediaInfo/Multiple/File_P2_Clip.cpp \
+	../../../Source/MediaInfo/Multiple/File_Riff.cpp \
+	../../../Source/MediaInfo/Multiple/File_Riff_Elements.cpp \
+	../../../Source/MediaInfo/Multiple/File_Rm.cpp \
+	../../../Source/MediaInfo/Multiple/File_SequenceInfo.cpp \
+	../../../Source/MediaInfo/Multiple/File_Skm.cpp \
+	../../../Source/MediaInfo/Multiple/File_Swf.cpp \
+	../../../Source/MediaInfo/Multiple/File_Umf.cpp \
+	../../../Source/MediaInfo/Multiple/File_Wm.cpp \
+	../../../Source/MediaInfo/Multiple/File_Wm_Elements.cpp \
+	../../../Source/MediaInfo/Multiple/File_Xdcam_Clip.cpp \
+	../../../Source/MediaInfo/Reader/Reader_Directory.cpp \
+	../../../Source/MediaInfo/Reader/Reader_File.cpp \
+	../../../Source/MediaInfo/Reader/Reader_libcurl.cpp \
+	../../../Source/MediaInfo/Reader/Reader_libmms.cpp \
+	../../../Source/MediaInfo/Tag/File__Tags.cpp \
+	../../../Source/MediaInfo/Tag/File_ApeTag.cpp \
+	../../../Source/MediaInfo/Tag/File_Id3.cpp \
+	../../../Source/MediaInfo/Tag/File_Id3v2.cpp \
+	../../../Source/MediaInfo/Tag/File_Lyrics3.cpp \
+	../../../Source/MediaInfo/Tag/File_Lyrics3v2.cpp \
+	../../../Source/MediaInfo/Tag/File_VorbisCom.cpp \
+	../../../Source/MediaInfo/Text/File_Cdp.cpp \
+	../../../Source/MediaInfo/Text/File_Cmml.cpp \
+	../../../Source/MediaInfo/Text/File_DvbSubtitle.cpp \
+	../../../Source/MediaInfo/Text/File_DtvccTransport.cpp \
+	../../../Source/MediaInfo/Text/File_Kate.cpp \
+	../../../Source/MediaInfo/Text/File_Eia608.cpp \
+	../../../Source/MediaInfo/Text/File_Eia708.cpp \
+	../../../Source/MediaInfo/Text/File_N19.cpp \
+	../../../Source/MediaInfo/Text/File_OtherText.cpp \
+	../../../Source/MediaInfo/Text/File_Pgs.cpp \
+	../../../Source/MediaInfo/Text/File_Scc.cpp \
+	../../../Source/MediaInfo/Text/File_Scte20.cpp \
+	../../../Source/MediaInfo/Text/File_Teletext.cpp \
+	../../../Source/MediaInfo/Video/File_Avc.cpp \
+	../../../Source/MediaInfo/Video/File_Avc_Duplicate.cpp \
+	../../../Source/MediaInfo/Video/File_AvsV.cpp \
+	../../../Source/MediaInfo/Video/File_AfdBarData.cpp \
+	../../../Source/MediaInfo/Video/File_Dirac.cpp \
+	../../../Source/MediaInfo/Video/File_Flic.cpp \
+	../../../Source/MediaInfo/Video/File_Fraps.cpp \
+	../../../Source/MediaInfo/Video/File_Lagarith.cpp \
+	../../../Source/MediaInfo/Video/File_H263.cpp \
+	../../../Source/MediaInfo/Video/File_Mpeg4v.cpp \
+	../../../Source/MediaInfo/Video/File_Mpegv.cpp \
+	../../../Source/MediaInfo/Video/File_Theora.cpp \
+	../../../Source/MediaInfo/Video/File_Vc1.cpp \
+	../../../Source/MediaInfo/Video/File_Vc3.cpp \
+	../../../Source/MediaInfo/Video/File_Vp8.cpp \
+	../../../Source/MediaInfo/Video/File_Y4m.cpp \
+	../../../Source/MediaInfoDLL/MediaInfoDLL.cpp $(am__append_1)
 libmediainfo_la_LDFLAGS = -no-undefined -version-info 0:0:0
 INCLUDES = -I../../../Source -I../../../../ZenLib/Source
 all: all-am
@@ -449,17 +681,23 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Export_Mpeg7.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Export_PBCore.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Export_reVTMD.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_7z.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Aac.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Aac_GeneralAudio.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Aac_GeneralAudio_Sbr.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Aac_GeneralAudio_Sbr_Ps.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Aac_Main.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Aac_Others.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Ac3.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Ace.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Adif.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Adpcm.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Adts.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Aes3.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_AfdBarData.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Als.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Amr.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Amv.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Ancillary.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Ape.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_ApeTag.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Au.Plo@am__quote@
@@ -471,32 +709,51 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Bzip2.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Cdp.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Cdxa.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Celt.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_ChannelGrouping.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Cmml.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Dcp.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Dirac.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_DolbyE.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Dpg.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Dpx.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Dts.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_DtvccTransport.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Dummy.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_DvDif.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_DvDif_Analysis.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_DvbSubtitle.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Dvdv.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Dxw.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Eia608.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Eia708.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Elf.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Exr.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_ExtendedModule.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Flac.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Flic.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Flv.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Fraps.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Gif.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Gxf.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Gxf_TimeCode.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Gzip.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_H263.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Hls.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Ibi.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Ibi_Creation.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Ico.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Id3.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Id3v2.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_ImpulseTracker.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Ism.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Iso9660.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Ivf.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Jpeg.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Kate.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_La.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Latm.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Lagarith.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Lxf.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Lyrics3.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Lyrics3v2.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Midi.Plo@am__quote@
@@ -505,7 +762,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Mpc.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_MpcSv8.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Mpeg4.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Mpeg4_AudioSpecificConfig.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Mpeg4_Descriptors.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Mpeg4_Elements.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Mpeg4_TimeCode.Plo@am__quote@
@@ -525,6 +781,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Ogg_SubElement.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Other.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_OtherText.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_P2_Clip.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Pcm.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Pgs.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Png.Plo@am__quote@
@@ -532,14 +789,20 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Rar.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Riff.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Riff_Elements.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Rkau.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Rle.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Rm.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Scc.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_ScreamTracker3.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Scte20.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_SequenceInfo.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Skm.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Speex.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Swf.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Tak.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Tar.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Teletext.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Tga.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Theora.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Tiff.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Tta.Plo@am__quote@
@@ -547,11 +810,15 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Umf.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Unknown.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Vc1.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Vc3.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Vorbis.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_VorbisCom.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Vp8.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Wm.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Wm_Elements.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Wvpk.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Xdcam_Clip.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Y4m.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File_Zip.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File__Analyze.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File__Analyze_Buffer.Plo@am__quote@
@@ -564,6 +831,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File__Duplicate__Base.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File__Duplicate__Writer.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File__MultipleParsing.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File__ReferenceFilesHelper.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/File__Tags.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/MediaInfo.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/MediaInfoDLL.Plo@am__quote@
@@ -579,6 +847,10 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Reader_File.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Reader_libcurl.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Reader_libmms.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/TimeCode.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tinyxml.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tinyxmlerror.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tinyxmlparser.Plo@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	if $(CXXCOMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ $<; \
@@ -741,6 +1013,13 @@ MediaInfoList_Internal.lo: ../../../Source/MediaInfo/MediaInfoList_Internal.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o MediaInfoList_Internal.lo `test -f '../../../Source/MediaInfo/MediaInfoList_Internal.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/MediaInfoList_Internal.cpp
 
+TimeCode.lo: ../../../Source/MediaInfo/TimeCode.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT TimeCode.lo -MD -MP -MF "$(DEPDIR)/TimeCode.Tpo" -c -o TimeCode.lo `test -f '../../../Source/MediaInfo/TimeCode.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/TimeCode.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/TimeCode.Tpo" "$(DEPDIR)/TimeCode.Plo"; else rm -f "$(DEPDIR)/TimeCode.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/TimeCode.cpp' object='TimeCode.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o TimeCode.lo `test -f '../../../Source/MediaInfo/TimeCode.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/TimeCode.cpp
+
 File_7z.lo: ../../../Source/MediaInfo/Archive/File_7z.cpp
 @am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_7z.lo -MD -MP -MF "$(DEPDIR)/File_7z.Tpo" -c -o File_7z.lo `test -f '../../../Source/MediaInfo/Archive/File_7z.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Archive/File_7z.cpp; \
 @am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_7z.Tpo" "$(DEPDIR)/File_7z.Plo"; else rm -f "$(DEPDIR)/File_7z.Tpo"; exit 1; fi
@@ -775,6 +1054,13 @@ File_Gzip.lo: ../../../Source/MediaInfo/Archive/File_Gzip.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Archive/File_Gzip.cpp' object='File_Gzip.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Gzip.lo `test -f '../../../Source/MediaInfo/Archive/File_Gzip.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Archive/File_Gzip.cpp
+
+File_Iso9660.lo: ../../../Source/MediaInfo/Archive/File_Iso9660.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Iso9660.lo -MD -MP -MF "$(DEPDIR)/File_Iso9660.Tpo" -c -o File_Iso9660.lo `test -f '../../../Source/MediaInfo/Archive/File_Iso9660.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Archive/File_Iso9660.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Iso9660.Tpo" "$(DEPDIR)/File_Iso9660.Plo"; else rm -f "$(DEPDIR)/File_Iso9660.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Archive/File_Iso9660.cpp' object='File_Iso9660.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Iso9660.lo `test -f '../../../Source/MediaInfo/Archive/File_Iso9660.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Archive/File_Iso9660.cpp
 
 File_Mz.lo: ../../../Source/MediaInfo/Archive/File_Mz.cpp
 @am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Mz.lo -MD -MP -MF "$(DEPDIR)/File_Mz.Tpo" -c -o File_Mz.lo `test -f '../../../Source/MediaInfo/Archive/File_Mz.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Archive/File_Mz.cpp; \
@@ -811,6 +1097,41 @@ File_Aac.lo: ../../../Source/MediaInfo/Audio/File_Aac.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Aac.lo `test -f '../../../Source/MediaInfo/Audio/File_Aac.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Audio/File_Aac.cpp
 
+File_Aac_GeneralAudio.lo: ../../../Source/MediaInfo/Audio/File_Aac_GeneralAudio.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Aac_GeneralAudio.lo -MD -MP -MF "$(DEPDIR)/File_Aac_GeneralAudio.Tpo" -c -o File_Aac_GeneralAudio.lo `test -f '../../../Source/MediaInfo/Audio/File_Aac_GeneralAudio.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Audio/File_Aac_GeneralAudio.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Aac_GeneralAudio.Tpo" "$(DEPDIR)/File_Aac_GeneralAudio.Plo"; else rm -f "$(DEPDIR)/File_Aac_GeneralAudio.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Audio/File_Aac_GeneralAudio.cpp' object='File_Aac_GeneralAudio.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Aac_GeneralAudio.lo `test -f '../../../Source/MediaInfo/Audio/File_Aac_GeneralAudio.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Audio/File_Aac_GeneralAudio.cpp
+
+File_Aac_GeneralAudio_Sbr.lo: ../../../Source/MediaInfo/Audio/File_Aac_GeneralAudio_Sbr.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Aac_GeneralAudio_Sbr.lo -MD -MP -MF "$(DEPDIR)/File_Aac_GeneralAudio_Sbr.Tpo" -c -o File_Aac_GeneralAudio_Sbr.lo `test -f '../../../Source/MediaInfo/Audio/File_Aac_GeneralAudio_Sbr.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Audio/File_Aac_GeneralAudio_Sbr.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Aac_GeneralAudio_Sbr.Tpo" "$(DEPDIR)/File_Aac_GeneralAudio_Sbr.Plo"; else rm -f "$(DEPDIR)/File_Aac_GeneralAudio_Sbr.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Audio/File_Aac_GeneralAudio_Sbr.cpp' object='File_Aac_GeneralAudio_Sbr.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Aac_GeneralAudio_Sbr.lo `test -f '../../../Source/MediaInfo/Audio/File_Aac_GeneralAudio_Sbr.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Audio/File_Aac_GeneralAudio_Sbr.cpp
+
+File_Aac_GeneralAudio_Sbr_Ps.lo: ../../../Source/MediaInfo/Audio/File_Aac_GeneralAudio_Sbr_Ps.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Aac_GeneralAudio_Sbr_Ps.lo -MD -MP -MF "$(DEPDIR)/File_Aac_GeneralAudio_Sbr_Ps.Tpo" -c -o File_Aac_GeneralAudio_Sbr_Ps.lo `test -f '../../../Source/MediaInfo/Audio/File_Aac_GeneralAudio_Sbr_Ps.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Audio/File_Aac_GeneralAudio_Sbr_Ps.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Aac_GeneralAudio_Sbr_Ps.Tpo" "$(DEPDIR)/File_Aac_GeneralAudio_Sbr_Ps.Plo"; else rm -f "$(DEPDIR)/File_Aac_GeneralAudio_Sbr_Ps.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Audio/File_Aac_GeneralAudio_Sbr_Ps.cpp' object='File_Aac_GeneralAudio_Sbr_Ps.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Aac_GeneralAudio_Sbr_Ps.lo `test -f '../../../Source/MediaInfo/Audio/File_Aac_GeneralAudio_Sbr_Ps.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Audio/File_Aac_GeneralAudio_Sbr_Ps.cpp
+
+File_Aac_Main.lo: ../../../Source/MediaInfo/Audio/File_Aac_Main.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Aac_Main.lo -MD -MP -MF "$(DEPDIR)/File_Aac_Main.Tpo" -c -o File_Aac_Main.lo `test -f '../../../Source/MediaInfo/Audio/File_Aac_Main.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Audio/File_Aac_Main.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Aac_Main.Tpo" "$(DEPDIR)/File_Aac_Main.Plo"; else rm -f "$(DEPDIR)/File_Aac_Main.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Audio/File_Aac_Main.cpp' object='File_Aac_Main.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Aac_Main.lo `test -f '../../../Source/MediaInfo/Audio/File_Aac_Main.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Audio/File_Aac_Main.cpp
+
+File_Aac_Others.lo: ../../../Source/MediaInfo/Audio/File_Aac_Others.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Aac_Others.lo -MD -MP -MF "$(DEPDIR)/File_Aac_Others.Tpo" -c -o File_Aac_Others.lo `test -f '../../../Source/MediaInfo/Audio/File_Aac_Others.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Audio/File_Aac_Others.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Aac_Others.Tpo" "$(DEPDIR)/File_Aac_Others.Plo"; else rm -f "$(DEPDIR)/File_Aac_Others.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Audio/File_Aac_Others.cpp' object='File_Aac_Others.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Aac_Others.lo `test -f '../../../Source/MediaInfo/Audio/File_Aac_Others.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Audio/File_Aac_Others.cpp
+
 File_Ac3.lo: ../../../Source/MediaInfo/Audio/File_Ac3.cpp
 @am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Ac3.lo -MD -MP -MF "$(DEPDIR)/File_Ac3.Tpo" -c -o File_Ac3.lo `test -f '../../../Source/MediaInfo/Audio/File_Ac3.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Audio/File_Ac3.cpp; \
 @am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Ac3.Tpo" "$(DEPDIR)/File_Ac3.Plo"; else rm -f "$(DEPDIR)/File_Ac3.Tpo"; exit 1; fi
@@ -818,26 +1139,12 @@ File_Ac3.lo: ../../../Source/MediaInfo/Audio/File_Ac3.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Ac3.lo `test -f '../../../Source/MediaInfo/Audio/File_Ac3.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Audio/File_Ac3.cpp
 
-File_Adif.lo: ../../../Source/MediaInfo/Audio/File_Adif.cpp
-@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Adif.lo -MD -MP -MF "$(DEPDIR)/File_Adif.Tpo" -c -o File_Adif.lo `test -f '../../../Source/MediaInfo/Audio/File_Adif.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Audio/File_Adif.cpp; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Adif.Tpo" "$(DEPDIR)/File_Adif.Plo"; else rm -f "$(DEPDIR)/File_Adif.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Audio/File_Adif.cpp' object='File_Adif.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Adif.lo `test -f '../../../Source/MediaInfo/Audio/File_Adif.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Audio/File_Adif.cpp
-
 File_Adpcm.lo: ../../../Source/MediaInfo/Audio/File_Adpcm.cpp
 @am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Adpcm.lo -MD -MP -MF "$(DEPDIR)/File_Adpcm.Tpo" -c -o File_Adpcm.lo `test -f '../../../Source/MediaInfo/Audio/File_Adpcm.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Audio/File_Adpcm.cpp; \
 @am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Adpcm.Tpo" "$(DEPDIR)/File_Adpcm.Plo"; else rm -f "$(DEPDIR)/File_Adpcm.Tpo"; exit 1; fi
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Audio/File_Adpcm.cpp' object='File_Adpcm.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Adpcm.lo `test -f '../../../Source/MediaInfo/Audio/File_Adpcm.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Audio/File_Adpcm.cpp
-
-File_Adts.lo: ../../../Source/MediaInfo/Audio/File_Adts.cpp
-@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Adts.lo -MD -MP -MF "$(DEPDIR)/File_Adts.Tpo" -c -o File_Adts.lo `test -f '../../../Source/MediaInfo/Audio/File_Adts.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Audio/File_Adts.cpp; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Adts.Tpo" "$(DEPDIR)/File_Adts.Plo"; else rm -f "$(DEPDIR)/File_Adts.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Audio/File_Adts.cpp' object='File_Adts.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Adts.lo `test -f '../../../Source/MediaInfo/Audio/File_Adts.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Audio/File_Adts.cpp
 
 File_Aes3.lo: ../../../Source/MediaInfo/Audio/File_Aes3.cpp
 @am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Aes3.lo -MD -MP -MF "$(DEPDIR)/File_Aes3.Tpo" -c -o File_Aes3.lo `test -f '../../../Source/MediaInfo/Audio/File_Aes3.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Audio/File_Aes3.cpp; \
@@ -881,12 +1188,33 @@ File_Au.lo: ../../../Source/MediaInfo/Audio/File_Au.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Au.lo `test -f '../../../Source/MediaInfo/Audio/File_Au.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Audio/File_Au.cpp
 
+File_Celt.lo: ../../../Source/MediaInfo/Audio/File_Celt.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Celt.lo -MD -MP -MF "$(DEPDIR)/File_Celt.Tpo" -c -o File_Celt.lo `test -f '../../../Source/MediaInfo/Audio/File_Celt.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Audio/File_Celt.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Celt.Tpo" "$(DEPDIR)/File_Celt.Plo"; else rm -f "$(DEPDIR)/File_Celt.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Audio/File_Celt.cpp' object='File_Celt.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Celt.lo `test -f '../../../Source/MediaInfo/Audio/File_Celt.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Audio/File_Celt.cpp
+
+File_ChannelGrouping.lo: ../../../Source/MediaInfo/Audio/File_ChannelGrouping.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_ChannelGrouping.lo -MD -MP -MF "$(DEPDIR)/File_ChannelGrouping.Tpo" -c -o File_ChannelGrouping.lo `test -f '../../../Source/MediaInfo/Audio/File_ChannelGrouping.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Audio/File_ChannelGrouping.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_ChannelGrouping.Tpo" "$(DEPDIR)/File_ChannelGrouping.Plo"; else rm -f "$(DEPDIR)/File_ChannelGrouping.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Audio/File_ChannelGrouping.cpp' object='File_ChannelGrouping.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_ChannelGrouping.lo `test -f '../../../Source/MediaInfo/Audio/File_ChannelGrouping.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Audio/File_ChannelGrouping.cpp
+
 File_Dts.lo: ../../../Source/MediaInfo/Audio/File_Dts.cpp
 @am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Dts.lo -MD -MP -MF "$(DEPDIR)/File_Dts.Tpo" -c -o File_Dts.lo `test -f '../../../Source/MediaInfo/Audio/File_Dts.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Audio/File_Dts.cpp; \
 @am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Dts.Tpo" "$(DEPDIR)/File_Dts.Plo"; else rm -f "$(DEPDIR)/File_Dts.Tpo"; exit 1; fi
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Audio/File_Dts.cpp' object='File_Dts.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Dts.lo `test -f '../../../Source/MediaInfo/Audio/File_Dts.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Audio/File_Dts.cpp
+
+File_DolbyE.lo: ../../../Source/MediaInfo/Audio/File_DolbyE.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_DolbyE.lo -MD -MP -MF "$(DEPDIR)/File_DolbyE.Tpo" -c -o File_DolbyE.lo `test -f '../../../Source/MediaInfo/Audio/File_DolbyE.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Audio/File_DolbyE.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_DolbyE.Tpo" "$(DEPDIR)/File_DolbyE.Plo"; else rm -f "$(DEPDIR)/File_DolbyE.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Audio/File_DolbyE.cpp' object='File_DolbyE.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_DolbyE.lo `test -f '../../../Source/MediaInfo/Audio/File_DolbyE.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Audio/File_DolbyE.cpp
 
 File_ExtendedModule.lo: ../../../Source/MediaInfo/Audio/File_ExtendedModule.cpp
 @am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_ExtendedModule.lo -MD -MP -MF "$(DEPDIR)/File_ExtendedModule.Tpo" -c -o File_ExtendedModule.lo `test -f '../../../Source/MediaInfo/Audio/File_ExtendedModule.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Audio/File_ExtendedModule.cpp; \
@@ -916,13 +1244,6 @@ File_La.lo: ../../../Source/MediaInfo/Audio/File_La.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_La.lo `test -f '../../../Source/MediaInfo/Audio/File_La.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Audio/File_La.cpp
 
-File_Latm.lo: ../../../Source/MediaInfo/Audio/File_Latm.cpp
-@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Latm.lo -MD -MP -MF "$(DEPDIR)/File_Latm.Tpo" -c -o File_Latm.lo `test -f '../../../Source/MediaInfo/Audio/File_Latm.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Audio/File_Latm.cpp; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Latm.Tpo" "$(DEPDIR)/File_Latm.Plo"; else rm -f "$(DEPDIR)/File_Latm.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Audio/File_Latm.cpp' object='File_Latm.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Latm.lo `test -f '../../../Source/MediaInfo/Audio/File_Latm.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Audio/File_Latm.cpp
-
 File_Midi.lo: ../../../Source/MediaInfo/Audio/File_Midi.cpp
 @am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Midi.lo -MD -MP -MF "$(DEPDIR)/File_Midi.Tpo" -c -o File_Midi.lo `test -f '../../../Source/MediaInfo/Audio/File_Midi.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Audio/File_Midi.cpp; \
 @am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Midi.Tpo" "$(DEPDIR)/File_Midi.Plo"; else rm -f "$(DEPDIR)/File_Midi.Tpo"; exit 1; fi
@@ -951,13 +1272,6 @@ File_MpcSv8.lo: ../../../Source/MediaInfo/Audio/File_MpcSv8.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_MpcSv8.lo `test -f '../../../Source/MediaInfo/Audio/File_MpcSv8.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Audio/File_MpcSv8.cpp
 
-File_Mpeg4_AudioSpecificConfig.lo: ../../../Source/MediaInfo/Audio/File_Mpeg4_AudioSpecificConfig.cpp
-@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Mpeg4_AudioSpecificConfig.lo -MD -MP -MF "$(DEPDIR)/File_Mpeg4_AudioSpecificConfig.Tpo" -c -o File_Mpeg4_AudioSpecificConfig.lo `test -f '../../../Source/MediaInfo/Audio/File_Mpeg4_AudioSpecificConfig.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Audio/File_Mpeg4_AudioSpecificConfig.cpp; \
-@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Mpeg4_AudioSpecificConfig.Tpo" "$(DEPDIR)/File_Mpeg4_AudioSpecificConfig.Plo"; else rm -f "$(DEPDIR)/File_Mpeg4_AudioSpecificConfig.Tpo"; exit 1; fi
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Audio/File_Mpeg4_AudioSpecificConfig.cpp' object='File_Mpeg4_AudioSpecificConfig.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Mpeg4_AudioSpecificConfig.lo `test -f '../../../Source/MediaInfo/Audio/File_Mpeg4_AudioSpecificConfig.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Audio/File_Mpeg4_AudioSpecificConfig.cpp
-
 File_Mpega.lo: ../../../Source/MediaInfo/Audio/File_Mpega.cpp
 @am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Mpega.lo -MD -MP -MF "$(DEPDIR)/File_Mpega.Tpo" -c -o File_Mpega.lo `test -f '../../../Source/MediaInfo/Audio/File_Mpega.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Audio/File_Mpega.cpp; \
 @am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Mpega.Tpo" "$(DEPDIR)/File_Mpega.Plo"; else rm -f "$(DEPDIR)/File_Mpega.Tpo"; exit 1; fi
@@ -978,6 +1292,13 @@ File_Ps2Audio.lo: ../../../Source/MediaInfo/Audio/File_Ps2Audio.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Audio/File_Ps2Audio.cpp' object='File_Ps2Audio.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Ps2Audio.lo `test -f '../../../Source/MediaInfo/Audio/File_Ps2Audio.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Audio/File_Ps2Audio.cpp
+
+File_Rkau.lo: ../../../Source/MediaInfo/Audio/File_Rkau.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Rkau.lo -MD -MP -MF "$(DEPDIR)/File_Rkau.Tpo" -c -o File_Rkau.lo `test -f '../../../Source/MediaInfo/Audio/File_Rkau.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Audio/File_Rkau.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Rkau.Tpo" "$(DEPDIR)/File_Rkau.Plo"; else rm -f "$(DEPDIR)/File_Rkau.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Audio/File_Rkau.cpp' object='File_Rkau.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Rkau.lo `test -f '../../../Source/MediaInfo/Audio/File_Rkau.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Audio/File_Rkau.cpp
 
 File_ScreamTracker3.lo: ../../../Source/MediaInfo/Audio/File_ScreamTracker3.cpp
 @am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_ScreamTracker3.lo -MD -MP -MF "$(DEPDIR)/File_ScreamTracker3.Tpo" -c -o File_ScreamTracker3.lo `test -f '../../../Source/MediaInfo/Audio/File_ScreamTracker3.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Audio/File_ScreamTracker3.cpp; \
@@ -1063,12 +1384,33 @@ Export_PBCore.lo: ../../../Source/MediaInfo/Export/Export_PBCore.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o Export_PBCore.lo `test -f '../../../Source/MediaInfo/Export/Export_PBCore.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Export/Export_PBCore.cpp
 
+Export_reVTMD.lo: ../../../Source/MediaInfo/Export/Export_reVTMD.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT Export_reVTMD.lo -MD -MP -MF "$(DEPDIR)/Export_reVTMD.Tpo" -c -o Export_reVTMD.lo `test -f '../../../Source/MediaInfo/Export/Export_reVTMD.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Export/Export_reVTMD.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/Export_reVTMD.Tpo" "$(DEPDIR)/Export_reVTMD.Plo"; else rm -f "$(DEPDIR)/Export_reVTMD.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Export/Export_reVTMD.cpp' object='Export_reVTMD.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o Export_reVTMD.lo `test -f '../../../Source/MediaInfo/Export/Export_reVTMD.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Export/Export_reVTMD.cpp
+
 File_Bmp.lo: ../../../Source/MediaInfo/Image/File_Bmp.cpp
 @am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Bmp.lo -MD -MP -MF "$(DEPDIR)/File_Bmp.Tpo" -c -o File_Bmp.lo `test -f '../../../Source/MediaInfo/Image/File_Bmp.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Image/File_Bmp.cpp; \
 @am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Bmp.Tpo" "$(DEPDIR)/File_Bmp.Plo"; else rm -f "$(DEPDIR)/File_Bmp.Tpo"; exit 1; fi
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Image/File_Bmp.cpp' object='File_Bmp.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Bmp.lo `test -f '../../../Source/MediaInfo/Image/File_Bmp.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Image/File_Bmp.cpp
+
+File_Dpx.lo: ../../../Source/MediaInfo/Image/File_Dpx.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Dpx.lo -MD -MP -MF "$(DEPDIR)/File_Dpx.Tpo" -c -o File_Dpx.lo `test -f '../../../Source/MediaInfo/Image/File_Dpx.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Image/File_Dpx.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Dpx.Tpo" "$(DEPDIR)/File_Dpx.Plo"; else rm -f "$(DEPDIR)/File_Dpx.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Image/File_Dpx.cpp' object='File_Dpx.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Dpx.lo `test -f '../../../Source/MediaInfo/Image/File_Dpx.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Image/File_Dpx.cpp
+
+File_Exr.lo: ../../../Source/MediaInfo/Image/File_Exr.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Exr.lo -MD -MP -MF "$(DEPDIR)/File_Exr.Tpo" -c -o File_Exr.lo `test -f '../../../Source/MediaInfo/Image/File_Exr.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Image/File_Exr.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Exr.Tpo" "$(DEPDIR)/File_Exr.Plo"; else rm -f "$(DEPDIR)/File_Exr.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Image/File_Exr.cpp' object='File_Exr.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Exr.lo `test -f '../../../Source/MediaInfo/Image/File_Exr.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Image/File_Exr.cpp
 
 File_Gif.lo: ../../../Source/MediaInfo/Image/File_Gif.cpp
 @am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Gif.lo -MD -MP -MF "$(DEPDIR)/File_Gif.Tpo" -c -o File_Gif.lo `test -f '../../../Source/MediaInfo/Image/File_Gif.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Image/File_Gif.cpp; \
@@ -1112,6 +1454,27 @@ File_Tiff.lo: ../../../Source/MediaInfo/Image/File_Tiff.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Tiff.lo `test -f '../../../Source/MediaInfo/Image/File_Tiff.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Image/File_Tiff.cpp
 
+File_Tga.lo: ../../../Source/MediaInfo/Image/File_Tga.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Tga.lo -MD -MP -MF "$(DEPDIR)/File_Tga.Tpo" -c -o File_Tga.lo `test -f '../../../Source/MediaInfo/Image/File_Tga.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Image/File_Tga.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Tga.Tpo" "$(DEPDIR)/File_Tga.Plo"; else rm -f "$(DEPDIR)/File_Tga.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Image/File_Tga.cpp' object='File_Tga.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Tga.lo `test -f '../../../Source/MediaInfo/Image/File_Tga.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Image/File_Tga.cpp
+
+File__ReferenceFilesHelper.lo: ../../../Source/MediaInfo/Multiple/File__ReferenceFilesHelper.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File__ReferenceFilesHelper.lo -MD -MP -MF "$(DEPDIR)/File__ReferenceFilesHelper.Tpo" -c -o File__ReferenceFilesHelper.lo `test -f '../../../Source/MediaInfo/Multiple/File__ReferenceFilesHelper.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Multiple/File__ReferenceFilesHelper.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File__ReferenceFilesHelper.Tpo" "$(DEPDIR)/File__ReferenceFilesHelper.Plo"; else rm -f "$(DEPDIR)/File__ReferenceFilesHelper.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Multiple/File__ReferenceFilesHelper.cpp' object='File__ReferenceFilesHelper.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File__ReferenceFilesHelper.lo `test -f '../../../Source/MediaInfo/Multiple/File__ReferenceFilesHelper.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Multiple/File__ReferenceFilesHelper.cpp
+
+File_Ancillary.lo: ../../../Source/MediaInfo/Multiple/File_Ancillary.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Ancillary.lo -MD -MP -MF "$(DEPDIR)/File_Ancillary.Tpo" -c -o File_Ancillary.lo `test -f '../../../Source/MediaInfo/Multiple/File_Ancillary.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Multiple/File_Ancillary.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Ancillary.Tpo" "$(DEPDIR)/File_Ancillary.Plo"; else rm -f "$(DEPDIR)/File_Ancillary.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Multiple/File_Ancillary.cpp' object='File_Ancillary.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Ancillary.lo `test -f '../../../Source/MediaInfo/Multiple/File_Ancillary.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Multiple/File_Ancillary.cpp
+
 File_Bdmv.lo: ../../../Source/MediaInfo/Multiple/File_Bdmv.cpp
 @am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Bdmv.lo -MD -MP -MF "$(DEPDIR)/File_Bdmv.Tpo" -c -o File_Bdmv.lo `test -f '../../../Source/MediaInfo/Multiple/File_Bdmv.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Multiple/File_Bdmv.cpp; \
 @am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Bdmv.Tpo" "$(DEPDIR)/File_Bdmv.Plo"; else rm -f "$(DEPDIR)/File_Bdmv.Tpo"; exit 1; fi
@@ -1125,6 +1488,13 @@ File_Cdxa.lo: ../../../Source/MediaInfo/Multiple/File_Cdxa.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Multiple/File_Cdxa.cpp' object='File_Cdxa.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Cdxa.lo `test -f '../../../Source/MediaInfo/Multiple/File_Cdxa.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Multiple/File_Cdxa.cpp
+
+File_Dcp.lo: ../../../Source/MediaInfo/Multiple/File_Dcp.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Dcp.lo -MD -MP -MF "$(DEPDIR)/File_Dcp.Tpo" -c -o File_Dcp.lo `test -f '../../../Source/MediaInfo/Multiple/File_Dcp.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Multiple/File_Dcp.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Dcp.Tpo" "$(DEPDIR)/File_Dcp.Plo"; else rm -f "$(DEPDIR)/File_Dcp.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Multiple/File_Dcp.cpp' object='File_Dcp.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Dcp.lo `test -f '../../../Source/MediaInfo/Multiple/File_Dcp.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Multiple/File_Dcp.cpp
 
 File_Dpg.lo: ../../../Source/MediaInfo/Multiple/File_Dpg.cpp
 @am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Dpg.lo -MD -MP -MF "$(DEPDIR)/File_Dpg.Tpo" -c -o File_Dpg.lo `test -f '../../../Source/MediaInfo/Multiple/File_Dpg.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Multiple/File_Dpg.cpp; \
@@ -1154,6 +1524,13 @@ File_Dvdv.lo: ../../../Source/MediaInfo/Multiple/File_Dvdv.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Dvdv.lo `test -f '../../../Source/MediaInfo/Multiple/File_Dvdv.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Multiple/File_Dvdv.cpp
 
+File_Dxw.lo: ../../../Source/MediaInfo/Multiple/File_Dxw.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Dxw.lo -MD -MP -MF "$(DEPDIR)/File_Dxw.Tpo" -c -o File_Dxw.lo `test -f '../../../Source/MediaInfo/Multiple/File_Dxw.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Multiple/File_Dxw.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Dxw.Tpo" "$(DEPDIR)/File_Dxw.Plo"; else rm -f "$(DEPDIR)/File_Dxw.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Multiple/File_Dxw.cpp' object='File_Dxw.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Dxw.lo `test -f '../../../Source/MediaInfo/Multiple/File_Dxw.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Multiple/File_Dxw.cpp
+
 File_Flv.lo: ../../../Source/MediaInfo/Multiple/File_Flv.cpp
 @am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Flv.lo -MD -MP -MF "$(DEPDIR)/File_Flv.Tpo" -c -o File_Flv.lo `test -f '../../../Source/MediaInfo/Multiple/File_Flv.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Multiple/File_Flv.cpp; \
 @am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Flv.Tpo" "$(DEPDIR)/File_Flv.Plo"; else rm -f "$(DEPDIR)/File_Flv.Tpo"; exit 1; fi
@@ -1167,6 +1544,55 @@ File_Gxf.lo: ../../../Source/MediaInfo/Multiple/File_Gxf.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Multiple/File_Gxf.cpp' object='File_Gxf.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Gxf.lo `test -f '../../../Source/MediaInfo/Multiple/File_Gxf.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Multiple/File_Gxf.cpp
+
+File_Gxf_TimeCode.lo: ../../../Source/MediaInfo/Multiple/File_Gxf_TimeCode.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Gxf_TimeCode.lo -MD -MP -MF "$(DEPDIR)/File_Gxf_TimeCode.Tpo" -c -o File_Gxf_TimeCode.lo `test -f '../../../Source/MediaInfo/Multiple/File_Gxf_TimeCode.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Multiple/File_Gxf_TimeCode.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Gxf_TimeCode.Tpo" "$(DEPDIR)/File_Gxf_TimeCode.Plo"; else rm -f "$(DEPDIR)/File_Gxf_TimeCode.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Multiple/File_Gxf_TimeCode.cpp' object='File_Gxf_TimeCode.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Gxf_TimeCode.lo `test -f '../../../Source/MediaInfo/Multiple/File_Gxf_TimeCode.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Multiple/File_Gxf_TimeCode.cpp
+
+File_Hls.lo: ../../../Source/MediaInfo/Multiple/File_Hls.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Hls.lo -MD -MP -MF "$(DEPDIR)/File_Hls.Tpo" -c -o File_Hls.lo `test -f '../../../Source/MediaInfo/Multiple/File_Hls.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Multiple/File_Hls.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Hls.Tpo" "$(DEPDIR)/File_Hls.Plo"; else rm -f "$(DEPDIR)/File_Hls.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Multiple/File_Hls.cpp' object='File_Hls.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Hls.lo `test -f '../../../Source/MediaInfo/Multiple/File_Hls.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Multiple/File_Hls.cpp
+
+File_Ibi.lo: ../../../Source/MediaInfo/Multiple/File_Ibi.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Ibi.lo -MD -MP -MF "$(DEPDIR)/File_Ibi.Tpo" -c -o File_Ibi.lo `test -f '../../../Source/MediaInfo/Multiple/File_Ibi.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Multiple/File_Ibi.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Ibi.Tpo" "$(DEPDIR)/File_Ibi.Plo"; else rm -f "$(DEPDIR)/File_Ibi.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Multiple/File_Ibi.cpp' object='File_Ibi.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Ibi.lo `test -f '../../../Source/MediaInfo/Multiple/File_Ibi.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Multiple/File_Ibi.cpp
+
+File_Ibi_Creation.lo: ../../../Source/MediaInfo/Multiple/File_Ibi_Creation.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Ibi_Creation.lo -MD -MP -MF "$(DEPDIR)/File_Ibi_Creation.Tpo" -c -o File_Ibi_Creation.lo `test -f '../../../Source/MediaInfo/Multiple/File_Ibi_Creation.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Multiple/File_Ibi_Creation.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Ibi_Creation.Tpo" "$(DEPDIR)/File_Ibi_Creation.Plo"; else rm -f "$(DEPDIR)/File_Ibi_Creation.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Multiple/File_Ibi_Creation.cpp' object='File_Ibi_Creation.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Ibi_Creation.lo `test -f '../../../Source/MediaInfo/Multiple/File_Ibi_Creation.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Multiple/File_Ibi_Creation.cpp
+
+File_Ism.lo: ../../../Source/MediaInfo/Multiple/File_Ism.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Ism.lo -MD -MP -MF "$(DEPDIR)/File_Ism.Tpo" -c -o File_Ism.lo `test -f '../../../Source/MediaInfo/Multiple/File_Ism.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Multiple/File_Ism.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Ism.Tpo" "$(DEPDIR)/File_Ism.Plo"; else rm -f "$(DEPDIR)/File_Ism.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Multiple/File_Ism.cpp' object='File_Ism.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Ism.lo `test -f '../../../Source/MediaInfo/Multiple/File_Ism.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Multiple/File_Ism.cpp
+
+File_Ivf.lo: ../../../Source/MediaInfo/Multiple/File_Ivf.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Ivf.lo -MD -MP -MF "$(DEPDIR)/File_Ivf.Tpo" -c -o File_Ivf.lo `test -f '../../../Source/MediaInfo/Multiple/File_Ivf.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Multiple/File_Ivf.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Ivf.Tpo" "$(DEPDIR)/File_Ivf.Plo"; else rm -f "$(DEPDIR)/File_Ivf.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Multiple/File_Ivf.cpp' object='File_Ivf.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Ivf.lo `test -f '../../../Source/MediaInfo/Multiple/File_Ivf.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Multiple/File_Ivf.cpp
+
+File_Lxf.lo: ../../../Source/MediaInfo/Multiple/File_Lxf.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Lxf.lo -MD -MP -MF "$(DEPDIR)/File_Lxf.Tpo" -c -o File_Lxf.lo `test -f '../../../Source/MediaInfo/Multiple/File_Lxf.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Multiple/File_Lxf.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Lxf.Tpo" "$(DEPDIR)/File_Lxf.Plo"; else rm -f "$(DEPDIR)/File_Lxf.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Multiple/File_Lxf.cpp' object='File_Lxf.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Lxf.lo `test -f '../../../Source/MediaInfo/Multiple/File_Lxf.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Multiple/File_Lxf.cpp
 
 File_Mk.lo: ../../../Source/MediaInfo/Multiple/File_Mk.cpp
 @am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Mk.lo -MD -MP -MF "$(DEPDIR)/File_Mk.Tpo" -c -o File_Mk.lo `test -f '../../../Source/MediaInfo/Multiple/File_Mk.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Multiple/File_Mk.cpp; \
@@ -1266,6 +1692,13 @@ File_Ogg_SubElement.lo: ../../../Source/MediaInfo/Multiple/File_Ogg_SubElement.c
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Ogg_SubElement.lo `test -f '../../../Source/MediaInfo/Multiple/File_Ogg_SubElement.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Multiple/File_Ogg_SubElement.cpp
 
+File_P2_Clip.lo: ../../../Source/MediaInfo/Multiple/File_P2_Clip.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_P2_Clip.lo -MD -MP -MF "$(DEPDIR)/File_P2_Clip.Tpo" -c -o File_P2_Clip.lo `test -f '../../../Source/MediaInfo/Multiple/File_P2_Clip.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Multiple/File_P2_Clip.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_P2_Clip.Tpo" "$(DEPDIR)/File_P2_Clip.Plo"; else rm -f "$(DEPDIR)/File_P2_Clip.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Multiple/File_P2_Clip.cpp' object='File_P2_Clip.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_P2_Clip.lo `test -f '../../../Source/MediaInfo/Multiple/File_P2_Clip.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Multiple/File_P2_Clip.cpp
+
 File_Riff.lo: ../../../Source/MediaInfo/Multiple/File_Riff.cpp
 @am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Riff.lo -MD -MP -MF "$(DEPDIR)/File_Riff.Tpo" -c -o File_Riff.lo `test -f '../../../Source/MediaInfo/Multiple/File_Riff.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Multiple/File_Riff.cpp; \
 @am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Riff.Tpo" "$(DEPDIR)/File_Riff.Plo"; else rm -f "$(DEPDIR)/File_Riff.Tpo"; exit 1; fi
@@ -1286,6 +1719,13 @@ File_Rm.lo: ../../../Source/MediaInfo/Multiple/File_Rm.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Multiple/File_Rm.cpp' object='File_Rm.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Rm.lo `test -f '../../../Source/MediaInfo/Multiple/File_Rm.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Multiple/File_Rm.cpp
+
+File_SequenceInfo.lo: ../../../Source/MediaInfo/Multiple/File_SequenceInfo.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_SequenceInfo.lo -MD -MP -MF "$(DEPDIR)/File_SequenceInfo.Tpo" -c -o File_SequenceInfo.lo `test -f '../../../Source/MediaInfo/Multiple/File_SequenceInfo.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Multiple/File_SequenceInfo.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_SequenceInfo.Tpo" "$(DEPDIR)/File_SequenceInfo.Plo"; else rm -f "$(DEPDIR)/File_SequenceInfo.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Multiple/File_SequenceInfo.cpp' object='File_SequenceInfo.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_SequenceInfo.lo `test -f '../../../Source/MediaInfo/Multiple/File_SequenceInfo.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Multiple/File_SequenceInfo.cpp
 
 File_Skm.lo: ../../../Source/MediaInfo/Multiple/File_Skm.cpp
 @am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Skm.lo -MD -MP -MF "$(DEPDIR)/File_Skm.Tpo" -c -o File_Skm.lo `test -f '../../../Source/MediaInfo/Multiple/File_Skm.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Multiple/File_Skm.cpp; \
@@ -1321,6 +1761,13 @@ File_Wm_Elements.lo: ../../../Source/MediaInfo/Multiple/File_Wm_Elements.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Multiple/File_Wm_Elements.cpp' object='File_Wm_Elements.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Wm_Elements.lo `test -f '../../../Source/MediaInfo/Multiple/File_Wm_Elements.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Multiple/File_Wm_Elements.cpp
+
+File_Xdcam_Clip.lo: ../../../Source/MediaInfo/Multiple/File_Xdcam_Clip.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Xdcam_Clip.lo -MD -MP -MF "$(DEPDIR)/File_Xdcam_Clip.Tpo" -c -o File_Xdcam_Clip.lo `test -f '../../../Source/MediaInfo/Multiple/File_Xdcam_Clip.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Multiple/File_Xdcam_Clip.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Xdcam_Clip.Tpo" "$(DEPDIR)/File_Xdcam_Clip.Plo"; else rm -f "$(DEPDIR)/File_Xdcam_Clip.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Multiple/File_Xdcam_Clip.cpp' object='File_Xdcam_Clip.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Xdcam_Clip.lo `test -f '../../../Source/MediaInfo/Multiple/File_Xdcam_Clip.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Multiple/File_Xdcam_Clip.cpp
 
 Reader_Directory.lo: ../../../Source/MediaInfo/Reader/Reader_Directory.cpp
 @am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT Reader_Directory.lo -MD -MP -MF "$(DEPDIR)/Reader_Directory.Tpo" -c -o Reader_Directory.lo `test -f '../../../Source/MediaInfo/Reader/Reader_Directory.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Reader/Reader_Directory.cpp; \
@@ -1413,6 +1860,20 @@ File_Cmml.lo: ../../../Source/MediaInfo/Text/File_Cmml.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Cmml.lo `test -f '../../../Source/MediaInfo/Text/File_Cmml.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Text/File_Cmml.cpp
 
+File_DvbSubtitle.lo: ../../../Source/MediaInfo/Text/File_DvbSubtitle.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_DvbSubtitle.lo -MD -MP -MF "$(DEPDIR)/File_DvbSubtitle.Tpo" -c -o File_DvbSubtitle.lo `test -f '../../../Source/MediaInfo/Text/File_DvbSubtitle.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Text/File_DvbSubtitle.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_DvbSubtitle.Tpo" "$(DEPDIR)/File_DvbSubtitle.Plo"; else rm -f "$(DEPDIR)/File_DvbSubtitle.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Text/File_DvbSubtitle.cpp' object='File_DvbSubtitle.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_DvbSubtitle.lo `test -f '../../../Source/MediaInfo/Text/File_DvbSubtitle.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Text/File_DvbSubtitle.cpp
+
+File_DtvccTransport.lo: ../../../Source/MediaInfo/Text/File_DtvccTransport.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_DtvccTransport.lo -MD -MP -MF "$(DEPDIR)/File_DtvccTransport.Tpo" -c -o File_DtvccTransport.lo `test -f '../../../Source/MediaInfo/Text/File_DtvccTransport.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Text/File_DtvccTransport.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_DtvccTransport.Tpo" "$(DEPDIR)/File_DtvccTransport.Plo"; else rm -f "$(DEPDIR)/File_DtvccTransport.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Text/File_DtvccTransport.cpp' object='File_DtvccTransport.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_DtvccTransport.lo `test -f '../../../Source/MediaInfo/Text/File_DtvccTransport.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Text/File_DtvccTransport.cpp
+
 File_Kate.lo: ../../../Source/MediaInfo/Text/File_Kate.cpp
 @am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Kate.lo -MD -MP -MF "$(DEPDIR)/File_Kate.Tpo" -c -o File_Kate.lo `test -f '../../../Source/MediaInfo/Text/File_Kate.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Text/File_Kate.cpp; \
 @am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Kate.Tpo" "$(DEPDIR)/File_Kate.Plo"; else rm -f "$(DEPDIR)/File_Kate.Tpo"; exit 1; fi
@@ -1455,6 +1916,27 @@ File_Pgs.lo: ../../../Source/MediaInfo/Text/File_Pgs.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Pgs.lo `test -f '../../../Source/MediaInfo/Text/File_Pgs.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Text/File_Pgs.cpp
 
+File_Scc.lo: ../../../Source/MediaInfo/Text/File_Scc.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Scc.lo -MD -MP -MF "$(DEPDIR)/File_Scc.Tpo" -c -o File_Scc.lo `test -f '../../../Source/MediaInfo/Text/File_Scc.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Text/File_Scc.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Scc.Tpo" "$(DEPDIR)/File_Scc.Plo"; else rm -f "$(DEPDIR)/File_Scc.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Text/File_Scc.cpp' object='File_Scc.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Scc.lo `test -f '../../../Source/MediaInfo/Text/File_Scc.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Text/File_Scc.cpp
+
+File_Scte20.lo: ../../../Source/MediaInfo/Text/File_Scte20.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Scte20.lo -MD -MP -MF "$(DEPDIR)/File_Scte20.Tpo" -c -o File_Scte20.lo `test -f '../../../Source/MediaInfo/Text/File_Scte20.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Text/File_Scte20.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Scte20.Tpo" "$(DEPDIR)/File_Scte20.Plo"; else rm -f "$(DEPDIR)/File_Scte20.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Text/File_Scte20.cpp' object='File_Scte20.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Scte20.lo `test -f '../../../Source/MediaInfo/Text/File_Scte20.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Text/File_Scte20.cpp
+
+File_Teletext.lo: ../../../Source/MediaInfo/Text/File_Teletext.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Teletext.lo -MD -MP -MF "$(DEPDIR)/File_Teletext.Tpo" -c -o File_Teletext.lo `test -f '../../../Source/MediaInfo/Text/File_Teletext.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Text/File_Teletext.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Teletext.Tpo" "$(DEPDIR)/File_Teletext.Plo"; else rm -f "$(DEPDIR)/File_Teletext.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Text/File_Teletext.cpp' object='File_Teletext.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Teletext.lo `test -f '../../../Source/MediaInfo/Text/File_Teletext.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Text/File_Teletext.cpp
+
 File_Avc.lo: ../../../Source/MediaInfo/Video/File_Avc.cpp
 @am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Avc.lo -MD -MP -MF "$(DEPDIR)/File_Avc.Tpo" -c -o File_Avc.lo `test -f '../../../Source/MediaInfo/Video/File_Avc.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Video/File_Avc.cpp; \
 @am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Avc.Tpo" "$(DEPDIR)/File_Avc.Plo"; else rm -f "$(DEPDIR)/File_Avc.Tpo"; exit 1; fi
@@ -1476,6 +1958,13 @@ File_AvsV.lo: ../../../Source/MediaInfo/Video/File_AvsV.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_AvsV.lo `test -f '../../../Source/MediaInfo/Video/File_AvsV.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Video/File_AvsV.cpp
 
+File_AfdBarData.lo: ../../../Source/MediaInfo/Video/File_AfdBarData.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_AfdBarData.lo -MD -MP -MF "$(DEPDIR)/File_AfdBarData.Tpo" -c -o File_AfdBarData.lo `test -f '../../../Source/MediaInfo/Video/File_AfdBarData.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Video/File_AfdBarData.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_AfdBarData.Tpo" "$(DEPDIR)/File_AfdBarData.Plo"; else rm -f "$(DEPDIR)/File_AfdBarData.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Video/File_AfdBarData.cpp' object='File_AfdBarData.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_AfdBarData.lo `test -f '../../../Source/MediaInfo/Video/File_AfdBarData.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Video/File_AfdBarData.cpp
+
 File_Dirac.lo: ../../../Source/MediaInfo/Video/File_Dirac.cpp
 @am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Dirac.lo -MD -MP -MF "$(DEPDIR)/File_Dirac.Tpo" -c -o File_Dirac.lo `test -f '../../../Source/MediaInfo/Video/File_Dirac.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Video/File_Dirac.cpp; \
 @am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Dirac.Tpo" "$(DEPDIR)/File_Dirac.Plo"; else rm -f "$(DEPDIR)/File_Dirac.Tpo"; exit 1; fi
@@ -1489,6 +1978,27 @@ File_Flic.lo: ../../../Source/MediaInfo/Video/File_Flic.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Video/File_Flic.cpp' object='File_Flic.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Flic.lo `test -f '../../../Source/MediaInfo/Video/File_Flic.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Video/File_Flic.cpp
+
+File_Fraps.lo: ../../../Source/MediaInfo/Video/File_Fraps.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Fraps.lo -MD -MP -MF "$(DEPDIR)/File_Fraps.Tpo" -c -o File_Fraps.lo `test -f '../../../Source/MediaInfo/Video/File_Fraps.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Video/File_Fraps.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Fraps.Tpo" "$(DEPDIR)/File_Fraps.Plo"; else rm -f "$(DEPDIR)/File_Fraps.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Video/File_Fraps.cpp' object='File_Fraps.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Fraps.lo `test -f '../../../Source/MediaInfo/Video/File_Fraps.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Video/File_Fraps.cpp
+
+File_Lagarith.lo: ../../../Source/MediaInfo/Video/File_Lagarith.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Lagarith.lo -MD -MP -MF "$(DEPDIR)/File_Lagarith.Tpo" -c -o File_Lagarith.lo `test -f '../../../Source/MediaInfo/Video/File_Lagarith.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Video/File_Lagarith.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Lagarith.Tpo" "$(DEPDIR)/File_Lagarith.Plo"; else rm -f "$(DEPDIR)/File_Lagarith.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Video/File_Lagarith.cpp' object='File_Lagarith.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Lagarith.lo `test -f '../../../Source/MediaInfo/Video/File_Lagarith.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Video/File_Lagarith.cpp
+
+File_H263.lo: ../../../Source/MediaInfo/Video/File_H263.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_H263.lo -MD -MP -MF "$(DEPDIR)/File_H263.Tpo" -c -o File_H263.lo `test -f '../../../Source/MediaInfo/Video/File_H263.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Video/File_H263.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_H263.Tpo" "$(DEPDIR)/File_H263.Plo"; else rm -f "$(DEPDIR)/File_H263.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Video/File_H263.cpp' object='File_H263.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_H263.lo `test -f '../../../Source/MediaInfo/Video/File_H263.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Video/File_H263.cpp
 
 File_Mpeg4v.lo: ../../../Source/MediaInfo/Video/File_Mpeg4v.cpp
 @am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Mpeg4v.lo -MD -MP -MF "$(DEPDIR)/File_Mpeg4v.Tpo" -c -o File_Mpeg4v.lo `test -f '../../../Source/MediaInfo/Video/File_Mpeg4v.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Video/File_Mpeg4v.cpp; \
@@ -1518,12 +2028,54 @@ File_Vc1.lo: ../../../Source/MediaInfo/Video/File_Vc1.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Vc1.lo `test -f '../../../Source/MediaInfo/Video/File_Vc1.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Video/File_Vc1.cpp
 
+File_Vc3.lo: ../../../Source/MediaInfo/Video/File_Vc3.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Vc3.lo -MD -MP -MF "$(DEPDIR)/File_Vc3.Tpo" -c -o File_Vc3.lo `test -f '../../../Source/MediaInfo/Video/File_Vc3.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Video/File_Vc3.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Vc3.Tpo" "$(DEPDIR)/File_Vc3.Plo"; else rm -f "$(DEPDIR)/File_Vc3.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Video/File_Vc3.cpp' object='File_Vc3.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Vc3.lo `test -f '../../../Source/MediaInfo/Video/File_Vc3.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Video/File_Vc3.cpp
+
+File_Vp8.lo: ../../../Source/MediaInfo/Video/File_Vp8.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Vp8.lo -MD -MP -MF "$(DEPDIR)/File_Vp8.Tpo" -c -o File_Vp8.lo `test -f '../../../Source/MediaInfo/Video/File_Vp8.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Video/File_Vp8.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Vp8.Tpo" "$(DEPDIR)/File_Vp8.Plo"; else rm -f "$(DEPDIR)/File_Vp8.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Video/File_Vp8.cpp' object='File_Vp8.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Vp8.lo `test -f '../../../Source/MediaInfo/Video/File_Vp8.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Video/File_Vp8.cpp
+
+File_Y4m.lo: ../../../Source/MediaInfo/Video/File_Y4m.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT File_Y4m.lo -MD -MP -MF "$(DEPDIR)/File_Y4m.Tpo" -c -o File_Y4m.lo `test -f '../../../Source/MediaInfo/Video/File_Y4m.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Video/File_Y4m.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/File_Y4m.Tpo" "$(DEPDIR)/File_Y4m.Plo"; else rm -f "$(DEPDIR)/File_Y4m.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfo/Video/File_Y4m.cpp' object='File_Y4m.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o File_Y4m.lo `test -f '../../../Source/MediaInfo/Video/File_Y4m.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfo/Video/File_Y4m.cpp
+
 MediaInfoDLL.lo: ../../../Source/MediaInfoDLL/MediaInfoDLL.cpp
 @am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT MediaInfoDLL.lo -MD -MP -MF "$(DEPDIR)/MediaInfoDLL.Tpo" -c -o MediaInfoDLL.lo `test -f '../../../Source/MediaInfoDLL/MediaInfoDLL.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfoDLL/MediaInfoDLL.cpp; \
 @am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/MediaInfoDLL.Tpo" "$(DEPDIR)/MediaInfoDLL.Plo"; else rm -f "$(DEPDIR)/MediaInfoDLL.Tpo"; exit 1; fi
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/MediaInfoDLL/MediaInfoDLL.cpp' object='MediaInfoDLL.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o MediaInfoDLL.lo `test -f '../../../Source/MediaInfoDLL/MediaInfoDLL.cpp' || echo '$(srcdir)/'`../../../Source/MediaInfoDLL/MediaInfoDLL.cpp
+
+tinyxml.lo: ../../../Source/ThirdParty/tinyxml/tinyxml.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT tinyxml.lo -MD -MP -MF "$(DEPDIR)/tinyxml.Tpo" -c -o tinyxml.lo `test -f '../../../Source/ThirdParty/tinyxml/tinyxml.cpp' || echo '$(srcdir)/'`../../../Source/ThirdParty/tinyxml/tinyxml.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/tinyxml.Tpo" "$(DEPDIR)/tinyxml.Plo"; else rm -f "$(DEPDIR)/tinyxml.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/ThirdParty/tinyxml/tinyxml.cpp' object='tinyxml.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o tinyxml.lo `test -f '../../../Source/ThirdParty/tinyxml/tinyxml.cpp' || echo '$(srcdir)/'`../../../Source/ThirdParty/tinyxml/tinyxml.cpp
+
+tinyxmlerror.lo: ../../../Source/ThirdParty/tinyxml/tinyxmlerror.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT tinyxmlerror.lo -MD -MP -MF "$(DEPDIR)/tinyxmlerror.Tpo" -c -o tinyxmlerror.lo `test -f '../../../Source/ThirdParty/tinyxml/tinyxmlerror.cpp' || echo '$(srcdir)/'`../../../Source/ThirdParty/tinyxml/tinyxmlerror.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/tinyxmlerror.Tpo" "$(DEPDIR)/tinyxmlerror.Plo"; else rm -f "$(DEPDIR)/tinyxmlerror.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/ThirdParty/tinyxml/tinyxmlerror.cpp' object='tinyxmlerror.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o tinyxmlerror.lo `test -f '../../../Source/ThirdParty/tinyxml/tinyxmlerror.cpp' || echo '$(srcdir)/'`../../../Source/ThirdParty/tinyxml/tinyxmlerror.cpp
+
+tinyxmlparser.lo: ../../../Source/ThirdParty/tinyxml/tinyxmlparser.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT tinyxmlparser.lo -MD -MP -MF "$(DEPDIR)/tinyxmlparser.Tpo" -c -o tinyxmlparser.lo `test -f '../../../Source/ThirdParty/tinyxml/tinyxmlparser.cpp' || echo '$(srcdir)/'`../../../Source/ThirdParty/tinyxml/tinyxmlparser.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/tinyxmlparser.Tpo" "$(DEPDIR)/tinyxmlparser.Plo"; else rm -f "$(DEPDIR)/tinyxmlparser.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='../../../Source/ThirdParty/tinyxml/tinyxmlparser.cpp' object='tinyxmlparser.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o tinyxmlparser.lo `test -f '../../../Source/ThirdParty/tinyxml/tinyxmlparser.cpp' || echo '$(srcdir)/'`../../../Source/ThirdParty/tinyxml/tinyxmlparser.cpp
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -1613,7 +2165,7 @@ distdir: $(DISTFILES)
 	    || exit 1; \
 	  fi; \
 	done
-	-find $(distdir) -type d ! -perm -777 -exec chmod a+rwx {} \; -o \
+	-find $(distdir) -type d ! -perm -755 -exec chmod a+rwx,go+rx {} \; -o \
 	  ! -type d ! -perm -444 -links 1 -exec chmod a+r {} \; -o \
 	  ! -type d ! -perm -400 -exec chmod a+r {} \; -o \
 	  ! -type d ! -perm -444 -exec $(SHELL) $(install_sh) -c -m a+r {} {} \; \

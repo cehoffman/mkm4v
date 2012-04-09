@@ -1,5 +1,5 @@
 // File_Other - Use magic number to detect only the format
-// Copyright (C) 2002-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2002-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -18,11 +18,15 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //---------------------------------------------------------------------------
-// Compilation conditions
-#include "MediaInfo/Setup.h"
+// Pre-compilation
+#include "MediaInfo/PreComp.h"
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+#include "MediaInfo/Setup.h"
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
@@ -121,8 +125,8 @@ void File_Other::Read_Buffer_Continue()
         Finish("SRT");
         return;
     }
-    else if (CC1(Buffer+0)==CC1("[") && CC1(Buffer+2)==CC1("S") && CC1(Buffer+22)==CC1("o") && CC1(Buffer+24)==CC1("]") //Unicode Text is : "[Script Info]
-          || CC1(Buffer+2)==CC1("[") && CC1(Buffer+4)==CC1("S") && CC1(Buffer+24)==CC1("o") && CC1(Buffer+26)==CC1("]"))
+    else if ((CC1(Buffer+0)==CC1("[") && CC1(Buffer+2)==CC1("S") && CC1(Buffer+22)==CC1("o") && CC1(Buffer+24)==CC1("]")) //Unicode Text is : "[Script Info]
+          || (CC1(Buffer+2)==CC1("[") && CC1(Buffer+4)==CC1("S") && CC1(Buffer+24)==CC1("o") && CC1(Buffer+26)==CC1("]")))
     {
         Accept("SSA");
 
@@ -133,6 +137,16 @@ void File_Other::Read_Buffer_Continue()
         return;
     }
     else if (CC4(Buffer)==CC4("RIFF") && CC4(Buffer+8)==CC4("AMV ")) {Format=_T("AMV");}
+    else if (CC4(Buffer)==CC4("RIFF") && CC4(Buffer+8)==CC4("WEBP"))
+    {
+        Accept("WEBP");
+
+        Stream_Prepare(Stream_Image);
+        Fill(Stream_Image, 0, Image_Format, "WebP");
+
+        Finish("WEBP");
+        return;
+    }
     else if (CC4(Buffer)==0x414D5697) {Format=_T("MTV");}
     else if (CC6(Buffer)==CC6("Z\0W\0F\0"))
     {
@@ -154,16 +168,6 @@ void File_Other::Read_Buffer_Continue()
         Fill(Stream_Audio, 0, Audio_Format, "Shorten");
 
         Finish("Shorten");
-        return;
-    }
-    else if (CC4(Buffer)==0x7442614B) //"tBaK"
-    {
-        Accept("TAK");
-
-        Stream_Prepare(Stream_Audio);
-        Fill(Stream_Audio, 0, Audio_Format, "TAK");
-
-        Finish("TAK");
         return;
     }
     else if (CC4(Buffer)==CC4("")) {Format=_T("");}

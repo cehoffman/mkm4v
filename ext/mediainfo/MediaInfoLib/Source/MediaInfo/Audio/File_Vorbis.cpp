@@ -1,5 +1,5 @@
 // File_Vorbis - Info for Vorbis files
-// Copyright (C) 2007-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2007-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -22,11 +22,15 @@
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 //---------------------------------------------------------------------------
-// Compilation conditions
-#include "MediaInfo/Setup.h"
+// Pre-compilation
+#include "MediaInfo/PreComp.h"
 #ifdef __BORLANDC__
     #pragma hdrstop
 #endif
+//---------------------------------------------------------------------------
+
+//---------------------------------------------------------------------------
+#include "MediaInfo/Setup.h"
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
@@ -43,15 +47,15 @@ namespace MediaInfoLib
 {
 
 //---------------------------------------------------------------------------
-int32u ilog(int32u Value)
+int8u ilog(int32u Value)
 {
-    int32u ToReturn=0;
+    int8u ToReturn=0;
     while(Value)
     {
         ToReturn++;
         Value>>=1;
     }
-    return(ToReturn);
+    return ToReturn;
 }
 
 //***************************************************************************
@@ -117,9 +121,9 @@ void File_Vorbis::Identification()
             Fill(Stream_Audio, StreamPos_Last, Audio_BitRate, BitRate_Nominal);
         if (BitRate_Minimum!=0 && BitRate_Minimum<0x80000000) //This is a signed value, and negative values are not OK
             Fill(Stream_Audio, StreamPos_Last, Audio_BitRate_Minimum, BitRate_Minimum);
-        if (BitRate_Maximum==0 && BitRate_Nominal!=0 && BitRate_Minimum==0)
+        if (BitRate_Nominal && BitRate_Maximum==BitRate_Nominal && BitRate_Nominal==BitRate_Minimum)
             Fill(Stream_Audio, StreamPos_Last, Audio_BitRate_Mode, "CBR");
-        else if (BitRate_Maximum>BitRate_Nominal*1.1 && BitRate_Minimum<BitRate_Nominal*0.9)
+        else
             Fill(Stream_Audio, StreamPos_Last, Audio_BitRate_Mode, "VBR");
         Fill(Stream_Audio, StreamPos_Last, Audio_Channel_s_, Channels);
         Fill(Stream_Audio, StreamPos_Last, Audio_SamplingRate, SamplingRate);
@@ -140,60 +144,60 @@ void File_Vorbis::Setup()
     vorbis_codebook_count+=1;
     for (int Pos=0; Pos<vorbis_codebook_count; Pos++)
     {
-        Element_Begin("codebook");
-        Get_S3 (24, codebook,                                   "codebook");
+        Element_Begin1("codebook");
+        Get_T3 (24, codebook,                                   "codebook");
         if (codebook!=0x564342)
             return;
-        Get_BS (16, codebook_dimensions,                        "codebook_dimensions");
-        Get_BS (24, codebook_entries,                           "codebook_entries");
-        Get_BS (1, ordered,                                     "ordered");
+        Get_BT (16, codebook_dimensions,                        "codebook_dimensions");
+        Get_BT (24, codebook_entries,                           "codebook_entries");
+        Get_BT (1, ordered,                                     "ordered");
         if (!ordered)
         {
             int32u sparse;
-            Get_BS (1, sparse,                                  "sparse");
+            Get_BT (1, sparse,                                  "sparse");
             for (int32u Pos2=0; Pos2<codebook_entries; Pos2++)
             {
                 if (sparse)
                 {
                     int32u flag;
-                    Get_BS (1, flag,                            "flag");
+                    Get_BT (1, flag,                            "flag");
                     if (flag)
                     {
-                        Info_BS(5, length,                      "length");
+                        Info_BT(5, length,                      "length");
                     }
                 }
                 else
                 {
-                    Info_BS(5, length,                          "length");
+                    Info_BT(5, length,                          "length");
                 }
             }
         }
         else
         {
-            Skip_BS(5,                                          "length");
+            Skip_BT(5,                                          "length");
             int32u num;
-            for(int32u i=0; i<codebook_entries; )
+            for(int8u i=0; i<codebook_entries; )
             {
-                Get_BS (ilog(codebook_entries-i), num,          "num");
+                Get_BT (ilog(codebook_entries-i), num,          "num");
                 for(int32u j=0; j<num && i<codebook_entries; j++, i++);
             }
         }
-        Get_BS (4, codebook_lookup_type,                        "codebook_lookup_type");
+        Get_BT (4, codebook_lookup_type,                        "codebook_lookup_type");
         if (codebook_lookup_type>2)
             return; //Not decodable
         if (codebook_lookup_type>0)
         {
-            int32u codebook_value_bits;
-            Info_BS(32, codebook_minimum_value,                 "codebook_minimum_value");
-            Info_BS(32, codebook_delta_value,                   "codebook_delta_value");
-            Get_BS ( 4, codebook_value_bits,                    "codebook_value_bits");
+            int8u codebook_value_bits;
+            Info_BT(32, codebook_minimum_value,                 "codebook_minimum_value");
+            Info_BT(32, codebook_delta_value,                   "codebook_delta_value");
+            Get_T1 ( 4, codebook_value_bits,                    "codebook_value_bits");
             codebook_value_bits++;
-            Info_BS( 1, codebook_sequence_p,                    "codebook_sequence_p");
+            Info_BT( 1, codebook_sequence_p,                    "codebook_sequence_p");
             int32s vals;
             if (codebook_lookup_type==1)
             {
                 vals=(int32u)floor(pow((float)codebook_entries,1.f/codebook_dimensions));
-                while(1)
+                for (;;)
                 {
                     int32u acc=1, acc1=1;
                     for(int32u i=0; i<codebook_dimensions; i++)
@@ -213,23 +217,24 @@ void File_Vorbis::Setup()
                 vals=codebook_entries*codebook_dimensions;
             int32u codebook_multiplicands;
             for(int i=0; i<vals; i++)
-                Get_BS (codebook_value_bits, codebook_multiplicands, "codebook_multiplicands");
+                Get_BT (codebook_value_bits, codebook_multiplicands, "codebook_multiplicands");
         }
-        Element_End();
+        Element_End0();
     }
 
     //Time domain transforms
     int32u vorbis_time_count;
-    Get_BS (6, vorbis_time_count,                               "vorbis_time_count");
+    Get_BT (6, vorbis_time_count,                               "vorbis_time_count");
     for (int32u Pos=0; Pos<vorbis_time_count+1; Pos++)
-        Skip_BS(16,                                             "zero");
+        Skip_BT(16,                                             "zero");
 
     //Floors
     int32u vorbis_floor_count;
-    Get_BS (6, vorbis_floor_count,                              "vorbis_floor_count");
+    Get_BT (6, vorbis_floor_count,                              "vorbis_floor_count");
     for (int32u Pos=0; Pos<vorbis_floor_count; Pos++)
     {
-        Info_BS(16, vorbis_floor_types,                         "vorbis_floor_types");
+        int16u vorbis_floor_types;
+        Get_T2(16, vorbis_floor_types,                          "vorbis_floor_types");
 
         FILLING_BEGIN();
             Fill(Stream_Audio, 0, Audio_Format_Settings_Floor, vorbis_floor_types);

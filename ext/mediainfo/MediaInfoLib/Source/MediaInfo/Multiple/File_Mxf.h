@@ -1,5 +1,5 @@
 // File_Mxf - Info for MXF files
-// Copyright (C) 2006-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2006-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This library is free software: you can redistribute it and/or modify it
 // under the terms of the GNU Lesser General Public License as published by
@@ -28,11 +28,18 @@
 
 //---------------------------------------------------------------------------
 #include "MediaInfo/File__Analyze.h"
+#if defined(MEDIAINFO_ANCILLARY_YES)
+    #include <MediaInfo/Multiple/File_Ancillary.h>
+#endif //defined(MEDIAINFO_ANCILLARY_YES)
+#include "MediaInfo/MediaInfo_Internal.h"
 #include <vector>
+#include <set>
 //---------------------------------------------------------------------------
 
 namespace MediaInfoLib
 {
+
+class File__ReferenceFilesHelper;
 
 //***************************************************************************
 // Class File_Mxf
@@ -43,17 +50,49 @@ class File_Mxf : public File__Analyze
 public :
     //Constructor/Destructor
     File_Mxf();
+    ~File_Mxf();
+
+    //int256u
+    class int256u
+    {
+        public:
+            // Binary correct representation of signed 256bit integer
+            int128u lo;
+            int128u hi;
+
+            int256u()
+            {
+                lo.lo=0;
+                lo.hi=0;
+                hi.lo=0;
+                hi.hi=0;
+            }
+    };
+
 
 protected :
     //Streams management
+    void Streams_Fill ();
     void Streams_Finish ();
-    void Streams_Finish_Descriptor (int128u DescriptorUID, int64u &File_Size_Total);
-    void Streams_Finish_Locator (int128u LocatorUID, int64u &File_Size_Total);
-    void Streams_Finish_Track (int128u TrackUID, std::vector<size_t> &Base_Positions);
-    void Streams_Finish_Component (int128u ComponentUID, float32 EditRate);
+    void Streams_Finish_Preface (int128u PrefaceUID);
+    void Streams_Finish_ContentStorage (int128u ContentStorageUID);
+    void Streams_Finish_Package (int128u PackageUID);
+    void Streams_Finish_Track (int128u TrackUID);
+    void Streams_Finish_Essence (int32u EssenceUID, int128u TrackUID);
+    void Streams_Finish_Descriptor (int128u DescriptorUID, int128u PackageUID);
+    void Streams_Finish_Locator (int128u LocatorUID);
+    void Streams_Finish_Component (int128u ComponentUID, float64 EditRate);
+    void Streams_Finish_Identification (int128u IdentificationUID);
+    void Streams_Finish_CommercialNames ();
 
     //Buffer - Global
+    void Read_Buffer_Init ();
     void Read_Buffer_Continue ();
+    void Read_Buffer_AfterParsing ();
+    void Read_Buffer_Unsynched();
+    #if MEDIAINFO_SEEK
+    size_t Read_Buffer_Seek (size_t Method, int64u Value, int64u ID);
+    #endif //MEDIAINFO_SEEK
 
     //Buffer - File header
     bool FileHeader_Begin();
@@ -63,53 +102,76 @@ protected :
     bool Synched_Test();
 
     //Buffer - Per element
+    bool Header_Begin();
     void Header_Parse();
     void Data_Parse();
 
     //Elements
-    void AES3PCMDescriptor();
-    void CDCIEssenceDescriptor();
-    void ClosedHeader();
-    void ClosedCompleteHeader();
-    void CompleteBody();
-    void CompleteFooter();
-    void CompleteHeader();
-    void ContentStorage();
-    void DMSegment();
-    void EssenceContainerData();
-    void EventTrack();
-    void FileDescriptor();
-    void Identification();
-    void IndexTableSegment();
-    void InterchangeObject();
-    void JPEG2000PictureSubDescriptor();
-    void GenerationInterchangeObject();
-    void GenericDescriptor();
-    void GenericPackage();
-    void GenericPictureEssenceDescriptor();
-    void GenericSoundEssenceDescriptor();
-    void GenericTrack();
-    void MaterialPackage();
-    void MPEG2VideoDescriptor();
-    void MultipleDescriptor();
-    void NetworkLocator();
-    void PartitionMetadata();
-    void OpenCompleteBodyPartition();
-    void OpenHeader();
-    void Padding();
-    void Preface();
-    void Primer();
-    void RGBAEssenceDescriptor();
-    void RandomIndexMetadata();
+    void Filler();
+    void Filler01() {Filler();}
+    void Filler02() {Filler();}
+    void TerminatingFiller();
+    void XmlDocumentText();
     void Sequence();
     void SourceClip();
-    void SourcePackage();
-    void StaticTrack();
-    void StructuralComponent();
-    void TextLocator();
     void TimecodeComponent();
+    void ContentStorage();
+    void EssenceContainerData();
+    void CDCIEssenceDescriptor();
+    void RGBAEssenceDescriptor();
+    void Preface();
+    void Identification();
+    void NetworkLocator();
+    void TextLocator();
+    void MaterialPackage();
+    void SourcePackage();
+    void EventTrack();
+    void StaticTrack();
     void Track();
+    void DMSegment();
+    void GenericSoundEssenceDescriptor();
+    void MultipleDescriptor();
+    void AES3PCMDescriptor();
     void WaveAudioDescriptor();
+    void MPEG2VideoDescriptor();
+    void JPEG2000PictureSubDescriptor();
+    void Unknown1();
+    void AncPacketsDescriptor();
+    void OpenIncompleteHeaderPartition();
+    void ClosedIncompleteHeaderPartition();
+    void OpenCompleteHeaderPartition();
+    void ClosedCompleteHeaderPartition();
+    void OpenIncompleteBodyPartition();
+    void ClosedIncompleteBodyPartition();
+    void OpenCompleteBodyPartition();
+    void ClosedCompleteBodyPartition();
+    void OpenIncompleteFooterPartition();
+    void ClosedIncompleteFooterPartition();
+    void OpenCompleteFooterPartition();
+    void ClosedCompleteFooterPartition();
+    void Primer();
+    void IndexTableSegment();
+    void RandomIndexMetadata();
+    void SDTI_SystemMetadataPack();
+    void SDTI_PackageMetadataSet();
+    void SDTI_PictureMetadataSet();
+    void SDTI_SoundMetadataSet();
+    void SDTI_DataMetadataSet();
+    void SDTI_ControlMetadataSet();
+    void SystemScheme1();
+    void Omneon_010201010100();
+    void Omneon_010201020100();
+
+    //Common
+    void GenerationInterchangeObject();
+    void InterchangeObject();
+    void GenericPictureEssenceDescriptor();
+    void PartitionMetadata();
+    void GenericTrack();
+    void GenericPackage();
+    void FileDescriptor();
+    void StructuralComponent();
+    void GenericDescriptor();
 
     //Complex types
     void AES3PCMDescriptor_AuxBitsMode();                       //3D08
@@ -131,6 +193,7 @@ protected :
     void CDCIEssenceDescriptor_ReversedByteOrder();             //330B
     void ContentStorage_Packages();                             //1901
     void ContentStorage_EssenceContainerData();                 //1902
+    void DMSegment_DMFramework();                               //6101
     void EssenceContainerData_LinkedPackageUID();               //2701
     void EssenceContainerData_IndexSID();                       //3F06
     void EssenceContainerData_BodySID();                        //3F07
@@ -198,10 +261,13 @@ protected :
     void IndexTableSegment_IndexSID();                          //3F06
     void IndexTableSegment_BodySID();                           //3F07
     void IndexTableSegment_SliceCount();                        //3F08
+    void IndexTableSegment_DeltaEntryArray();                   //3F09
+    void IndexTableSegment_IndexEntryArray();                   //3F0A
     void IndexTableSegment_IndexEditRate();                     //3F0B
     void IndexTableSegment_IndexStartPosition();                //3F0C
     void IndexTableSegment_IndexDuration();                     //3F0D
     void IndexTableSegment_PosTableCount();                     //3F0E
+    void IndexTableSegment_8002();                              //8002
     void JPEG2000PictureSubDescriptor_Rsiz();                   //8001
     void JPEG2000PictureSubDescriptor_Xsiz();                   //8002
     void JPEG2000PictureSubDescriptor_Ysiz();                   //8003
@@ -249,6 +315,7 @@ protected :
     void SourcePackage_Descriptor();                            //4701
     void StructuralComponent_DataDefinition();                  //0201
     void StructuralComponent_Duration();                        //0202
+    void SystemScheme1_TimeCodeArray();                         //0102
     void TextLocator_LocatorName();                             //4101
     void TimecodeComponent_StartTimecode();                     //1501
     void TimecodeComponent_RoundedTimecodeBase();               //1502
@@ -268,55 +335,87 @@ protected :
     void WaveAudioDescriptor_PeakEnvelopeTimestamp();           //3D30
     void WaveAudioDescriptor_PeakEnvelopeData();                //3D31
     void WaveAudioDescriptor_ChannelAssignment();               //3D31
+    void Omneon_010201010100_8001();                            //8001
+    void Omneon_010201010100_8003();                            //8003
+    void Omneon_010201020100_8002();                            //8002
+    void Omneon_010201020100_8003();                            //8003
+    void Omneon_010201020100_8004();                            //8004
+    void Omneon_010201020100_8005();                            //8005
+    void Omneon_010201020100_8006();                            //8006
 
     //Basic types
-    void Get_Rational(float32 &Value);
+    void Get_Rational(float64 &Value);
     void Skip_Rational();
     void Info_Rational();
     void Get_Timestamp (Ztring &Value);
     void Skip_Timestamp();
     void Info_Timestamp();
+    void Get_UMID       (int256u &Value, const char* Name);
     void Skip_UMID      ();
 
     void Get_UL (int128u &Value, const char* Name, const char* (*Param) (int128u));
     void Skip_UL(const char* Name);
+    void Get_BER(int64u &Value, const char* Name);
+    #if MEDIAINFO_TRACE
+    void Info_UL_01xx01_Items ();
+    void Info_UL_02xx01_Groups ();
+    void Info_UL_040101_Values ();
     #define Info_UL(_INFO, _NAME, _PARAM) int128u _INFO; Get_UL(_INFO, _NAME, _PARAM)
+    #else //MEDIAINFO_TRACE
+    void Info_UL_01xx01_Items () {Element_Offset+=8;};
+    void Info_UL_02xx01_Groups () {Element_Offset+=8;};
+    void Info_UL_040101_Values () {Element_Offset+=8;};
+    #define Info_UL(_INFO, _NAME, _PARAM) int128u _INFO;
+    #endif //MEDIAINFO_TRACE
 
+    struct randomindexmetadata
+    {
+        int64u ByteOffset;
+        int32u BodySID;
+    };
+    std::vector<randomindexmetadata> RandomIndexMetadatas;
+    bool                             RandomIndexMetadatas_AlreadyParsed;
+    std::set<int64u>                 PartitionPack_AlreadyParsed;
     size_t Streams_Count;
     int128u Code;
+    int128u OperationalPattern;
     int128u InstanceUID;
-    int128u Preface_PrimaryPackage_Data;
-    int128u Preface_ContentStorage_Data;
-    int64u Buffer_DataSizeToParse;
+    int64u Buffer_Begin;
+    int64u Buffer_End;
+    int64u Buffer_Header_Size;
     int16u Code2;
     int16u Length2;
+    int64u File_Size_Total; //Used only in Finish()
+    int64u IsParsingMiddle_MaxOffset;
+    bool   Track_Number_IsAvailable;
+    bool   IsParsingEnd;
+    bool   IsCheckingRandomAccessTable;
+    bool   IsCheckingFooterPartitionAddress;
+    bool   FooterPartitionAddress_Jumped;
+    bool   PartitionPack_Parsed;
+    size_t IdIsAlwaysSame_Offset;
 
     //Primer
     std::map<int16u, int128u> Primer_Values;
 
-    //ContentStorage
-    struct contentstorage
+    //Preface
+    struct preface
     {
-        std::vector<int128u> Packages;
-    };
-    typedef std::map<int128u, contentstorage> contentstorages; //Key is InstanceUID of ContentStorage
-    contentstorages ContentStorages;
+        int128u PrimaryPackage;
+        std::vector<int128u> Identifications;
+        int128u ContentStorage;
 
-    //Package
-    struct package
-    {
-        int128u Descriptor;
-        std::vector<int128u> Tracks;
-        bool IsSourcePackage;
-
-        package()
+        preface()
         {
-            Descriptor=0;
-            IsSourcePackage=false;
+            PrimaryPackage.hi=(int64u)-1;
+            PrimaryPackage.lo=(int64u)-1;
+            ContentStorage.hi=(int64u)-1;
+            ContentStorage.lo=(int64u)-1;
         }
     };
-    typedef std::map<int128u, package> packages; //Key is InstanceUID of package
-    packages Packages;
+    typedef std::map<int128u, preface> prefaces; //Key is InstanceUID of preface
+    prefaces Prefaces;
+    int128u  Preface_Current;
 
     //Identification
     struct identification
@@ -330,21 +429,39 @@ protected :
     typedef std::map<int128u, identification> identifications; //Key is InstanceUID of identification
     identifications Identifications;
 
-    //Locator
-    struct locator
+    //ContentStorage
+    struct contentstorage
     {
-        Ztring EssenceLocator;
+        std::vector<int128u> Packages;
     };
-    typedef std::map<int128u, locator> locators; //Key is InstanceUID of the locator
-    locators Locators;
+    typedef std::map<int128u, contentstorage> contentstorages; //Key is InstanceUID of ContentStorage
+    contentstorages ContentStorages;
+
+    //Package
+    struct package
+    {
+        int256u PackageUID;
+        int128u Descriptor;
+        std::vector<int128u> Tracks;
+        bool IsSourcePackage;
+
+        package()
+        {
+            Descriptor=0;
+            IsSourcePackage=false;
+        }
+    };
+    typedef std::map<int128u, package> packages; //Key is InstanceUID of package
+    packages Packages;
 
     //Track
     struct track
     {
         int128u Sequence;
         int32u TrackID;
+        Ztring TrackName;
         int32u TrackNumber;
-        float32 EditRate;
+        float64 EditRate;
         bool   Stream_Finish_Done;
 
         track()
@@ -352,39 +469,46 @@ protected :
             Sequence=0;
             TrackID=(int32u)-1;
             TrackNumber=(int32u)-1;
-            EditRate=0.000;
+            EditRate=(float64)0;
             Stream_Finish_Done=false;
         }
     };
     typedef std::map<int128u, track> tracks; //Key is InstanceUID of the track
     tracks Tracks;
 
-    //Component (Sequence, TimeCode, Source Clip)
-    struct component
-    {
-        int64u Duration;
-
-        component()
-        {
-            Duration=0;
-        }
-    };
-    typedef std::map<int128u, component> components; //Key is InstanceUID of the component
-    components Components;
-
     //Essence
     struct essence
     {
         stream_t StreamKind;
         size_t   StreamPos;
+        size_t   StreamPos_Initial;
         File__Analyze* Parser;
         std::map<std::string, Ztring> Infos;
+        int64u Stream_Size;
+        int32u TrackID;
+        bool   TrackID_WasLookedFor;
+        bool   Stream_Finish_Done;
+        bool   Track_Number_IsMappedToTrack; //if !Track_Number_IsAvailable, is true when it was euristicly mapped
+        bool   IsFilled;
+        bool   IsChannelGrouping;
+        int64u      Frame_Count_NotParsedIncluded;
+        frame_info  FrameInfo;
 
         essence()
         {
             StreamKind=Stream_Max;
             StreamPos=(size_t)-1;
+            StreamPos_Initial=(size_t)-1;
             Parser=NULL;
+            Stream_Size=(int64u)-1;
+            TrackID=(int32u)-1;
+            TrackID_WasLookedFor=false;
+            Stream_Finish_Done=false;
+            Track_Number_IsMappedToTrack=false;
+            IsFilled=false;
+            IsChannelGrouping=false;
+            Frame_Count_NotParsedIncluded=(int64u)-1;
+            FrameInfo.DTS=(int64u)-1;
         }
 
         ~essence()
@@ -392,7 +516,7 @@ protected :
             delete Parser; //Parser=NULL;
         }
     };
-    typedef std::map<int32u, essence> essences;
+    typedef std::map<int32u, essence> essences; //Key is TrackNumber
     essences Essences;
 
     //Descriptor
@@ -402,34 +526,273 @@ protected :
         std::vector<int128u> Locators;
 
         stream_t StreamKind;
-        float32 SampleRate;
+        size_t   StreamPos;
+        float64 SampleRate;
+        float64 DisplayAspectRatio;
+        int128u InstanceUID;
+        int128u EssenceContainer;
+        int128u EssenceCompression;
         int32u LinkedTrackID;
+        int32u Width;
+        int32u Width_Display;
+        int32u Width_Display_Offset;
+        int32u Height;
+        int32u Height_Display;
+        int32u Height_Display_Offset;
+        int32u SubSampling_Horizontal;
+        int32u SubSampling_Vertical;
+        int32u ChannelCount;
         std::map<std::string, Ztring> Infos;
+        int16u BlockAlign;
+        int32u QuantizationBits;
+        int64u Duration;
+        int8u  ActiveFormat;
+        enum type
+        {
+            Type_Unknown,
+            Type_CDCI,
+            Type_RGBA,
+            Type_MPEG2Video,
+            Type_WaveAudio,
+            Type_AES3PCM,
+            Type_JPEG2000Picture,
+            Type_AncPackets,
+        };
+        type Type;
+        bool HasBFrames;
+        int32u ByteRate;
 
         descriptor()
         {
             StreamKind=Stream_Max;
+            StreamPos=(size_t)-1;
             SampleRate=0;
+            DisplayAspectRatio=0;
+            InstanceUID.hi=(int64u)-1;
+            InstanceUID.lo=(int64u)-1;
+            EssenceContainer.hi=(int64u)-1;
+            EssenceContainer.lo=(int64u)-1;
+            EssenceCompression.hi=(int64u)-1;
+            EssenceCompression.lo=(int64u)-1;
             LinkedTrackID=(int32u)-1;
+            Width=(int32u)-1;
+            Width_Display=(int32u)-1;
+            Width_Display_Offset=(int32u)-1;
+            Height=(int32u)-1;
+            Height_Display=(int32u)-1;
+            Height_Display_Offset=(int32u)-1;
+            SubSampling_Horizontal=(int32u)-1;
+            SubSampling_Vertical=(int32u)-1;
+            ChannelCount=(int32u)-1;
+            BlockAlign=(int16u)-1;
+            QuantizationBits=(int8u)-1;
+            Duration=(int64u)-1;
+            ActiveFormat=(int8u)-1;
+            Type=Type_Unknown;
+            HasBFrames=false;
+            ByteRate=(int32u)-1;
         }
     };
     typedef std::map<int128u, descriptor> descriptors; //Key is InstanceUID of Descriptor
     descriptors Descriptors;
 
-    //IDs
-    struct id
+    //Locator
+    struct locator
     {
-        stream_t StreamKind;
-        size_t   StreamPos;
+        Ztring      EssenceLocator;
+        stream_t    StreamKind;
+        size_t      StreamPos;
+        bool        IsTextLocator;
 
-        id()
+        locator()
         {
             StreamKind=Stream_Max;
             StreamPos=(size_t)-1;
+            IsTextLocator=false;
+        }
+
+        ~locator()
+        {
         }
     };
-    typedef std::map<int32u, id> trackids; //Key is TrackID/LinkedTrackID
-    trackids TrackIDs;
+    typedef std::map<int128u, locator> locators; //Key is InstanceUID of the locator
+    locators Locators;
+    File__ReferenceFilesHelper* ReferenceFiles;
+    #if MEDIAINFO_NEXTPACKET
+        bool                    ReferenceFiles_IsParsing;
+    #endif //MEDIAINFO_NEXTPACKET
+
+    //Component (Sequence, TimeCode, Source Clip)
+    struct component
+    {
+        int64u Duration;
+        int256u SourcePackageID; //Sequence from SourcePackage only
+        int32u  SourceTrackID;
+        std::vector<int128u> StructuralComponents; //Sequence from MaterialPackage only
+
+        component()
+        {
+            Duration=(int64u)-1;
+            SourceTrackID=(int32u)-1;
+        }
+
+        void Update (struct component &New)
+        {
+            if (New.Duration!=(int64u)-1)
+                Duration=New.Duration;
+            if (New.SourcePackageID.hi || New.SourcePackageID.lo)
+                SourcePackageID=New.SourcePackageID;
+            if (New.SourceTrackID!=(int32u)-1)
+                SourceTrackID=New.SourceTrackID;
+            if (!New.StructuralComponents.empty())
+                StructuralComponents=New.StructuralComponents;
+        }
+    };
+    typedef std::map<int128u, component> components; //Key is InstanceUID of the component
+    components Components;
+
+    //Parsers
+    void           ChooseParser__FromEssence(const essences::iterator &Essence, const descriptors::iterator &Descriptor);
+    void           ChooseParser__Aaf(const essences::iterator &Essence, const descriptors::iterator &Descriptor);
+    void           ChooseParser__Aaf_CP_Picture(const essences::iterator &Essence, const descriptors::iterator &Descriptor);
+    void           ChooseParser__Aaf_CP_Sound(const essences::iterator &Essence, const descriptors::iterator &Descriptor);
+    void           ChooseParser__Aaf_CP_Data(const essences::iterator &Essence, const descriptors::iterator &Descriptor);
+    void           ChooseParser__Aaf_14(const essences::iterator &Essence, const descriptors::iterator &Descriptor);
+    void           ChooseParser__Aaf_GC_Picture(const essences::iterator &Essence, const descriptors::iterator &Descriptor);
+    void           ChooseParser__Aaf_GC_Sound(const essences::iterator &Essence, const descriptors::iterator &Descriptor);
+    void           ChooseParser__Aaf_GC_Data(const essences::iterator &Essence, const descriptors::iterator &Descriptor);
+    void           ChooseParser__Aaf_GC_Compound(const essences::iterator &Essence, const descriptors::iterator &Descriptor);
+    void           ChooseParser__Avid(const essences::iterator &Essence, const descriptors::iterator &Descriptor);
+    void           ChooseParser__Avid_Picture(const essences::iterator &Essence, const descriptors::iterator &Descriptor);
+    File__Analyze* ChooseParser(const essences::iterator &Essence, const descriptors::iterator &Descriptor);
+    File__Analyze* ChooseParser__FromEssenceContainer(const essences::iterator &Essence, const descriptors::iterator &Descriptor);
+    File__Analyze* ChooseParser_Avc(const essences::iterator &Essence, const descriptors::iterator &Descriptor);
+    File__Analyze* ChooseParser_DV(const essences::iterator &Essence, const descriptors::iterator &Descriptor);
+    File__Analyze* ChooseParser_Mpeg4v(const essences::iterator &Essence, const descriptors::iterator &Descriptor);
+    File__Analyze* ChooseParser_Mpegv(const essences::iterator &Essence, const descriptors::iterator &Descriptor);
+    File__Analyze* ChooseParser_Raw(const essences::iterator &Essence, const descriptors::iterator &Descriptor);
+    File__Analyze* ChooseParser_RV24(const essences::iterator &Essence, const descriptors::iterator &Descriptor);
+    File__Analyze* ChooseParser_Vc3(const essences::iterator &Essence, const descriptors::iterator &Descriptor);
+    File__Analyze* ChooseParser_Aac(const essences::iterator &Essence, const descriptors::iterator &Descriptor);
+    File__Analyze* ChooseParser_Ac3(const essences::iterator &Essence, const descriptors::iterator &Descriptor);
+    File__Analyze* ChooseParser_Aes3(const essences::iterator &Essence, const descriptors::iterator &Descriptor);
+    File__Analyze* ChooseParser_Alaw(const essences::iterator &Essence, const descriptors::iterator &Descriptor);
+    File__Analyze* ChooseParser_ChannelGrouping(const essences::iterator &Essence, const descriptors::iterator &Descriptor);
+    File__Analyze* ChooseParser_Mpega(const essences::iterator &Essence, const descriptors::iterator &Descriptor);
+    File__Analyze* ChooseParser_Pcm(const essences::iterator &Essence, const descriptors::iterator &Descriptor);
+    File__Analyze* ChooseParser_Jpeg2000(const essences::iterator &Essence, const descriptors::iterator &Descriptor);
+
+    //Helpers
+    void Subsampling_Compute(descriptors::iterator Descriptor);
+    void Locators_CleanUp();
+    void Locators_Test();
+    void TryToFinish();
+
+    //Temp
+    int128u EssenceContainer_FromPartitionMetadata;
+    int64u PartitionMetadata_PreviousPartition;
+    int64u PartitionMetadata_FooterPartition;
+    int64u TimeCode_StartTimecode;
+    int16u TimeCode_RoundedTimecodeBase;
+    bool   TimeCode_DropFrame;
+    float64 DTS_Delay; //In seconds
+    bool   StreamPos_StartAtOne; //information about the base of StreamPos (0 or 1, 1 is found in 1 file)
+    int64u SDTI_TimeCode_StartTimecode;
+    int64u SDTI_SizePerFrame;
+    bool   SDTI_IsPresent; //Used to test if SDTI packet is used for Index StreamOffset calculation
+    bool   SDTI_IsInIndexStreamOffset; //Used to test if SDTI packet is used for Index StreamOffset calculation
+    int64u SystemScheme1_TimeCodeArray_StartTimecode;
+    int64u SystemScheme1_FrameRateFromDescriptor;
+    bool   Essences_FirstEssence_Parsed; 
+    int32u IndexTable_NSL;
+    int32u IndexTable_NPE;
+    #if defined(MEDIAINFO_ANCILLARY_YES)
+        File_Ancillary* Ancillary;
+        bool            Ancillary_IsBinded;
+    #endif //defined(MEDIAINFO_ANCILLARY_YES)
+
+    //Hints
+    size_t* File_Buffer_Size_Hint_Pointer;
+
+    //Partitions
+    struct partition
+    {
+        int64u StreamOffset; //From file, not MXF one
+        int64u PartitionPackByteCount; //Fill included
+        int64u FooterPartition;
+        int64u HeaderByteCount;
+        int64u IndexByteCount;
+        int64u BodyOffset;
+
+        partition()
+        {
+            StreamOffset=0;
+            PartitionPackByteCount=(int64u)-1;
+            FooterPartition=0;
+            HeaderByteCount=0;
+            IndexByteCount=0;
+            BodyOffset=0;
+        }
+
+        bool operator < (const partition& lhs) const
+        {
+            return StreamOffset<lhs.StreamOffset;
+        }
+    };
+    typedef std::vector<partition>  partitions;
+    partitions                      Partitions;
+    size_t                          Partitions_Pos;
+    bool                            Partitions_IsCalculatingHeaderByteCount;
+    bool                            Partitions_IsCalculatingSdtiByteCount;
+    bool                            Partitions_IsFooter;
+
+    #if MEDIAINFO_DEMUX || MEDIAINFO_SEEK
+        bool Demux_HeaderParsed;
+        bool Demux_Interleave;
+        size_t CountOfLocatorsToParse;
+        float64 Demux_Rate;
+
+        //IndexTable
+        struct indextable
+        {
+            int64u  StreamOffset; //From file, not MXF one
+            int64u  IndexStartPosition;
+            int64u  IndexDuration;
+            int32u  EditUnitByteCount;
+            float64 IndexEditRate;
+            struct entry
+            {
+                int64u  StreamOffset;
+                int8u   Type;
+            };
+            std::vector<entry> Entries;
+
+            indextable()
+            {
+                StreamOffset=(int64u)-1;
+                IndexStartPosition=0;
+                IndexDuration=0;
+                EditUnitByteCount=0;
+                IndexEditRate=0;
+            }
+
+            bool operator < (const indextable& lhs) const
+            {
+                return IndexStartPosition<lhs.IndexStartPosition;
+            }
+        };
+        typedef std::vector<indextable> indextables;
+        indextables                     IndexTables;
+        size_t                          IndexTables_Pos;
+        
+        //Other
+        int64u  Clip_Header_Size;
+        int64u  Clip_Begin;
+        int64u  Clip_End;
+        int128u Clip_Code;
+        int64u  OverallBitrate_IsCbrForSure;
+        bool    Duration_Detected;
+    #endif //MEDIAINFO_DEMUX || MEDIAINFO_SEEK
 };
 
 } //NameSpace

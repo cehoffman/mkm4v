@@ -1,5 +1,5 @@
 // ZenLib::Format::Http::Utils - Utils for HTTP handling
-// Copyright (C) 2008-2010 MediaArea.net SARL, Info@MediaArea.net
+// Copyright (C) 2008-2011 MediaArea.net SARL, Info@MediaArea.net
 //
 // This software is provided 'as-is', without any express or implied
 // warranty.  In no event will the authors be held liable for any damages
@@ -52,12 +52,16 @@ namespace Http
 //---------------------------------------------------------------------------
 // Character manipulation
 unsigned char Char2Hex (unsigned char Char);
+wchar_t       Char2Hex (wchar_t Char);
 std::string   Hex2Char (unsigned char Char);
+std::wstring  Hex2Char (wchar_t Char);
 
 //---------------------------------------------------------------------------
 // URL manipulation
 std::string URL_Encoded_Encode (const std::string& URL);
+std::wstring URL_Encoded_Encode (const std::wstring& URL);
 std::string URL_Encoded_Decode (const std::string& URL);
+std::wstring URL_Encoded_Decode (const std::wstring& URL);
 
 //---------------------------------------------------------------------------
 // Cleanup
