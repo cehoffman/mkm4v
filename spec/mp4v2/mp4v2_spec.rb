@@ -107,6 +107,14 @@ describe Mp4v2 do
     end
   end
 
+  def setter
+    self.class.class_variable_get(:@@setters)[field][@current || 0]
+  end
+
+  def getter
+    self.class.class_variable_get(:@@getters)[field][@current || 0]
+  end
+
   def self.metadata_test(type, field, *values)
     values.flatten!
     values.compact!
@@ -115,18 +123,20 @@ describe Mp4v2 do
     values.each { |val| mappings[val] = val }
 
     describe field do
-      @@setters, @@getters, @@current = {}, {}, {} unless class_variable_defined?(:@@setters)
-      @@setters[field] = mappings.keys
-      @@getters[field] = mappings.values
-      @@current[field] = 0
+      class_variable_set(:@@setters, {}) unless class_variable_defined?(:@@setters)
+      class_variable_set(:@@getters, {}) unless class_variable_defined?(:@@getters)
+      class_variable_set(:@@current, {}) unless class_variable_defined?(:@@current)
+      class_variable_get(:@@setters)[field] = mappings.keys
+      class_variable_get(:@@getters)[field] = mappings.values
+      class_variable_get(:@@current)[field] = 0
 
       define_method :field do
-          field
+        field
       end
 
       mappings.each_pair do |set, get|
-        @@setter = set
-        @@getter = get
+        class_variable_set(:@@setter,  set)
+        class_variable_set(:@@getter, get)
 
         it_should_behave_like "generic metadata field"
       end

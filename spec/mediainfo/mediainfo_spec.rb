@@ -58,7 +58,9 @@ describe MediaInfo do
     end
 
     it "should accept a number as a parameter" do
-      @mediainfo.track_info(:video, 0, 1).should == "1"
+      # Use @mediainfo.options("Info_Parameters")["Info_Parameters"] to see
+      # mapping
+      @mediainfo.track_info(:video, 0, 2).should == "1"
     end
   end
 
@@ -75,9 +77,9 @@ describe MediaInfo do
 
     it "should replace \\r with system newline terminators" do
       $/ = "\n"
-      @mediainfo.options("Info_Codecs")["Info_Codecs"].should =~ /;3COM NBX;2CC;A;;;3Com Corporation\n;FAAD AAC;2CC;A\n/
+      @mediainfo.options("Info_Codecs")["Info_Codecs"].should =~ /x263;Xirlink;4CC;V;;\n/
       $/ = "\r\n"
-      @mediainfo.options("Info_Codecs")["Info_Codecs"].should =~ /;3COM NBX;2CC;A;;;3Com Corporation\r\n;FAAD AAC;2CC;A\r\n/
+      @mediainfo.options("Info_Codecs")["Info_Codecs"].should =~ /x263;Xirlink;4CC;V;;\r\n/
     end
 
     it "should return option strings in utf-8" do
@@ -86,30 +88,32 @@ describe MediaInfo do
   end
 
   it "should output information in xml" do
-    @mediainfo.to_xml.gsub($/, "\n").should == (fixtures + "sample_mpeg4.xml").read
+    @mediainfo.to_xml.gsub($/, "\n").should == (fixtures + "sample_mpeg4.xml").read.strip
   end
 
   it "should output information in xml using system newlines" do
     $/ = "\r\n"
-    @mediainfo.to_xml.should == (fixtures + "sample_mpeg4.xml").read.gsub("\n", "\r\n")
+    @mediainfo.to_xml.should == (fixtures + "sample_mpeg4.xml").read.gsub("\n", "\r\n").strip
   end
 
   it "should output information in html" do
+    pending
     @mediainfo.to_html.gsub($/, "\n").should == (fixtures + "sample_mpeg4.html").read
   end
 
   it "should output information in html using system newlines" do
+    pending
     $/ = "\r\n"
     @mediainfo.to_html.should == (fixtures + "sample_mpeg4.html").read.gsub("\n", "\r\n")
   end
 
   it "should output information in a human readable format" do
-    @mediainfo.to_s.gsub($/, "\n").should == (fixtures + "sample_mpeg4.txt").read
+    @mediainfo.to_s.gsub($/, "\n").should == (fixtures + "sample_mpeg4.txt").read.strip
   end
 
   it "should output information in a human readable format using system newlines" do
     $/ = "\r\n"
-    @mediainfo.to_s.should == (fixtures + "sample_mpeg4.txt").read.gsub("\n", "\r\n")
+    @mediainfo.to_s.should == (fixtures + "sample_mpeg4.txt").read.gsub("\n", "\r\n").strip
   end
 
   it "should return information forms in utf-8" do

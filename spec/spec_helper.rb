@@ -1,9 +1,8 @@
 require 'bundler/setup'
 $LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
 require "mkm4v"
-require "ruby-debug"
+# require "ruby-debug"
 require "fileutils"
-require "fakefs"
 require "fakefs/safe"
 require "fakefs/spec_helpers"
 

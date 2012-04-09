@@ -18,7 +18,7 @@ describe MediaInfo::GeneralTrack do
   end
 
   it "should know the duration of the whole file" do
-    @general.duration.milliseconds.should == 4992
+    @general.duration.milliseconds.should == 4967
   end
 
   it "should know the container of the file" do
@@ -30,7 +30,7 @@ describe MediaInfo::GeneralTrack do
   end
 
   it "should know the bitrate of the whole file" do
-    @general.bitrate.should == 393876
+    @general.bitrate.should == 395859
   end
 
   it "should have flag if the file is interleaved" do

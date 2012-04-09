@@ -1,7 +1,7 @@
 class MediaInfo::ImageTrack
   include MediaInfo::Track
 
-  property :resolution, 'Resolution', Integer
+  property :resolution, 'BitDepth', Integer
   property :width, 'Width', Integer
   property :height, 'Height', Integer
   property :size, 'StreamSize', Integer

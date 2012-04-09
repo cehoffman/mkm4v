@@ -8,7 +8,7 @@
  extern "C" {
 #endif
 
-// Needs to be withing extern "C" for linking
+// Needs to be within extern "C" for linking
 #include <ruby/encoding.h>
 
 static ZenLib::CriticalSection CS;
@@ -96,7 +96,7 @@ static VALUE mediainfo_init(VALUE self, VALUE filename) {
   for (int i = RARRAY_LEN(track_types) - 1; i >= 0; i--) {
     VALUE track_type = rb_funcall(rb_ary_entry(track_types, i), rb_intern("to_s"), 0);
     VALUE klass = rb_str_cat(rb_funcall(track_type, rb_intern("capitalize"), 0), "Track", 5);
-    VALUE kind = rb_ary_new2(tracks);
+    VALUE kind = rb_ary_new();
     rb_ivar_set(self, rb_to_id(rb_str_concat(rb_utf8_str("@"), track_type)), kind);
 
     if (rb_const_defined(rb_cMediaInfo, rb_to_id(klass))) {
@@ -138,7 +138,7 @@ static VALUE mediainfo_inform(VALUE self, ID kind) {
 
   CS.Leave();
 
-  return rb_funcall(rb_utf8_str(inform), rb_intern("gsub"), 2, rb_utf8_str("\r"), rb_gv_get("$/"));
+  return rb_funcall(rb_funcall(rb_utf8_str(inform), rb_intern("gsub"), 2, rb_utf8_str("\r"), rb_gv_get("$/")), rb_intern("strip!"), 0);
 }
 
 static VALUE mediainfo_to_html(VALUE self) {
@@ -146,7 +146,18 @@ static VALUE mediainfo_to_html(VALUE self) {
 }
 
 static VALUE mediainfo_to_xml(VALUE self) {
-  return mediainfo_inform(self, xml);
+  VALUE str = rb_str_buf_new2("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+  rb_str_buf_cat2(str, RSTRING_PTR(rb_gv_get("$/")));
+  rb_str_buf_cat2(str, "<Mediainfo version=\"0.7.55\">");
+  rb_str_buf_cat2(str, RSTRING_PTR(rb_gv_get("$/")));
+  rb_enc_associate(str, utf8_encoding);
+
+  rb_str_buf_append(str, mediainfo_inform(self, xml));
+
+  rb_str_buf_cat2(str, RSTRING_PTR(rb_gv_get("$/")));
+  rb_str_buf_cat2(str, "</Mediainfo>");
+
+  return str;
 }
 
 static VALUE mediainfo_to_s(VALUE self) {

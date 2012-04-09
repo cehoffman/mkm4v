@@ -20,7 +20,6 @@ Rake::ExtensionTask.new('mp4v2', gemspec) do |ext|
   ext.source_pattern = "*.{c,cpp}"
 end
 
-Rake::Task[:spec].prerequisites << :compile
 
 # Rake::TaskManager.class_eval do
 #   def remove_task(*task_name)
@@ -40,7 +39,8 @@ Rake::Task[:spec].prerequisites << :compile
 # Rake.application.rename_task :release_to_gemcutter, :release
 
 require 'rspec/core/rake_task'
-puts RSpec::Core::RakeTask.new(:spec).send(:spec_command)
+RSpec::Core::RakeTask.new
+Rake::Task[:spec].prerequisites << :compile
 
 desc "Build the man documentation"
 task "man:build" do

@@ -1,12 +1,4 @@
 shared_examples_for "generic metadata field" do
-  def setter
-    self.class.class_variable_get(:@@setters)[field][@current || 0]
-  end
-
-  def getter
-    self.class.class_variable_get(:@@getters)[field][@current || 0]
-  end
-
   it "should be settable with #{class_variable_get(:@@setter).class} and gettable as #{class_variable_get(:@@getter).class}" do
     @current = self.class.class_variable_get(:@@current)[field]
 

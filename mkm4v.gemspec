@@ -14,6 +14,7 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency 'iso-639', '~> 0.0.2'
 
   gem.add_development_dependency 'ronn', '~> 0.7.3'
+  gem.add_development_dependency 'pry', '~> 0.9.8.4'
   gem.add_development_dependency 'rspec', '~> 2.9.0'
   gem.add_development_dependency 'rake-compiler', '~> 0.8.0'
   gem.add_development_dependency 'fakefs', '~> 0.4.0'

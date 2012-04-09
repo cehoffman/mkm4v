@@ -8,7 +8,7 @@ class Mp4v2::Artwork
   end
 
   def save
-    @file.open("wb") { |f| f << @data }
+    File.open(@file.to_s, 'wb') { |f| f << @data }
   end
 
   def ==(other)

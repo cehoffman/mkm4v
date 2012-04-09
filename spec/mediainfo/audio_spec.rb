@@ -10,7 +10,7 @@ describe MediaInfo::AudioTrack do
   end
 
   it "should know the duration" do
-    @audio.duration.milliseconds.should == 4992
+    @audio.duration.milliseconds.should == 4967
   end
 
   it "should know the bitrate" do
@@ -26,7 +26,7 @@ describe MediaInfo::AudioTrack do
   end
 
   it "should know the stream size" do
-    @audio.size.should == 30376
+    @audio.size.should == 30203
   end
 
   it "should know the language" do
