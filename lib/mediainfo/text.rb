@@ -3,4 +3,5 @@ class MediaInfo::TextTrack
 
   property :encoding, 'Format', Encoding
   property :lang, 'Language'
+  property :container, 'CodecID'
 end
