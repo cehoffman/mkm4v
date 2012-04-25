@@ -36,7 +36,22 @@ void _mp4v2_read_metadata(MP4V2Handles *handle) {
   TAG_SET(encodedBy, encoded_by);
   TAG_BOOL(podcast, podcast, 1);
   TAG_SET(category, category);
-  TAG_BOOL(hdVideo, hd, 1);
+  // TAG_NUM(hdVideo, hd);
+
+  if (tags->hdVideo) {
+    switch(*tags->hdVideo) {
+      case 0:
+        SET(hd, Qfalse);
+        break;
+      case 1:
+        SET(hd, SYM("720p"));
+        break;
+      case 2:
+        SET(hd, SYM("1080p"));
+        break;
+      default:;
+    }
+  }
 
   if (tags->mediaType) {
     switch(*tags->mediaType) {
@@ -195,9 +210,33 @@ void _mp4v2_write_metadata(MP4V2Handles *handle) {
   MODIFY_STR(EncodedBy, encoded_by);
   MODIFY_BOOL(Podcast, podcast);
   MODIFY_STR(Category, category);
-  MODIFY_BOOL(HDVideo, hd);
+  // MODIFY_BOOL(HDVideo, hd);
 
-  VALUE index = GET(kind);
+  VALUE index = GET(hd);
+  if (index != Qnil && TYPE(index) != T_SYMBOL) {
+    if (rb_respond_to(index, rb_intern("to_sym"))) {
+      index = rb_funcall(index, rb_intern("to_sym"), 0);
+    }
+
+    if (TYPE(index) != T_SYMBOL) {
+      rb_raise(rb_eTypeError, "can't convert hd to symbol");
+    }
+  }
+
+  uint8_t type = NULL;
+  if (index == SYM("720p")) {
+    type = 1;
+  } else if (index == SYM("1080p")) {
+    type = 2;
+  }
+
+  if (type) {
+    MODIFY(HDVideo, &type);
+  } else {
+    MODIFY(HDVideo, NULL);
+  }
+
+  index = GET(kind);
   if (index != Qnil && TYPE(index) != T_SYMBOL) {
     if (rb_respond_to(index, rb_intern("to_sym"))) {
       index = rb_funcall(index, rb_intern("to_sym"), 0);
@@ -208,7 +247,7 @@ void _mp4v2_write_metadata(MP4V2Handles *handle) {
     }
   }
 
-  uint8_t type = NULL;
+  index = NULL;
   if (index == SYM("music")) {
     type = 1;
   } else if (index == SYM("audiobook")) {
