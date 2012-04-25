@@ -11,7 +11,7 @@ void _mp4v2_read_chapters(MP4V2Handles *handle) {
 
   MP4Duration sum = 0;
   for (uint32_t i = 0; i < count; i++) {
-    chapter = rb_funcall(rb_cChapter, rb_intern("new"), 2, DBL2NUM(sum/1000.0), rb_utf8_str(chaps[i].title));
+    chapter = rb_funcall(rb_cChapter, rb_intern("new"), 2, DBL2NUM(sum), rb_utf8_str(chaps[i].title));
     rb_ary_push(chapters, chapter);
     sum += chaps[i].duration;
   }
@@ -46,7 +46,7 @@ void _mp4v2_write_chapters(MP4V2Handles *handle) {
       for (uint32_t i = 0; i < count; i++) {
         // Calculate the duration of chapter from previous timestamp and current
         chapter = rb_ary_entry(chapters, i);
-        stamp = NUM2DBL(rb_ivar_get(rb_ivar_get(chapter, rb_intern("@timestamp")), rb_intern("@seconds"))) * 1000.0;
+        stamp = NUM2DBL(rb_funcall(rb_ivar_get(chapter, rb_intern("@timestamp")), rb_intern("milliseconds"), 0));
         chaps[i].duration = stamp - last_stamp;
         last_stamp = stamp;
 
