@@ -12,6 +12,7 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency 'trollop', '~> 1.15'
   gem.add_runtime_dependency 'plist', '~> 3.1.0'
   gem.add_runtime_dependency 'iso-639', '~> 0.0.2'
+  gem.add_runtime_dependency 'nokogiri', '~> 1.5.9'
 
   gem.add_development_dependency 'ronn', '~> 0.7.3'
   gem.add_development_dependency 'pry', '~> 0.9.8.4'
