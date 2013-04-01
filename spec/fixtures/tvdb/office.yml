@@ -1,0 +1,87 @@
+---
+http://www.thetvdb.com/api/GetSeries.php?seriesname=office: "<?xml version=\"1.0\"
+  encoding=\"utf-8\"?>\n<Data>\n    <Series>\n        <seriesid>103541</seriesid>\n
+  \       <language>en</language>\n        <SeriesName>The Naked Office</SeriesName>\n
+  \       <id>103541</id>\n    </Series>\n    <Series>\n        <seriesid>70493</seriesid>\n
+  \       <language>en</language>\n        <SeriesName>Office Gossip</SeriesName>\n
+  \       <FirstAired>2001-02-01</FirstAired>\n        <id>70493</id>\n    </Series>\n
+  \   <Series>\n        <seriesid>75330</seriesid>\n        <language>en</language>\n
+  \       <SeriesName>The 1970s Office</SeriesName>\n        <Overview>It hardly bears
+  thinking about, but just imagine having to live without all the technology that
+  we take for granted. We panic when we go to work and discover that we've left our
+  mobile phones at home. We're enraged when our computers crash and we can't order
+  our weekly shopping over the web. Once upon a time there was a strange world without
+  computers, mobiles and the internet. Instead of bluetooth keyboards there were typewriters.
+  The only way to get money from your bank was to stand in a queue and write a cheque.
+  But we're bringing that scary world back to life in The 1970s Office, a retro-scripted
+  reality series that will celebrate the awfulness (and the richness) of the recent
+  past. We'll do this by meticulously recreating the typical 70s office and installing
+  a bunch of fickle, precious and competitive admen for the toughest test of their
+  careers. Assigned that seventies' favourite, The Space Hopper, they will work towards
+  their ad campaign pitch. For two weeks,</Overview>\n        <FirstAired>2004-10-01</FirstAired>\n
+  \       <id>75330</id>\n    </Series>\n    <Series>\n        <seriesid>118511</seriesid>\n
+  \       <language>en</language>\n        <SeriesName>A Night at the Office</SeriesName>\n
+  \       <banner>graphical/118511-g.jpg</banner>\n        <Overview>On August 11th
+  2009, it was announced that the cast of The Office would be reuniting for a special,
+  called \"A Night at The Office\", available at BBC2 and online.</Overview>\n        <FirstAired>2009-01-01</FirstAired>\n
+  \       <id>118511</id>\n    </Series>\n    <Series>\n        <seriesid>82932</seriesid>\n
+  \       <language>en</language>\n        <SeriesName>The Principal's Office</SeriesName>\n
+  \       <Overview>Your heart races, your palms are sweaty, your eyes begin to twitch\u2014will
+  you survive a trip to \"The Principal's Office\"? Capturing all the fear, paranoia,
+  blatant lying and transparent brownnosing, this series will capture the most outrageous
+  excuses from students and parents as they try to avoid detentions, suspensions or
+  worse from these high school principals who have heard it all before.</Overview>\n
+  \       <FirstAired>2008-08-21</FirstAired>\n        <id>82932</id>\n    </Series>\n
+  \   <Series>\n        <seriesid>78107</seriesid>\n        <language>en</language>\n
+  \       <SeriesName>The Office (UK)</SeriesName>\n        <banner>graphical/78107-g7.jpg</banner>\n
+  \       <Overview>A mockumentary about life in a mid-sized suboffice paper merchants
+  in a bleak British industrial town, where manager David Brent thinks he's the coolest,
+  funniest, and most popular boss ever. He isn't. That doesn't stop him from embarrassing
+  himself in front of the cameras on a regular basis, whether from his political sermonizing,
+  his stand-up 'comedy', or his incredibly unique dancing. Meanwhile, long-suffering
+  Tim longs after Dawn the engaged receptionist and keeps himself sane by playing
+  childish practical jokes on his insufferable, army-obsessed deskmate Gareth. Will
+  the Slough office be closed? Will the BBC give David a game show? Will Tim and Dawn
+  end up with each other? And more importantly, will Gareth realize what a hopeless
+  prat he is?</Overview>\n        <FirstAired>2001-07-01</FirstAired>\n        <IMDB_ID>tt0290978</IMDB_ID>\n
+  \       <id>78107</id>\n    </Series>\n    <Series>\n        <seriesid>82325</seriesid>\n
+  \       <language>en</language>\n        <SeriesName>Power Office Ladies</SeriesName>\n
+  \       <banner>graphical/82325-g.jpg</banner>\n        <Overview>Shomuni (\u30B7\u30E7\u30E0\u30CB)
+  is a comedic TV drama serial based on the Japanese manga of the same name by Gumi
+  Yasuda (\u5B89\u7530\u5F18\u4E4B Yasuda Gumi). The stories revolve around the Office
+  Ladies of General Affairs department 2 (Shomu ni, or GA-2) in a large multinational
+  company called Manpan Corporation. GA-2 is called \"the graveyard for female office
+  ladies\", simply because it is the place where female employees are dumped should
+  they mess up big time elsewhere. Jobs include replacing used toilet rolls, changing
+  light-bulbs, organizing company outings among other menial stuff. As an added incentive,
+  their department is located in the nether regions of the company - in the basement,
+  and is in fact a disused store room.</Overview>\n        <FirstAired>1998-04-15</FirstAired>\n
+  \       <id>82325</id>\n    </Series>\n    <Series>\n        <seriesid>78836</seriesid>\n
+  \       <language>en</language>\n        <SeriesName>Terry Tate: Office Linebacker</SeriesName>\n
+  \       <banner>graphical/t10284j-g.jpg</banner>\n        <id>78836</id>\n    </Series>\n
+  \   <Series>\n        <seriesid>73244</seriesid>\n        <language>en</language>\n
+  \       <SeriesName>The Office (US)</SeriesName>\n        <banner>graphical/73244-g9.jpg</banner>\n
+  \       <Overview>Based on the popular British series of the same name, this faster-paced
+  American version follows the daily interactions of a group of idiosyncratic office
+  employees at paper company Dunder Mifflin's Scranton branch via a documentary film
+  crew's cameras.</Overview>\n        <FirstAired>2005-03-24</FirstAired>\n        <IMDB_ID>tt0386676</IMDB_ID>\n
+  \       <id>73244</id>\n    </Series>\n    <Series>\n        <seriesid>77470</seriesid>\n
+  \       <language>en</language>\n        <SeriesName>The Office (1995)</SeriesName>\n
+  \       <Overview></Overview>\n        <FirstAired>1995-03-01</FirstAired>\n        <id>77470</id>\n
+  \   </Series>\n</Data>"
+http://www.thetvdb.com/api/50BC287089F0922A/mirrors.xml: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Mirrors>\n
+  \   <Mirror>\n        <id>1</id>\n        <mirrorpath>http://thetvdb.com</mirrorpath>\n
+  \       <typemask>7</typemask>\n    </Mirror>\n</Mirrors>"
+file://./spec/fixtures/tvdb/103541/en.xml: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Data>\n
+  \   <Series>\n        <id>103541</id>\n        <Actors>||</Actors>\n        <Airs_DayOfWeek></Airs_DayOfWeek>\n
+  \       <Airs_Time></Airs_Time>\n        <ContentRating></ContentRating>\n        <FirstAired></FirstAired>\n
+  \       <Genre></Genre>\n        <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n
+  \       <Network></Network>\n        <NetworkID></NetworkID>\n        <Overview></Overview>\n
+  \       <Rating></Rating>\n        <Runtime></Runtime>\n        <SeriesID></SeriesID>\n
+  \       <SeriesName>The Naked Office</SeriesName>\n        <Status></Status>\n        <added>2009-07-10
+  16:47:56</added>\n        <addedBy>4705</addedBy>\n        <banner></banner>\n        <fanart></fanart>\n
+  \       <lastupdated>1247269676</lastupdated>\n        <poster></poster>\n        <zap2it_id></zap2it_id>\n
+  \   </Series>\n</Data>"
+file://./spec/fixtures/tvdb/103541/banners.xml: '<?xml version="1.0" encoding="UTF-8"?>
+
+  <Banners></Banners>'

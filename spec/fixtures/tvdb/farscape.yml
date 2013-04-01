@@ -1,0 +1,1602 @@
+---
+http://www.thetvdb.com/api/GetSeries.php?seriesname=farscape: "<?xml version=\"1.0\"
+  encoding=\"utf-8\"?>\n<Data>\n    <Series>\n        <seriesid>70522</seriesid>\n
+  \       <language>en</language>\n        <SeriesName>Farscape</SeriesName>\n        <banner>graphical/1029-g.jpg</banner>\n
+  \       <Overview>Five years ago, astronaut John Crichton attempted to use the Earth's
+  atmosphere to propel his ship, Farscape 1, at great speeds across the solar system.
+  He went much further though and was sucked down a wormhole to a distant part of
+  the galaxy and into the middle of a battle. He was rescued by a group of escaping
+  prisoners and taken aboard their living ship. As the years went by, Crichton has
+  made enemies, powerful and dangerous enemies. On his journey to find a way back
+  home, he freed other captives who became part of the crew on Moya.</Overview>\n
+  \       <FirstAired>1999-03-01</FirstAired>\n        <IMDB_ID>tt0187636</IMDB_ID>\n
+  \       <zap2it_id>SH299415</zap2it_id>\n        <id>70522</id>\n    </Series>\n</Data>"
+http://www.thetvdb.com/api/50BC287089F0922A/mirrors.xml: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Mirrors>\n
+  \   <Mirror>\n        <id>1</id>\n        <mirrorpath>http://thetvdb.com</mirrorpath>\n
+  \       <typemask>7</typemask>\n    </Mirror>\n</Mirrors>"
+file://./spec/fixtures/tvdb/70522/en.xml: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Data>\n
+  \   <Series>\n        <id>70522</id>\n        <Actors>|Ben Browder|Claudia Black|Gigi
+  Edgley|Francesca Buller|Paul Goddard|David Franklin|Tammy MacIntosh|Raelee Hill|Jonathan
+  Hardy|Anthony Simcoe|Virginia Hey|Wayne Pygram|Lani John Tupu|Rebecca Rigg|Melissa
+  Jaffer|</Actors>\n        <Airs_DayOfWeek></Airs_DayOfWeek>\n        <Airs_Time></Airs_Time>\n
+  \       <ContentRating></ContentRating>\n        <FirstAired>1999-03-01</FirstAired>\n
+  \       <Genre>|Science-Fiction|</Genre>\n        <IMDB_ID>tt0187636</IMDB_ID>\n
+  \       <Language>en</Language>\n        <Network>SciFi</Network>\n        <NetworkID></NetworkID>\n
+  \       <Overview>Five years ago, astronaut John Crichton attempted to use the Earth's
+  atmosphere to propel his ship, Farscape 1, at great speeds across the solar system.
+  He went much further though and was sucked down a wormhole to a distant part of
+  the galaxy and into the middle of a battle. He was rescued by a group of escaping
+  prisoners and taken aboard their living ship. As the years went by, Crichton has
+  made enemies, powerful and dangerous enemies. On his journey to find a way back
+  home, he freed other captives who became part of the crew on Moya.</Overview>\n
+  \       <Rating>9.1</Rating>\n        <Runtime>45</Runtime>\n        <SeriesID>1029</SeriesID>\n
+  \       <SeriesName>Farscape</SeriesName>\n        <Status>Ended</Status>\n        <added></added>\n
+  \       <addedBy></addedBy>\n        <banner>graphical/70522-g4.jpg</banner>\n        <fanart>fanart/original/70522-1.jpg</fanart>\n
+  \       <lastupdated>1264873772</lastupdated>\n        <poster>posters/70522-1.jpg</poster>\n
+  \       <zap2it_id>SH299415</zap2it_id>\n    </Series>\n    <Episode>\n        <id>11402</id>\n
+  \       <Combined_episodenumber>1</Combined_episodenumber>\n        <Combined_season>0</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber></DVD_episodenumber>\n
+  \       <DVD_season></DVD_season>\n        <Director></Director>\n        <EpImgFlag></EpImgFlag>\n
+  \       <EpisodeName>Farscape: Undressed</EpisodeName>\n        <EpisodeNumber>1</EpisodeNumber>\n
+  \       <FirstAired>2001-03-16</FirstAired>\n        <GuestStars></GuestStars>\n
+  \       <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n        <Overview>This
+  hour long documentary was aired before series 3. It was hosted by Ben Browder, Claudia
+  Black, Rygel and Pilot. It featured clips from the previous 2 sereis' and gave an
+  overview of the show and got viewers up-to-speed with the current storyline. Getting
+  any new viewers ready for the next series.</Overview>\n        <ProductionCode></ProductionCode>\n
+  \       <Rating></Rating>\n        <SeasonNumber>0</SeasonNumber>\n        <Writer></Writer>\n
+  \       <absolute_number></absolute_number>\n        <airsafter_season>3</airsafter_season>\n
+  \       <airsbefore_episode>1</airsbefore_episode>\n        <airsbefore_season>3</airsbefore_season>\n
+  \       <filename>episodes/70522/11402.jpg</filename>\n        <lastupdated>1201449808</lastupdated>\n
+  \       <seasonid>17991</seasonid>\n        <seriesid>70522</seriesid>\n    </Episode>\n
+  \   <Episode>\n        <id>11357</id>\n        <Combined_episodenumber>1.0</Combined_episodenumber>\n
+  \       <Combined_season>1</Combined_season>\n        <DVD_chapter></DVD_chapter>\n
+  \       <DVD_discid></DVD_discid>\n        <DVD_episodenumber>1.0</DVD_episodenumber>\n
+  \       <DVD_season>1</DVD_season>\n        <Director>|Andrew Prowse|</Director>\n
+  \       <EpImgFlag></EpImgFlag>\n        <EpisodeName>Premiere</EpisodeName>\n        <EpisodeNumber>1</EpisodeNumber>\n
+  \       <FirstAired>1999-03-19</FirstAired>\n        <GuestStars>|Murray Bartlett|Greg
+  Blandy|Colin Borgonon|Christine Stephen-Daly|Damen Stephenson|Lawrence Woodward|</GuestStars>\n
+  \       <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n        <Overview>Astronaut
+  John Crichton attempts to use the Earth's atmosphere to propel his module at high
+  speeds. He is hit by a radiation wave and is sucked through a wormhole into a distant
+  part of the universe--straight into the middle of a space battle.</Overview>\n        <ProductionCode>#10101</ProductionCode>\n
+  \       <Rating>8.6</Rating>\n        <SeasonNumber>1</SeasonNumber>\n        <Writer>|Rockne
+  S. O'Bannon|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11357.jpg</filename>\n
+  \       <lastupdated>1234463726</lastupdated>\n        <seasonid>449</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11359</id>\n
+  \       <Combined_episodenumber>3.0</Combined_episodenumber>\n        <Combined_season>1</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>3.0</DVD_episodenumber>\n
+  \       <DVD_season>1</DVD_season>\n        <Director>|Brian Henson|</Director>\n
+  \       <EpImgFlag></EpImgFlag>\n        <EpisodeName>Exodus from Genesis</EpisodeName>\n
+  \       <EpisodeNumber>2</EpisodeNumber>\n        <FirstAired>1999-03-26</FirstAired>\n
+  \       <GuestStars>|Damian deMontemas|Jodie Dry|Geoff Barker|Chenoeh Miller|Tai
+  Scrivener|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n
+  \       <Overview>Moya gets infested with bugs who have come on board to breed.
+  They turn up the temperature to speed up the process but this causes Aeryn to get
+  heat delirium as she is cold blooded. The bugs seem to be able to replicate members
+  of the crew. And as if that isn't enough, a peacekeeper ship shows up.</Overview>\n
+  \       <ProductionCode>#10103</ProductionCode>\n        <Rating>8.0</Rating>\n
+  \       <SeasonNumber>1</SeasonNumber>\n        <Writer>|Ro Hume|</Writer>\n        <absolute_number></absolute_number>\n
+  \       <filename>episodes/70522/11359.jpg</filename>\n        <lastupdated>1239972604</lastupdated>\n
+  \       <seasonid>449</seasonid>\n        <seriesid>70522</seriesid>\n    </Episode>\n
+  \   <Episode>\n        <id>11361</id>\n        <Combined_episodenumber>5.0</Combined_episodenumber>\n
+  \       <Combined_season>1</Combined_season>\n        <DVD_chapter></DVD_chapter>\n
+  \       <DVD_discid></DVD_discid>\n        <DVD_episodenumber>5.0</DVD_episodenumber>\n
+  \       <DVD_season>1</DVD_season>\n        <Director>|Rowan Woods|</Director>\n
+  \       <EpImgFlag></EpImgFlag>\n        <EpisodeName>Back and Back and Back to
+  the Future</EpisodeName>\n        <EpisodeNumber>3</EpisodeNumber>\n        <FirstAired>1999-04-02</FirstAired>\n
+  \       <GuestStars>|Lisa Hensley|John Clayton|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n
+  \       <Language>en</Language>\n        <Overview>The crew come across a ship that
+  is molecularly de-stabilizing. D'Argo makes everyone bring it aboard when he discovers
+  that there are Ilanics on board. Crichton goes on to the escape pod he gets a shock
+  and starts experiencing strange visions of the future, firstly of himself and Matala,
+  then of Moya's destruction</Overview>\n        <ProductionCode>#10105</ProductionCode>\n
+  \       <Rating>9.0</Rating>\n        <SeasonNumber>1</SeasonNumber>\n        <Writer>|Babs
+  Greyhosky|</Writer>\n        <absolute_number>5</absolute_number>\n        <filename>episodes/70522/11361.jpg</filename>\n
+  \       <lastupdated>1239972633</lastupdated>\n        <seasonid>449</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11360</id>\n
+  \       <Combined_episodenumber>4.0</Combined_episodenumber>\n        <Combined_season>1</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>4.0</DVD_episodenumber>\n
+  \       <DVD_season>1</DVD_season>\n        <Director>|Pino Amenta|</Director>\n
+  \       <EpImgFlag></EpImgFlag>\n        <EpisodeName>Throne for a Loss</EpisodeName>\n
+  \       <EpisodeNumber>4</EpisodeNumber>\n        <FirstAired>1999-04-09</FirstAired>\n
+  \       <GuestStars>|John Adam|Jeremiah Tickell|Zoe Dimakis|Api Bavadra|Tim Mieville|</GuestStars>\n
+  \       <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n        <Overview>A
+  group of Tavleks come aboard for trade negotiations. Rygel takes a vitally important
+  crystal from Moya to make himself seem wealthy. The Tavleks kidnap Rygel and take
+  him down to the planet, leaving one of their wounded on board. Everyone goes to
+  the surface to get him except Zhaan who stays on board to keep an eye on the Tavlek
+  left behind.</Overview>\n        <ProductionCode>#10104</ProductionCode>\n        <Rating>10.0</Rating>\n
+  \       <SeasonNumber>1</SeasonNumber>\n        <Writer>|Richard Manning|</Writer>\n
+  \       <absolute_number></absolute_number>\n        <filename>episodes/70522/11360.jpg</filename>\n
+  \       <lastupdated>1234463891</lastupdated>\n        <seasonid>449</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11363</id>\n
+  \       <Combined_episodenumber>7.0</Combined_episodenumber>\n        <Combined_season>1</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>7.0</DVD_episodenumber>\n
+  \       <DVD_season>1</DVD_season>\n        <Director>|Tony Tilse|</Director>\n
+  \       <EpImgFlag></EpImgFlag>\n        <EpisodeName>PK Tech Girl</EpisodeName>\n
+  \       <EpisodeNumber>5</EpisodeNumber>\n        <FirstAired>1999-04-16</FirstAired>\n
+  \       <GuestStars>|Phillip Hinton|Peter Knowles|Peter Astridge|Derek Amer|Alyssa
+  Jane Cook|Christopher Truswell|David Wheeler|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n
+  \       <Language>en</Language>\n        <Overview>The crew find an old abandoned
+  peacekeeper ship adrift in space, on board they discover that Crais was there recently
+  where he deposited a unit of techs to make repairs. Meanwhile Rygel learns that
+  this was the ship where he was first held captive and starts getting paranoid. Things
+  get even worse though when a group of fire breathing aliens show up.</Overview>\n
+  \       <ProductionCode>#10107</ProductionCode>\n        <Rating>9.0</Rating>\n
+  \       <SeasonNumber>1</SeasonNumber>\n        <Writer>|Nan Hagan|</Writer>\n        <absolute_number></absolute_number>\n
+  \       <filename>episodes/70522/11363.jpg</filename>\n        <lastupdated>1239972648</lastupdated>\n
+  \       <seasonid>449</seasonid>\n        <seriesid>70522</seriesid>\n    </Episode>\n
+  \   <Episode>\n        <id>11362</id>\n        <Combined_episodenumber>6.0</Combined_episodenumber>\n
+  \       <Combined_season>1</Combined_season>\n        <DVD_chapter></DVD_chapter>\n
+  \       <DVD_discid></DVD_discid>\n        <DVD_episodenumber>6.0</DVD_episodenumber>\n
+  \       <DVD_season>1</DVD_season>\n        <Director>|Rowan Woods|</Director>\n
+  \       <EpImgFlag></EpImgFlag>\n        <EpisodeName>Thank God it's Friday, Again.</EpisodeName>\n
+  \       <EpisodeNumber>6</EpisodeNumber>\n        <FirstAired>1999-04-23</FirstAired>\n
+  \       <GuestStars>|Angie Milliken|Tina Thomsen|Ken Blackburn|Selina Muller|Mark
+  Slocum|Peter Baroch|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n
+  \       <Overview>The crew visits a planet full of happy workers. Soon D'Argo and
+  Zhaan start working and refuse to return to the ship. Meanwhile Rygel's body fluids
+  become explosive and Aeryn and Pilot must learn why before Rygel dies.</Overview>\n
+  \       <ProductionCode>#10106</ProductionCode>\n        <Rating>5.0</Rating>\n
+  \       <SeasonNumber>1</SeasonNumber>\n        <Writer>|David Wilks|</Writer>\n
+  \       <absolute_number></absolute_number>\n        <filename>episodes/70522/11362.jpg</filename>\n
+  \       <lastupdated>1234195596</lastupdated>\n        <seasonid>449</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11358</id>\n
+  \       <Combined_episodenumber>2.0</Combined_episodenumber>\n        <Combined_season>1</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>2.0</DVD_episodenumber>\n
+  \       <DVD_season>1</DVD_season>\n        <Director>|Pino Amenta|</Director>\n
+  \       <EpImgFlag></EpImgFlag>\n        <EpisodeName>I, E.T.</EpisodeName>\n        <EpisodeNumber>7</EpisodeNumber>\n
+  \       <FirstAired>1999-05-08</FirstAired>\n        <GuestStars>|Mary Mara|Cayde
+  Tasker|Boris Brkic|Mark Shaw|Dominic Bianco|Heath Wilder|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n
+  \       <Language>en</Language>\n        <Overview>A peacekeeper beacon goes off
+  and Moya has to land on an alien planet to prevent it's signal being intercepted
+  and Moya being discovered. Crichton, D'Argo and Aeryn leave Moya and explore the
+  planet in search of a substance that can be used to numb Moya's senses so the beacon
+  can be removed. Crichton gets separated from the group and meets up with some inhabitants
+  of the planet who hide him from the authorities.</Overview>\n        <ProductionCode>#10102</ProductionCode>\n
+  \       <Rating>8.0</Rating>\n        <SeasonNumber>1</SeasonNumber>\n        <Writer>|Sally
+  Lapiduss|</Writer>\n        <absolute_number>2</absolute_number>\n        <filename>episodes/70522/11358.jpg</filename>\n
+  \       <lastupdated>1239972675</lastupdated>\n        <seasonid>449</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11364</id>\n
+  \       <Combined_episodenumber>8.0</Combined_episodenumber>\n        <Combined_season>1</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>8.0</DVD_episodenumber>\n
+  \       <DVD_season>1</DVD_season>\n        <Director>|Brendan Maher|</Director>\n
+  \       <EpImgFlag></EpImgFlag>\n        <EpisodeName>That Old Black Magic</EpisodeName>\n
+  \       <EpisodeNumber>8</EpisodeNumber>\n        <FirstAired>1999-06-11</FirstAired>\n
+  \       <GuestStars>|Chris Haywood|Gerry Day|Duane Johnson|Leilani Johnson|Wadih
+  Dona|Christine Stephen-Daly|Jake Blundell|Grant Bowler|Errol Henderson|Vic Rooney|</GuestStars>\n
+  \       <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n        <Overview>Crichton
+  is put into a head-to-head battle with Crais by a magical being named Maldis who
+  feeds off the emotions of others and makes himself stronger by absorbing all of
+  the negative energy and anger from Crichton and Crais.</Overview>\n        <ProductionCode>#10108</ProductionCode>\n
+  \       <Rating>7.0</Rating>\n        <SeasonNumber>1</SeasonNumber>\n        <Writer>|Richard
+  Manning|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11364.jpg</filename>\n
+  \       <lastupdated>1234195653</lastupdated>\n        <seasonid>449</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11365</id>\n
+  \       <Combined_episodenumber>9.0</Combined_episodenumber>\n        <Combined_season>1</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>9.0</DVD_episodenumber>\n
+  \       <DVD_season>1</DVD_season>\n        <Director>|Andrew Prowse|</Director>\n
+  \       <EpImgFlag></EpImgFlag>\n        <EpisodeName>DNA Mad Scientist</EpisodeName>\n
+  \       <EpisodeNumber>9</EpisodeNumber>\n        <FirstAired>1999-06-18</FirstAired>\n
+  \       <GuestStars>|Julian Garner|Sarah Burns|Adrian Getley|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n
+  \       <Language>en</Language>\n        <Overview>A scientist extracts DNA from
+  several of Moya's crew, promising them that with it he would be able to use it to
+  find the location of their home planets. Things get more interesting however when
+  he asks for some of pilot.</Overview>\n        <ProductionCode>#10109</ProductionCode>\n
+  \       <Rating>10.0</Rating>\n        <SeasonNumber>1</SeasonNumber>\n        <Writer>|Tom
+  Blomquist|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11365.jpg</filename>\n
+  \       <lastupdated>1234195679</lastupdated>\n        <seasonid>449</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11366</id>\n
+  \       <Combined_episodenumber>10.0</Combined_episodenumber>\n        <Combined_season>1</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>10.0</DVD_episodenumber>\n
+  \       <DVD_season>1</DVD_season>\n        <Director>|Ian Watson|</Director>\n
+  \       <EpImgFlag></EpImgFlag>\n        <EpisodeName>They've Got a Secret</EpisodeName>\n
+  \       <EpisodeNumber>10</EpisodeNumber>\n        <FirstAired>1999-06-25</FirstAired>\n
+  \       <GuestStars>|Grant Magee|Alison Fox|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n
+  \       <Language>en</Language>\n        <Overview>During routine searches for Peacekeeper
+  beacons, D'Argo falls down a chute, destroys a Peacekeeper shield and gets ejected
+  into open space. After being rescued D'Argo starts to think that everyone on Moya
+  are members of his family. Moya, meanwhile, starts to alter the environmental conditions
+  inside the ship so that it is hardly habitable for the crew. .</Overview>\n        <ProductionCode>#10110</ProductionCode>\n
+  \       <Rating>8.0</Rating>\n        <SeasonNumber>1</SeasonNumber>\n        <Writer>|Sally
+  Lapiduss|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11366.jpg</filename>\n
+  \       <lastupdated>1234195705</lastupdated>\n        <seasonid>449</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11367</id>\n
+  \       <Combined_episodenumber>11.0</Combined_episodenumber>\n        <Combined_season>1</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>11.0</DVD_episodenumber>\n
+  \       <DVD_season>1</DVD_season>\n        <Director>|Tony Tilse|</Director>\n
+  \       <EpImgFlag></EpImgFlag>\n        <EpisodeName>Till the Blood Runs Clear</EpisodeName>\n
+  \       <EpisodeNumber>11</EpisodeNumber>\n        <FirstAired>1999-07-09</FirstAired>\n
+  \       <GuestStars>|Jeremy Sims|Magda Szubanski|Jo Kerrigan|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n
+  \       <Language>en</Language>\n        <Overview>Crichton comes across the same
+  conditions that initially created a wormhole. He leaves Moya in his module with
+  Aeryn where he attempts to create a wormhole and return home. Although a wormhole
+  forms it is unstable and the module gets damaged and he is forced to make an emergency
+  landing on the planet to make repairs. On the planet he and Aeryn encounter a holographic
+  message sent by Crais, offering rewards for: D'Argo, Zhaan and Rygel.</Overview>\n
+  \       <ProductionCode>#10111</ProductionCode>\n        <Rating>9.0</Rating>\n
+  \       <SeasonNumber>1</SeasonNumber>\n        <Writer>|Doug Heyes Jr.|</Writer>\n
+  \       <absolute_number></absolute_number>\n        <filename>episodes/70522/11367.jpg</filename>\n
+  \       <lastupdated>1234195728</lastupdated>\n        <seasonid>449</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11369</id>\n
+  \       <Combined_episodenumber>13.0</Combined_episodenumber>\n        <Combined_season>1</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>13.0</DVD_episodenumber>\n
+  \       <DVD_season>1</DVD_season>\n        <Director>|Peter Andrikidis|</Director>\n
+  \       <EpImgFlag></EpImgFlag>\n        <EpisodeName>The Flax</EpisodeName>\n        <EpisodeNumber>12</EpisodeNumber>\n
+  \       <FirstAired>1999-07-16</FirstAired>\n        <GuestStars>|Rhys Muldoon|John
+  Bachelor|David Bowers|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n
+  \       <Overview>While on a transport pod piloting lesson with Aeryn, Crichton
+  gets caught in an energy field which is invisible to their sensors. Back on Moya,
+  a strange guest docks and comes aboard to warn the crew about The Flax, an invisible
+  energy net created to catch ships.</Overview>\n        <ProductionCode>#10113</ProductionCode>\n
+  \       <Rating>7.0</Rating>\n        <SeasonNumber>1</SeasonNumber>\n        <Writer>|Justin
+  Monjo|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11369.jpg</filename>\n
+  \       <lastupdated>1250059986</lastupdated>\n        <seasonid>449</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11368</id>\n
+  \       <Combined_episodenumber>12.0</Combined_episodenumber>\n        <Combined_season>1</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>12.0</DVD_episodenumber>\n
+  \       <DVD_season>1</DVD_season>\n        <Director>|Andrew Prowse|David Kemper|Ro
+  Hume|</Director>\n        <EpImgFlag></EpImgFlag>\n        <EpisodeName>Rhapsody
+  in Blue</EpisodeName>\n        <EpisodeNumber>13</EpisodeNumber>\n        <FirstAired>1999-07-23</FirstAired>\n
+  \       <GuestStars>|Kate Raison|Max Phipps|Darlene Vogel|Michael Beckley|Aaron
+  Cash|Grant Magee|Robert Supple|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n
+  \       <Overview>Moya responds to a distress call from another pregnant Leviathan.
+  On arrival at a planet they are contacted by a delvian who informs them that the
+  distress call was a deception. It was her way a getting Moya to come to them. The
+  delvians have a hidden agenda though. They want to forcefully take Zhaan's knowledge
+  and learn how she overcame her insanity.</Overview>\n        <ProductionCode>#10112</ProductionCode>\n
+  \       <Rating>7.0</Rating>\n        <SeasonNumber>1</SeasonNumber>\n        <Writer></Writer>\n
+  \       <absolute_number></absolute_number>\n        <filename>episodes/70522/11368.jpg</filename>\n
+  \       <lastupdated>1250059964</lastupdated>\n        <seasonid>449</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11370</id>\n
+  \       <Combined_episodenumber>14.0</Combined_episodenumber>\n        <Combined_season>1</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>14.0</DVD_episodenumber>\n
+  \       <DVD_season>1</DVD_season>\n        <Director>|Ian Watson|</Director>\n
+  \       <EpImgFlag></EpImgFlag>\n        <EpisodeName>Jeremiah Crichton</EpisodeName>\n
+  \       <EpisodeNumber>14</EpisodeNumber>\n        <FirstAired>1999-07-30</FirstAired>\n
+  \       <GuestStars>|Tania Mustapic|Deni Gordon|John O'Brien|Kevin Copeland|Natalie
+  Mendoza|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n
+  \       <Overview>Crichton leaves Moya in his module for a drive. Moya starbursts
+  leaving Crichton marooned and alone in space. He finds a planet and makes it his
+  home where he lives for several months until the others find him. He is unwilling
+  to accept however, that Moya didn't starburst intentionally.</Overview>\n        <ProductionCode>#10114</ProductionCode>\n
+  \       <Rating>5.0</Rating>\n        <SeasonNumber>1</SeasonNumber>\n        <Writer>|Doug
+  Heyes Jr.|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11370.jpg</filename>\n
+  \       <lastupdated>1234195147</lastupdated>\n        <seasonid>449</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11371</id>\n
+  \       <Combined_episodenumber>15.0</Combined_episodenumber>\n        <Combined_season>1</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>15.0</DVD_episodenumber>\n
+  \       <DVD_season>1</DVD_season>\n        <Director>|Tony Tilse|</Director>\n
+  \       <EpImgFlag></EpImgFlag>\n        <EpisodeName>Durka Returns</EpisodeName>\n
+  \       <EpisodeNumber>15</EpisodeNumber>\n        <FirstAired>1999-08-13</FirstAired>\n
+  \       <GuestStars>|Tiriel Mora|David Wheeler|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n
+  \       <Language>en</Language>\n        <Overview>When a Starburst goes badly wrong,
+  Moya collides with a Nebari ship. On board is Durka, Rygel's former torturer, who
+  has been mind cleansed and now serves the Nebari. Chiana, an attractive young rebel
+  faces the same fate. Rygel takes it upon himself to take revenge on Durka and ends
+  up undoing the cleansing and restoring him to his former, tyrannic incarnation.</Overview>\n
+  \       <ProductionCode>#10115</ProductionCode>\n        <Rating>8.0</Rating>\n
+  \       <SeasonNumber>1</SeasonNumber>\n        <Writer>|Grant McAloon|</Writer>\n
+  \       <absolute_number></absolute_number>\n        <filename>episodes/70522/11371.jpg</filename>\n
+  \       <lastupdated>1234195180</lastupdated>\n        <seasonid>449</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11372</id>\n
+  \       <Combined_episodenumber>16.0</Combined_episodenumber>\n        <Combined_season>1</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>16.0</DVD_episodenumber>\n
+  \       <DVD_season>1</DVD_season>\n        <Director>|Rowan Woods|</Director>\n
+  \       <EpImgFlag></EpImgFlag>\n        <EpisodeName>A Human Reaction</EpisodeName>\n
+  \       <EpisodeNumber>16</EpisodeNumber>\n        <FirstAired>1999-08-01</FirstAired>\n
+  \       <GuestStars>|Frankie Davidson|Richard Sydenham|Phillip Gordon|Kent McCord|</GuestStars>\n
+  \       <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n        <Overview>Crichton
+  is sucked down a wormhole and crash lands on a beach...on Earth, Australia. Although
+  the home he has returned to isn't as real as it seems. Everything gets worse when
+  the rest of Moya's crew shows up and are experimented on...killing Rygel.</Overview>\n
+  \       <ProductionCode>#10116</ProductionCode>\n        <Rating>9.0</Rating>\n
+  \       <SeasonNumber>1</SeasonNumber>\n        <Writer>|Justin Monjo|</Writer>\n
+  \       <absolute_number></absolute_number>\n        <filename>episodes/70522/11372.jpg</filename>\n
+  \       <lastupdated>1234195211</lastupdated>\n        <seasonid>449</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11373</id>\n
+  \       <Combined_episodenumber>17.0</Combined_episodenumber>\n        <Combined_season>1</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>17.0</DVD_episodenumber>\n
+  \       <DVD_season>1</DVD_season>\n        <Director>|Ian Watson|</Director>\n
+  \       <EpImgFlag></EpImgFlag>\n        <EpisodeName>Through the Looking Glass</EpisodeName>\n
+  \       <EpisodeNumber>17</EpisodeNumber>\n        <FirstAired>1999-09-10</FirstAired>\n
+  \       <GuestStars>|June Salter|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n
+  \       <Overview>Moya tries to starburst to prove to the crew that she still can.
+  It goes slightly wrong though and she gets stuck in starburst and split into several
+  different dimensions.</Overview>\n        <ProductionCode>#10117</ProductionCode>\n
+  \       <Rating>9.0</Rating>\n        <SeasonNumber>1</SeasonNumber>\n        <Writer>|David
+  Kemper|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11373.jpg</filename>\n
+  \       <lastupdated>1234195243</lastupdated>\n        <seasonid>449</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11374</id>\n
+  \       <Combined_episodenumber>18.0</Combined_episodenumber>\n        <Combined_season>1</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>18.0</DVD_episodenumber>\n
+  \       <DVD_season>1</DVD_season>\n        <Director>|Tony Tilse|Doug Heyes Jr.|</Director>\n
+  \       <EpImgFlag></EpImgFlag>\n        <EpisodeName>A Bug's Life</EpisodeName>\n
+  \       <EpisodeNumber>18</EpisodeNumber>\n        <FirstAired>1999-09-17</FirstAired>\n
+  \       <GuestStars>|Michael Tuahine|Zoe Coyle|Richard White|Paul Leyden|</GuestStars>\n
+  \       <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n        <Overview>A
+  peacekeeper ship is approaching Moya, so Crichton and Aeryn pose as peacekeeper
+  officers on a secret mission while everyone else gets locked into cells to make
+  the deception seem realistic. The peacekeepers that come aboard have some secret
+  cargo. But when their secret cargo escapes, no one on board is safe.</Overview>\n
+  \       <ProductionCode>#10118</ProductionCode>\n        <Rating>9.0</Rating>\n
+  \       <SeasonNumber>1</SeasonNumber>\n        <Writer></Writer>\n        <absolute_number></absolute_number>\n
+  \       <filename>episodes/70522/11374.jpg</filename>\n        <lastupdated>1234195280</lastupdated>\n
+  \       <seasonid>449</seasonid>\n        <seriesid>70522</seriesid>\n    </Episode>\n
+  \   <Episode>\n        <id>11375</id>\n        <Combined_episodenumber>19.0</Combined_episodenumber>\n
+  \       <Combined_season>1</Combined_season>\n        <DVD_chapter></DVD_chapter>\n
+  \       <DVD_discid></DVD_discid>\n        <DVD_episodenumber>19.0</DVD_episodenumber>\n
+  \       <DVD_season>1</DVD_season>\n        <Director>|Rowan Woods|</Director>\n
+  \       <EpImgFlag></EpImgFlag>\n        <EpisodeName>Nerve</EpisodeName>\n        <EpisodeNumber>19</EpisodeNumber>\n
+  \       <FirstAired>2000-01-07</FirstAired>\n        <GuestStars>|Kent McCord|Alyssa
+  Jane Cook|Stephen Leeder|Imogen Annesley|Anthony Kierann|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n
+  \       <Language>en</Language>\n        <Overview>Crichton and Chiana try to infiltrate
+  a peacekeeper base to get some vital medicine for Aeryn. Crichton gets caught by
+  Scorpius and imprisoned. He is tortured using a device called the 'Aurora Chair'
+  which is able to look inside his mind and where Scorpius learns that Crichton has
+  the secret to creating wormholes.</Overview>\n        <ProductionCode>#10119</ProductionCode>\n
+  \       <Rating>9.0</Rating>\n        <SeasonNumber>1</SeasonNumber>\n        <Writer>|Richard
+  Manning|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11375.jpg</filename>\n
+  \       <lastupdated>1234195312</lastupdated>\n        <seasonid>449</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11376</id>\n
+  \       <Combined_episodenumber>20.0</Combined_episodenumber>\n        <Combined_season>1</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>20.0</DVD_episodenumber>\n
+  \       <DVD_season>1</DVD_season>\n        <Director>|Ian Watson|</Director>\n
+  \       <EpImgFlag></EpImgFlag>\n        <EpisodeName>The Hidden Memory</EpisodeName>\n
+  \       <EpisodeNumber>20</EpisodeNumber>\n        <FirstAired>2000-01-14</FirstAired>\n
+  \       <GuestStars>|Alyssa Jane Cook|Imogen Annesley|Anthony Kierann|Christian
+  Bischoff|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n
+  \       <Overview>Scorpius attempts to extract the wormhole technology from Crichton's
+  mind, while Aeryn mounts a rescue operation. Crais finds himself at Scorpius' mercy,
+  and Moya gives birth.</Overview>\n        <ProductionCode>#10120</ProductionCode>\n
+  \       <Rating>9.0</Rating>\n        <SeasonNumber>1</SeasonNumber>\n        <Writer>|Justin
+  Monjo|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11376.jpg</filename>\n
+  \       <lastupdated>1238072138</lastupdated>\n        <seasonid>449</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11377</id>\n
+  \       <Combined_episodenumber>21.0</Combined_episodenumber>\n        <Combined_season>1</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>21.0</DVD_episodenumber>\n
+  \       <DVD_season>1</DVD_season>\n        <Director>|Andrew Prowse|</Director>\n
+  \       <EpImgFlag></EpImgFlag>\n        <EpisodeName>Bone to be Wild</EpisodeName>\n
+  \       <EpisodeNumber>21</EpisodeNumber>\n        <FirstAired>2000-01-21</FirstAired>\n
+  \       <GuestStars>|Marton Csokas|Francesca Buller|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n
+  \       <Language>en</Language>\n        <Overview>Moya is hiding from a peacekeeper
+  command carrier in an asteroid field. The crew receive a distress call and Crichton,
+  Zhaan and D'Argo go down to one of the asteroids to rescue a women who has an unusual
+  appetite.</Overview>\n        <ProductionCode>#10121</ProductionCode>\n        <Rating>8.0</Rating>\n
+  \       <SeasonNumber>1</SeasonNumber>\n        <Writer>|Rockne S. O'Bannon|David
+  Kemper|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11377.jpg</filename>\n
+  \       <lastupdated>1238072083</lastupdated>\n        <seasonid>449</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11378</id>\n
+  \       <Combined_episodenumber>22.0</Combined_episodenumber>\n        <Combined_season>1</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>22.0</DVD_episodenumber>\n
+  \       <DVD_season>1</DVD_season>\n        <Director></Director>\n        <EpImgFlag></EpImgFlag>\n
+  \       <EpisodeName>Family Ties</EpisodeName>\n        <EpisodeNumber>22</EpisodeNumber>\n
+  \       <FirstAired>2000-01-28</FirstAired>\n        <GuestStars></GuestStars>\n
+  \       <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n        <Overview>Rygel
+  steals a transport pod and goes to the peacekeeper command carrier to betray the
+  others. However he ends up returning to Moya with Crais who wants asylum. Crichton
+  decides to destroy Scorpius' Gamac Base to give Moya time to escape.</Overview>\n
+  \       <ProductionCode>#10122</ProductionCode>\n        <Rating>9.0</Rating>\n
+  \       <SeasonNumber>1</SeasonNumber>\n        <Writer>|Rockne S. O'Bannon|David
+  Kemper|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11378.jpg</filename>\n
+  \       <lastupdated>1234195433</lastupdated>\n        <seasonid>449</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11379</id>\n
+  \       <Combined_episodenumber>1.0</Combined_episodenumber>\n        <Combined_season>2</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>1.0</DVD_episodenumber>\n
+  \       <DVD_season>2</DVD_season>\n        <Director>|Andrew Prowse|</Director>\n
+  \       <EpImgFlag></EpImgFlag>\n        <EpisodeName>Mind the Baby</EpisodeName>\n
+  \       <EpisodeNumber>1</EpisodeNumber>\n        <FirstAired>2000-03-17</FirstAired>\n
+  \       <GuestStars>|Jennifer Fischer|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n
+  \       <Language>en</Language>\n        <Overview>Crichton, Aeryn and D'argo are
+  stranded in an asteroid field while Scorpius searches for them. Their safety depends
+  on Crais, who is nearby in Talyn. Aeryn teaches Crais how to control the young Leviathan
+  - the only thing she can offer in return for the lives of her friends. When Moya
+  returns to the asteroid field to look for her offspring, Crichton decides to remove
+  Crais from control of Talyn. Scorpius finally sees his chance to strike.</Overview>\n
+  \       <ProductionCode>#10202</ProductionCode>\n        <Rating>8.0</Rating>\n
+  \       <SeasonNumber>2</SeasonNumber>\n        <Writer>|Richard Manning|</Writer>\n
+  \       <absolute_number></absolute_number>\n        <filename>episodes/70522/11379.jpg</filename>\n
+  \       <lastupdated>1234414667</lastupdated>\n        <seasonid>450</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11380</id>\n
+  \       <Combined_episodenumber>2.0</Combined_episodenumber>\n        <Combined_season>2</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>2.0</DVD_episodenumber>\n
+  \       <DVD_season>2</DVD_season>\n        <Director>|Tony Tilse|</Director>\n
+  \       <EpImgFlag></EpImgFlag>\n        <EpisodeName>Vitas Mortis</EpisodeName>\n
+  \       <EpisodeNumber>2</EpisodeNumber>\n        <FirstAired>2000-03-24</FirstAired>\n
+  \       <GuestStars>|Melissa Jaffer|Anna Lise-Phillips|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n
+  \       <Language>en</Language>\n        <Overview>D'Argo takes part in a sacred
+  ritual that helps an old Luxan, an Orican, to survive. During the ritual the Orican
+  draws energy from who she thinks is D'Argo but is actually Moya. Consequently Moya
+  starts to age rapidly.</Overview>\n        <ProductionCode>#10203</ProductionCode>\n
+  \       <Rating>9.0</Rating>\n        <SeasonNumber>2</SeasonNumber>\n        <Writer>|Grant
+  McAloon|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11380.jpg</filename>\n
+  \       <lastupdated>1234414684</lastupdated>\n        <seasonid>450</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11381</id>\n
+  \       <Combined_episodenumber>3.0</Combined_episodenumber>\n        <Combined_season>2</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>3.0</DVD_episodenumber>\n
+  \       <DVD_season>2</DVD_season>\n        <Director>|Rowan Woods|</Director>\n
+  \       <EpImgFlag></EpImgFlag>\n        <EpisodeName>Taking the Stone</EpisodeName>\n
+  \       <EpisodeNumber>3</EpisodeNumber>\n        <FirstAired>2000-03-31</FirstAired>\n
+  \       <GuestStars>|Natasha Beaumont|Peter Scarf|Michela Noonan|Anthony Hayes|</GuestStars>\n
+  \       <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n        <Overview>Chiana
+  leaves Moya and goes to 'grave planet' populated by reckless thrill seekers who
+  play dangerous and life threatening games.</Overview>\n        <ProductionCode>#10204</ProductionCode>\n
+  \       <Rating>9.0</Rating>\n        <SeasonNumber>2</SeasonNumber>\n        <Writer>|Justin
+  Monjo|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11381.jpg</filename>\n
+  \       <lastupdated>1234414742</lastupdated>\n        <seasonid>450</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11382</id>\n
+  \       <Combined_episodenumber>4.0</Combined_episodenumber>\n        <Combined_season>2</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>4.0</DVD_episodenumber>\n
+  \       <DVD_season>2</DVD_season>\n        <Director>|Ian Watson|</Director>\n
+  \       <EpImgFlag></EpImgFlag>\n        <EpisodeName>Crackers Don't Matter</EpisodeName>\n
+  \       <EpisodeNumber>4</EpisodeNumber>\n        <FirstAired>2000-04-07</FirstAired>\n
+  \       <GuestStars>|Danny Adcock|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n
+  \       <Overview>The crew returns from a Commerce Planet with a load of Crackers
+  and a meek alien called Traltixx, who promises he can alter Moya's electromagnetics
+  to make her untraceable. Crichton is skeptical; it seems too good to be true. As
+  they pass through a constellation of pulsars, an intense paranoia affects the crew,
+  turning them violently again each other. Crichton must fight against his own paranoid
+  delusions to work out what Traltixx is actually doing and how to stop him.</Overview>\n
+  \       <ProductionCode>#10205</ProductionCode>\n        <Rating>4.5</Rating>\n
+  \       <SeasonNumber>2</SeasonNumber>\n        <Writer>|Justin Monjo|</Writer>\n
+  \       <absolute_number></absolute_number>\n        <filename>episodes/70522/11382.jpg</filename>\n
+  \       <lastupdated>1234414755</lastupdated>\n        <seasonid>450</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11383</id>\n
+  \       <Combined_episodenumber>5.0</Combined_episodenumber>\n        <Combined_season>2</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>5.0</DVD_episodenumber>\n
+  \       <DVD_season>2</DVD_season>\n        <Director>|Tony Tilse|</Director>\n
+  \       <EpImgFlag></EpImgFlag>\n        <EpisodeName>The Way We Weren't</EpisodeName>\n
+  \       <EpisodeNumber>5</EpisodeNumber>\n        <FirstAired>2000-04-14</FirstAired>\n
+  \       <GuestStars>|Melissa Jaffer|Alex Dimitriades|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n
+  \       <Language>en</Language>\n        <Overview>A datacam tape is uncovered showing
+  Aeryn as part of a Peacekeeper firing squad that executed a previous Pilot aboard
+  Moya. The rest of the crew wants answers but Aeryn is recalcitrant about revisiting
+  her past - especially her relationship with Velorek, the man charged with forcibly
+  bonding a new Pilot to Moya. Pilot two refuses to communicate with the crew, not
+  wanting to reveal his own complicity in the murky circumstances surrounding his
+  installment as Moya's guide.</Overview>\n        <ProductionCode>#10207</ProductionCode>\n
+  \       <Rating>9.0</Rating>\n        <SeasonNumber>2</SeasonNumber>\n        <Writer>|Naren
+  Shankar|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11383.jpg</filename>\n
+  \       <lastupdated>1234414767</lastupdated>\n        <seasonid>450</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11384</id>\n
+  \       <Combined_episodenumber>6.0</Combined_episodenumber>\n        <Combined_season>2</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>6.0</DVD_episodenumber>\n
+  \       <DVD_season>2</DVD_season>\n        <Director>|Andrew Prowse|</Director>\n
+  \       <EpImgFlag></EpImgFlag>\n        <EpisodeName>Picture if You Will</EpisodeName>\n
+  \       <EpisodeNumber>6</EpisodeNumber>\n        <FirstAired>2000-04-21</FirstAired>\n
+  \       <GuestStars>|Chris Haywood|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n
+  \       <Language>en</Language>\n        <Overview>Maldus returns to torment the
+  crew, convincing them that their friends have perished. One by one, the evil sorcerer
+  drags them into his realm.</Overview>\n        <ProductionCode>#10206</ProductionCode>\n
+  \       <Rating>8.0</Rating>\n        <SeasonNumber>2</SeasonNumber>\n        <Writer>|Peter
+  Neale|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11384.jpg</filename>\n
+  \       <lastupdated>1234414779</lastupdated>\n        <seasonid>450</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11385</id>\n
+  \       <Combined_episodenumber>7.0</Combined_episodenumber>\n        <Combined_season>2</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>7.0</DVD_episodenumber>\n
+  \       <DVD_season>2</DVD_season>\n        <Director>|Rowan Woods|</Director>\n
+  \       <EpImgFlag></EpImgFlag>\n        <EpisodeName>Home on the Remains</EpisodeName>\n
+  \       <EpisodeNumber>7</EpisodeNumber>\n        <FirstAired>2000-06-16</FirstAired>\n
+  \       <GuestStars>|John Brumpton|Hunter Peske|Gavin Robins|Rob Carlton|Justine
+  Saunders|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n
+  \       <Overview>With Moya out of food, Chiana leads everyone to a dead boudong
+  where she once worked.</Overview>\n        <ProductionCode>#10208</ProductionCode>\n
+  \       <Rating>8.0</Rating>\n        <SeasonNumber>2</SeasonNumber>\n        <Writer>|Gabrielle
+  Stanton|Harry Werksman Jr.|</Writer>\n        <absolute_number></absolute_number>\n
+  \       <filename>episodes/70522/11385.jpg</filename>\n        <lastupdated>1234414790</lastupdated>\n
+  \       <seasonid>450</seasonid>\n        <seriesid>70522</seriesid>\n    </Episode>\n
+  \   <Episode>\n        <id>11386</id>\n        <Combined_episodenumber>8.0</Combined_episodenumber>\n
+  \       <Combined_season>2</Combined_season>\n        <DVD_chapter></DVD_chapter>\n
+  \       <DVD_discid></DVD_discid>\n        <DVD_episodenumber>8.0</DVD_episodenumber>\n
+  \       <DVD_season>2</DVD_season>\n        <Director>|Ian Watson|</Director>\n
+  \       <EpImgFlag></EpImgFlag>\n        <EpisodeName>Dream a Little Dream</EpisodeName>\n
+  \       <EpisodeNumber>8</EpisodeNumber>\n        <FirstAired>2000-06-23</FirstAired>\n
+  \       <GuestStars>|Steve Jacobs|Sandy Gore|Peter Kowitz|Jeremy Callaghan|Marin
+  Mimica|Simone Kessell|Dean Nottle|Jessica Wilcox|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n
+  \       <Language>en</Language>\n        <Overview>While waiting inside a transport
+  pod to be picked up by Moya, Zhaan tells Crichton about being accused and tried
+  for murder during his absence.</Overview>\n        <ProductionCode>#10201</ProductionCode>\n
+  \       <Rating>7.0</Rating>\n        <SeasonNumber>2</SeasonNumber>\n        <Writer>|Steven
+  Rae|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11386.jpg</filename>\n
+  \       <lastupdated>1234414803</lastupdated>\n        <seasonid>450</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11387</id>\n
+  \       <Combined_episodenumber>9.0</Combined_episodenumber>\n        <Combined_season>2</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>9.0</DVD_episodenumber>\n
+  \       <DVD_season>2</DVD_season>\n        <Director>|Ian Watson|</Director>\n
+  \       <EpImgFlag></EpImgFlag>\n        <EpisodeName>Out of Their Minds</EpisodeName>\n
+  \       <EpisodeNumber>9</EpisodeNumber>\n        <FirstAired>2000-07-07</FirstAired>\n
+  \       <GuestStars>|Nicholas McKay|Dominique Sweeney|Thomas Holesgrove|Angie Milliken|</GuestStars>\n
+  \       <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n        <Overview>An
+  alien ship fires a weapon at Moya. Although the energy shield is active, some of
+  the blast makes it through and causes everyone's consciousness to jump into another
+  body.</Overview>\n        <ProductionCode>#10209</ProductionCode>\n        <Rating>7.5</Rating>\n
+  \       <SeasonNumber>2</SeasonNumber>\n        <Writer>|Michael Cassutt|</Writer>\n
+  \       <absolute_number></absolute_number>\n        <filename>episodes/70522/11387.jpg</filename>\n
+  \       <lastupdated>1234414823</lastupdated>\n        <seasonid>450</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11391</id>\n
+  \       <Combined_episodenumber>10.0</Combined_episodenumber>\n        <Combined_season>2</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>10.0</DVD_episodenumber>\n
+  \       <DVD_season>2</DVD_season>\n        <Director>|Catherine Millar|Gabrielle
+  Stanton|Harry Werksman Jr.|</Director>\n        <EpImgFlag></EpImgFlag>\n        <EpisodeName>My
+  Three Crichtons</EpisodeName>\n        <EpisodeNumber>10</EpisodeNumber>\n        <FirstAired>2000-07-14</FirstAired>\n
+  \       <GuestStars>|Matthew Le Nevez|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n
+  \       <Language>en</Language>\n        <Overview>A strange globe appears on Moya,
+  sucking in Crichton and duplicating him creating two additional people. One who
+  is a de-evolved 'cave man' and another who has increased mental ability.</Overview>\n
+  \       <ProductionCode>#10212</ProductionCode>\n        <Rating>8.0</Rating>\n
+  \       <SeasonNumber>2</SeasonNumber>\n        <Writer></Writer>\n        <absolute_number></absolute_number>\n
+  \       <filename>episodes/70522/11391.jpg</filename>\n        <lastupdated>1234414837</lastupdated>\n
+  \       <seasonid>450</seasonid>\n        <seriesid>70522</seriesid>\n    </Episode>\n
+  \   <Episode>\n        <id>11388</id>\n        <Combined_episodenumber>11.0</Combined_episodenumber>\n
+  \       <Combined_season>2</Combined_season>\n        <DVD_chapter></DVD_chapter>\n
+  \       <DVD_discid></DVD_discid>\n        <DVD_episodenumber>11.0</DVD_episodenumber>\n
+  \       <DVD_season>2</DVD_season>\n        <Director>|Andrew Prowse|Tony Tilse|</Director>\n
+  \       <EpImgFlag></EpImgFlag>\n        <EpisodeName>Look at the Princess (1):
+  A Kiss Is But a Kiss</EpisodeName>\n        <EpisodeNumber>11</EpisodeNumber>\n
+  \       <FirstAired>2000-07-21</FirstAired>\n        <GuestStars>|Felix Williamson|Tina
+  Bursill|Felicity Price|Aaron Cash|Matt Day|Gavin Robins|Nicholas McKay|Bianca Chiminello|Francesca
+  Buller|John Clardige|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n
+  \       <Overview>Moya arrives at a planet where the population test their genetic
+  compatibility by kissing. Crichton kisses a princess, who is next in line for the
+  throne, and discovers that his DNA is a perfect match for her. He must now marry
+  her and they will rule together.</Overview>\n        <ProductionCode>#10210</ProductionCode>\n
+  \       <Rating>7.5</Rating>\n        <SeasonNumber>2</SeasonNumber>\n        <Writer>|David
+  Kemper|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11388.jpg</filename>\n
+  \       <lastupdated>1234414885</lastupdated>\n        <seasonid>450</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11389</id>\n
+  \       <Combined_episodenumber>12.0</Combined_episodenumber>\n        <Combined_season>2</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>12.0</DVD_episodenumber>\n
+  \       <DVD_season>2</DVD_season>\n        <Director>|Andrew Prowse|Tony Tilse|</Director>\n
+  \       <EpImgFlag></EpImgFlag>\n        <EpisodeName>Look at the Princess (2):
+  I Do, I Think</EpisodeName>\n        <EpisodeNumber>12</EpisodeNumber>\n        <FirstAired>2000-07-28</FirstAired>\n
+  \       <GuestStars>|Aaron Cash|Felicity Price|Bianca Chiminello|Francesca Buller|Matt
+  Day|Nicholas McKay|Felix Williamson|Thomas Holesgrove|Tina Bursill|Jonathan Hardy|</GuestStars>\n
+  \       <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n        <Overview>Princess
+  Katralla's mother brings in Scorpius promising Crichton that if he doesn't marry
+  her daughter, she will hand him over. Meanwhile, Prince Clavor starts a plot to
+  assassinate Crichton so that he may ascend to the throne instead of his sister.</Overview>\n
+  \       <ProductionCode>#10221</ProductionCode>\n        <Rating>8.0</Rating>\n
+  \       <SeasonNumber>2</SeasonNumber>\n        <Writer>|David Kemper|</Writer>\n
+  \       <absolute_number></absolute_number>\n        <filename>episodes/70522/11389.jpg</filename>\n
+  \       <lastupdated>1234414912</lastupdated>\n        <seasonid>450</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11390</id>\n
+  \       <Combined_episodenumber>13.0</Combined_episodenumber>\n        <Combined_season>2</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>13.0</DVD_episodenumber>\n
+  \       <DVD_season>2</DVD_season>\n        <Director>|Andrew Prowse|Tony Tilse|</Director>\n
+  \       <EpImgFlag></EpImgFlag>\n        <EpisodeName>Look at the Princess (3):
+  The Maltese Crichton</EpisodeName>\n        <EpisodeNumber>13</EpisodeNumber>\n
+  \       <FirstAired>2000-08-04</FirstAired>\n        <GuestStars>|Bianca Chiminello|Matt
+  Day|Tina Bursill|Felix Williamson|Rose Klemp|Felicity Price|Thomas Holesgrove|Nicholas
+  McKay|Aaron Cash|Jonathan Hardy|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n
+  \       <Overview>Now married, Crichton and Katalla are frozen into living statues
+  so that they may watch over the presiding governments of the next eighty cycles.
+  Immediately, Clavor and the Scarran emissary attempt another assassination and succeed
+  in removing Crichton's head. The crew must save John and Chiana while escaping Scorpius.</Overview>\n
+  \       <ProductionCode>#10211</ProductionCode>\n        <Rating>8.5</Rating>\n
+  \       <SeasonNumber>2</SeasonNumber>\n        <Writer>|David Kemper|</Writer>\n
+  \       <absolute_number></absolute_number>\n        <filename>episodes/70522/11390.jpg</filename>\n
+  \       <lastupdated>1234414923</lastupdated>\n        <seasonid>450</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11392</id>\n
+  \       <Combined_episodenumber>14.0</Combined_episodenumber>\n        <Combined_season>2</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>14.0</DVD_episodenumber>\n
+  \       <DVD_season>2</DVD_season>\n        <Director>|Tony Tilse|</Director>\n
+  \       <EpImgFlag></EpImgFlag>\n        <EpisodeName>Beware of Dog</EpisodeName>\n
+  \       <EpisodeNumber>14</EpisodeNumber>\n        <FirstAired>2000-08-11</FirstAired>\n
+  \       <GuestStars>|Virginia Weule|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n
+  \       <Language>en</Language>\n        <Overview>The crew bring aboard an alien
+  tracker to remove some creatures that came aboard hidden in some cargo.</Overview>\n
+  \       <ProductionCode>#10213</ProductionCode>\n        <Rating>8.0</Rating>\n
+  \       <SeasonNumber>2</SeasonNumber>\n        <Writer>|Naren Shankar|</Writer>\n
+  \       <absolute_number></absolute_number>\n        <filename>episodes/70522/11392.jpg</filename>\n
+  \       <lastupdated>1234414943</lastupdated>\n        <seasonid>450</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11393</id>\n
+  \       <Combined_episodenumber>15.0</Combined_episodenumber>\n        <Combined_season>2</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>15.0</DVD_episodenumber>\n
+  \       <DVD_season>2</DVD_season>\n        <Director>|Rowan Woods|</Director>\n
+  \       <EpImgFlag></EpImgFlag>\n        <EpisodeName>Won't Get Fooled Again</EpisodeName>\n
+  \       <EpisodeNumber>15</EpisodeNumber>\n        <FirstAired>2000-08-18</FirstAired>\n
+  \       <GuestStars>|Murray Bartlett|Carmen Duncan|Thomas Holesgrove|</GuestStars>\n
+  \       <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n        <Overview>The
+  Scorpius clone puts John into a dream world to prevent the Scarrans from getting
+  any wormhole knowledge.</Overview>\n        <ProductionCode>#10214</ProductionCode>\n
+  \       <Rating>7.0</Rating>\n        <SeasonNumber>2</SeasonNumber>\n        <Writer>|Richard
+  Manning|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11393.jpg</filename>\n
+  \       <lastupdated>1234414955</lastupdated>\n        <seasonid>450</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11394</id>\n
+  \       <Combined_episodenumber>16.0</Combined_episodenumber>\n        <Combined_season>2</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>16.0</DVD_episodenumber>\n
+  \       <DVD_season>2</DVD_season>\n        <Director>|Ian Watson|</Director>\n
+  \       <EpImgFlag></EpImgFlag>\n        <EpisodeName>The Locket</EpisodeName>\n
+  \       <EpisodeNumber>16</EpisodeNumber>\n        <FirstAired>2000-08-25</FirstAired>\n
+  \       <GuestStars>|Alyson Standen|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n
+  \       <Language>en</Language>\n        <Overview>A temporal distortion traps Aeryn
+  and John on a planet's surface, where they live out the rest of their lives -- while
+  Moya remains trapped in orbit, experiencing only hours. Stark returns to the ship
+  with news of D'Argo's son.</Overview>\n        <ProductionCode>#10215</ProductionCode>\n
+  \       <Rating>8.5</Rating>\n        <SeasonNumber>2</SeasonNumber>\n        <Writer>|Justin
+  Monjo|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11394.jpg</filename>\n
+  \       <lastupdated>1234414984</lastupdated>\n        <seasonid>450</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11395</id>\n
+  \       <Combined_episodenumber>17.0</Combined_episodenumber>\n        <Combined_season>2</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>17.0</DVD_episodenumber>\n
+  \       <DVD_season>2</DVD_season>\n        <Director>|Tony Tilse|</Director>\n
+  \       <EpImgFlag></EpImgFlag>\n        <EpisodeName>The Ugly Truth</EpisodeName>\n
+  \       <EpisodeNumber>17</EpisodeNumber>\n        <FirstAired>2000-08-08</FirstAired>\n
+  \       <GuestStars>|Peter Carroll|Linda Cropper|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n
+  \       <Language>en</Language>\n        <Overview>Crais and Talyn return. The crew
+  are put on trial for an attack that Talyn made on an alien ship.</Overview>\n        <ProductionCode>#10216</ProductionCode>\n
+  \       <Rating>4.5</Rating>\n        <SeasonNumber>2</SeasonNumber>\n        <Writer>|Gabrielle
+  Stanton|Harry Werksman Jr.|</Writer>\n        <absolute_number></absolute_number>\n
+  \       <filename>episodes/70522/11395.jpg</filename>\n        <lastupdated>1234414997</lastupdated>\n
+  \       <seasonid>450</seasonid>\n        <seriesid>70522</seriesid>\n    </Episode>\n
+  \   <Episode>\n        <id>11396</id>\n        <Combined_episodenumber>18.0</Combined_episodenumber>\n
+  \       <Combined_season>2</Combined_season>\n        <DVD_chapter></DVD_chapter>\n
+  \       <DVD_discid></DVD_discid>\n        <DVD_episodenumber>18.0</DVD_episodenumber>\n
+  \       <DVD_season>2</DVD_season>\n        <Director>|Rowan Woods|</Director>\n
+  \       <EpImgFlag></EpImgFlag>\n        <EpisodeName>A Clockwork Nebari</EpisodeName>\n
+  \       <EpisodeNumber>18</EpisodeNumber>\n        <FirstAired>2000-09-15</FirstAired>\n
+  \       <GuestStars>|Malcolm Kennard|Simon Bossell|Skye Wansey|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n
+  \       <Language>en</Language>\n        <Overview>A Nebari group come aboard Moya
+  and attempt to mind cleanse everyone using a drug. Pilot and Rygel are the only
+  two who can resist the effects. Crichton also remains unaffected due to Scorpius'
+  neural clone.</Overview>\n        <ProductionCode>#10217</ProductionCode>\n        <Rating>6.3</Rating>\n
+  \       <SeasonNumber>2</SeasonNumber>\n        <Writer>|Lily Taylor|</Writer>\n
+  \       <absolute_number></absolute_number>\n        <filename>episodes/70522/11396.jpg</filename>\n
+  \       <lastupdated>1234415011</lastupdated>\n        <seasonid>450</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11397</id>\n
+  \       <Combined_episodenumber>19.0</Combined_episodenumber>\n        <Combined_season>2</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>19.0</DVD_episodenumber>\n
+  \       <DVD_season>2</DVD_season>\n        <Director>|Andrew Prowse|</Director>\n
+  \       <EpImgFlag></EpImgFlag>\n        <EpisodeName>Liars, Guns and Money (1):
+  A Not So Simple Plan</EpisodeName>\n        <EpisodeNumber>19</EpisodeNumber>\n
+  \       <FirstAired>2001-01-05</FirstAired>\n        <GuestStars>|Nicholas Hope|Claudia
+  Karvan|Adrian Brown|Jennifer Fischer|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n
+  \       <Language>en</Language>\n        <Overview>Stark returns to Moya with a
+  plan to rob a shadow depository and buy a contingent of slaves, one of which is
+  D'Argo's son Jothee. D'Argo attempts the robbery on his own however and now the
+  crew must recover him as well as the money they require.</Overview>\n        <ProductionCode>#10218</ProductionCode>\n
+  \       <Rating>6.3</Rating>\n        <SeasonNumber>2</SeasonNumber>\n        <Writer>|Grant
+  McAloon|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11397.jpg</filename>\n
+  \       <lastupdated>1234415021</lastupdated>\n        <seasonid>450</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11398</id>\n
+  \       <Combined_episodenumber>20.0</Combined_episodenumber>\n        <Combined_season>2</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>20.0</DVD_episodenumber>\n
+  \       <DVD_season>2</DVD_season>\n        <Director>|Catherine Millar|</Director>\n
+  \       <EpImgFlag></EpImgFlag>\n        <EpisodeName>Liars, Guns and Money (2):
+  With Friends Like These...</EpisodeName>\n        <EpisodeNumber>20</EpisodeNumber>\n
+  \       <FirstAired>2001-01-12</FirstAired>\n        <GuestStars>|Jeremy Sims|David
+  Wheeler|David Bowers|Linal Haft|Jo Kerrigan|Thomas Holesgrove|Phillip Hinton|John
+  Adam|Nicholas Hope|Claudia Karvan|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n
+  \       <Overview>Scorpius buys the slaves containing D'Argo's son before D'Argo
+  can. Some of the crew leave Moya in search of mercenaries to rescue Jothee. Meanwhile
+  back on Moya, the stolen money has turned into metal eating spiders that begin to
+  consume Moya.</Overview>\n        <ProductionCode>#10219</ProductionCode>\n        <Rating>6.7</Rating>\n
+  \       <SeasonNumber>2</SeasonNumber>\n        <Writer>|Naren Shankar|</Writer>\n
+  \       <absolute_number></absolute_number>\n        <filename>episodes/70522/11398.jpg</filename>\n
+  \       <lastupdated>1234415035</lastupdated>\n        <seasonid>450</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11399</id>\n
+  \       <Combined_episodenumber>21.0</Combined_episodenumber>\n        <Combined_season>2</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>21.0</DVD_episodenumber>\n
+  \       <DVD_season>2</DVD_season>\n        <Director>|Catherine Millar|</Director>\n
+  \       <EpImgFlag></EpImgFlag>\n        <EpisodeName>Liars, Guns and Money (3):
+  Plan B</EpisodeName>\n        <EpisodeNumber>21</EpisodeNumber>\n        <FirstAired>2001-01-19</FirstAired>\n
+  \       <GuestStars>|Claudia Karvan|Phillip Hinton|Nicholas Hope|John Adam|David
+  Bowers|Thomas Holesgrove|Linal Haft|Jeremy Sims|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n
+  \       <Language>en</Language>\n        <Overview>Crichton turns himself over to
+  Scorpius in order to free Jothee. With all the mercenaries now aboard Moya, the
+  crew form a plan to rescue Crichton and destroy the depository.</Overview>\n        <ProductionCode>#10220</ProductionCode>\n
+  \       <Rating>8.3</Rating>\n        <SeasonNumber>2</SeasonNumber>\n        <Writer>|Justin
+  Monjo|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11399.jpg</filename>\n
+  \       <lastupdated>1234415050</lastupdated>\n        <seasonid>450</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11400</id>\n
+  \       <Combined_episodenumber>22.0</Combined_episodenumber>\n        <Combined_season>2</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>22.0</DVD_episodenumber>\n
+  \       <DVD_season>2</DVD_season>\n        <Director>|Rowan Woods|</Director>\n
+  \       <EpImgFlag></EpImgFlag>\n        <EpisodeName>Die Me, Dichotomy</EpisodeName>\n
+  \       <EpisodeNumber>22</EpisodeNumber>\n        <FirstAired>2001-01-26</FirstAired>\n
+  \       <GuestStars>|Thomas Holesgrove|Hugh Keays-Byrne|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n
+  \       <Language>en</Language>\n        <Overview>The crew find a doctor that can
+  heal Moya's burns and remove Crichton's neural chip. Things are complicated however
+  when Crichton is informed he needs additional brain tissue from a donor in stasis
+  who will die when the tissue is removed. Also Scorpius is beginning to take over
+  Crichton's brain.</Overview>\n        <ProductionCode>#10222</ProductionCode>\n
+  \       <Rating>7.5</Rating>\n        <SeasonNumber>2</SeasonNumber>\n        <Writer>|David
+  Kemper|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11400.jpg</filename>\n
+  \       <lastupdated>1234415066</lastupdated>\n        <seasonid>450</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11401</id>\n
+  \       <Combined_episodenumber>1.0</Combined_episodenumber>\n        <Combined_season>3</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>1.0</DVD_episodenumber>\n
+  \       <DVD_season>3</DVD_season>\n        <Director>|Ian Watson|</Director>\n
+  \       <EpImgFlag>1</EpImgFlag>\n        <EpisodeName>Season of Death</EpisodeName>\n
+  \       <EpisodeNumber>1</EpisodeNumber>\n        <FirstAired>2001-03-16</FirstAired>\n
+  \       <GuestStars>|Aaron Catalan|Thomas Holesgrove|Hugh Keays-Byrne|</GuestStars>\n
+  \       <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n        <Overview>D'Argo
+  and Stark try to heal John, left with his head open on an operating table, while
+  Scorpius attempts to avoid discovery. Zhaan makes a great personal sacrifice, while
+  Jothee and Chiana commit an indiscretion.</Overview>\n        <ProductionCode>#10301</ProductionCode>\n
+  \       <Rating>8.0</Rating>\n        <SeasonNumber>3</SeasonNumber>\n        <Writer>|Richard
+  Manning|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11401.jpg</filename>\n
+  \       <lastupdated>1234415276</lastupdated>\n        <seasonid>451</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11403</id>\n
+  \       <Combined_episodenumber>2.0</Combined_episodenumber>\n        <Combined_season>3</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>2.0</DVD_episodenumber>\n
+  \       <DVD_season>3</DVD_season>\n        <Director>|Andrew Prowse|</Director>\n
+  \       <EpImgFlag>1</EpImgFlag>\n        <EpisodeName>Suns and Lovers</EpisodeName>\n
+  \       <EpisodeNumber>2</EpisodeNumber>\n        <FirstAired>2001-03-23</FirstAired>\n
+  \       <GuestStars>|Leanna Walsman|Thomas Holesgrove|Jessica Fallico|Arthur Percival|</GuestStars>\n
+  \       <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n        <Overview>Moya
+  docks at a commerce station so the crew can spend some of the money they acquired
+  from the depository. Disaster strikes however when the station is hit by a storm.</Overview>\n
+  \       <ProductionCode>#10302</ProductionCode>\n        <Rating>7.7</Rating>\n
+  \       <SeasonNumber>3</SeasonNumber>\n        <Writer>|Justin Monjo|</Writer>\n
+  \       <absolute_number></absolute_number>\n        <filename>episodes/70522/11403.jpg</filename>\n
+  \       <lastupdated>1234415291</lastupdated>\n        <seasonid>451</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11404</id>\n
+  \       <Combined_episodenumber>3.0</Combined_episodenumber>\n        <Combined_season>3</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>3.0</DVD_episodenumber>\n
+  \       <DVD_season>3</DVD_season>\n        <Director>|Tony Tilse|</Director>\n
+  \       <EpImgFlag>1</EpImgFlag>\n        <EpisodeName>Self Inflicted Wounds (1):
+  Could'a, Would'a, Should'a</EpisodeName>\n        <EpisodeNumber>3</EpisodeNumber>\n
+  \       <FirstAired>2001-03-30</FirstAired>\n        <GuestStars>|Victoria Longley|Nicholas
+  Hope|Dwayne Fernandes|Kerith Atkinson|Brian Carbee|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n
+  \       <Language>en</Language>\n        <Overview>Moya approaches a wormhole, gets
+  pulled in and fused to another ship.</Overview>\n        <ProductionCode>#10303</ProductionCode>\n
+  \       <Rating>8.0</Rating>\n        <SeasonNumber>3</SeasonNumber>\n        <Writer>|David
+  Kemper|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11404.jpg</filename>\n
+  \       <lastupdated>1234415301</lastupdated>\n        <seasonid>451</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11405</id>\n
+  \       <Combined_episodenumber>4.0</Combined_episodenumber>\n        <Combined_season>3</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>4.0</DVD_episodenumber>\n
+  \       <DVD_season>3</DVD_season>\n        <Director>|Tony Tilse|</Director>\n
+  \       <EpImgFlag>1</EpImgFlag>\n        <EpisodeName>Self Inflicted Wounds (2):
+  Wait for the Wheel</EpisodeName>\n        <EpisodeNumber>4</EpisodeNumber>\n        <FirstAired>2001-04-06</FirstAired>\n
+  \       <GuestStars>|Victoria Longley|Nicholas Hope|Dwayne Fernandes|Kerith Atkinson|Brian
+  Carbee|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n
+  \       <Overview>The crew work out a way of getting free from the other ship and
+  out of the wormhole. Things become more complicated when their new 'friends' begin
+  to sabotage Moya and Crichton picks up a transmission from Earth.</Overview>\n        <ProductionCode>#10304</ProductionCode>\n
+  \       <Rating>8.0</Rating>\n        <SeasonNumber>3</SeasonNumber>\n        <Writer>|David
+  Kemper|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11405.jpg</filename>\n
+  \       <lastupdated>1234415314</lastupdated>\n        <seasonid>451</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11406</id>\n
+  \       <Combined_episodenumber>5.0</Combined_episodenumber>\n        <Combined_season>3</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>5.0</DVD_episodenumber>\n
+  \       <DVD_season>3</DVD_season>\n        <Director>|Peter Andrikidis|</Director>\n
+  \       <EpImgFlag>1</EpImgFlag>\n        <EpisodeName>...Different Destinations</EpisodeName>\n
+  \       <EpisodeNumber>5</EpisodeNumber>\n        <FirstAired>2001-04-13</FirstAired>\n
+  \       <GuestStars>|Dan Spielman|Lucy Bell|Marshall Napier|Terry Serio|Basia A'Hern|Alan
+  Cinis|Anne-Marie Kreller|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n
+  \       <Overview>Stark accidentally sends himself, Crichton, Aeryn and Jool back
+  in time where they alter the time line and are forced to interfere further to restore
+  it.</Overview>\n        <ProductionCode>#10305</ProductionCode>\n        <Rating>7.5</Rating>\n
+  \       <SeasonNumber>3</SeasonNumber>\n        <Writer>|Steve Worland|</Writer>\n
+  \       <absolute_number></absolute_number>\n        <filename>episodes/70522/11406.jpg</filename>\n
+  \       <lastupdated>1234415323</lastupdated>\n        <seasonid>451</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11407</id>\n
+  \       <Combined_episodenumber>6.0</Combined_episodenumber>\n        <Combined_season>3</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>6.0</DVD_episodenumber>\n
+  \       <DVD_season>3</DVD_season>\n        <Director>|Ian Watson|</Director>\n
+  \       <EpImgFlag>1</EpImgFlag>\n        <EpisodeName>Eat Me</EpisodeName>\n        <EpisodeNumber>6</EpisodeNumber>\n
+  \       <FirstAired>2001-04-01</FirstAired>\n        <GuestStars>|Shane Briant|Lisa
+  Griffiths|Sean Masterson|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n
+  \       <Overview>In need of supplies, Crichton lands his transport pod on a dying
+  leviathan which is full of hungry cannibals and a scientist who has the ability
+  to create clones.</Overview>\n        <ProductionCode>#10306</ProductionCode>\n
+  \       <Rating>6.7</Rating>\n        <SeasonNumber>3</SeasonNumber>\n        <Writer>|Matt
+  Ford|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11407.jpg</filename>\n
+  \       <lastupdated>1234415339</lastupdated>\n        <seasonid>451</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11408</id>\n
+  \       <Combined_episodenumber>7.0</Combined_episodenumber>\n        <Combined_season>3</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>7.0</DVD_episodenumber>\n
+  \       <DVD_season>3</DVD_season>\n        <Director>|Ian Barry|</Director>\n        <EpImgFlag>1</EpImgFlag>\n
+  \       <EpisodeName>Thanks for Sharing</EpisodeName>\n        <EpisodeNumber>7</EpisodeNumber>\n
+  \       <FirstAired>2001-06-15</FirstAired>\n        <GuestStars>|Rebecca Gibney|Robert
+  Bruning|Sandy Winton|Linda Cropper|Julianne Newbould|Hunter Perske|</GuestStars>\n
+  \       <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n        <Overview>Moya
+  rendezvous with Talyn who is seriously damaged. They hide in the atmosphere of a
+  planet to prevent the Peacekeepers from finding them. D'Argo and Rygel go down to
+  the planet to find some Clorium, a drug that will help Talyn recover.</Overview>\n
+  \       <ProductionCode>#10307</ProductionCode>\n        <Rating>6.3</Rating>\n
+  \       <SeasonNumber>3</SeasonNumber>\n        <Writer>|Clayvon C. Harris|</Writer>\n
+  \       <absolute_number></absolute_number>\n        <filename>episodes/70522/11408.jpg</filename>\n
+  \       <lastupdated>1234415349</lastupdated>\n        <seasonid>451</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11409</id>\n
+  \       <Combined_episodenumber>8.0</Combined_episodenumber>\n        <Combined_season>3</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>8.0</DVD_episodenumber>\n
+  \       <DVD_season>3</DVD_season>\n        <Director></Director>\n        <EpImgFlag>1</EpImgFlag>\n
+  \       <EpisodeName>Green Eyed Monster</EpisodeName>\n        <EpisodeNumber>8</EpisodeNumber>\n
+  \       <FirstAired>2001-06-22</FirstAired>\n        <GuestStars></GuestStars>\n
+  \       <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n        <Overview>Talyn
+  is swallowed by a boodong, leaving Stark and Rygel stranded in a transport pod.</Overview>\n
+  \       <ProductionCode>#10308</ProductionCode>\n        <Rating>8.0</Rating>\n
+  \       <SeasonNumber>3</SeasonNumber>\n        <Writer>|Ben Browder|</Writer>\n
+  \       <absolute_number></absolute_number>\n        <filename>episodes/70522/11409.jpg</filename>\n
+  \       <lastupdated>1234415363</lastupdated>\n        <seasonid>451</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11410</id>\n
+  \       <Combined_episodenumber>9.0</Combined_episodenumber>\n        <Combined_season>3</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>9.0</DVD_episodenumber>\n
+  \       <DVD_season>3</DVD_season>\n        <Director>|Catherine Millar|</Director>\n
+  \       <EpImgFlag>1</EpImgFlag>\n        <EpisodeName>Losing Time</EpisodeName>\n
+  \       <EpisodeNumber>9</EpisodeNumber>\n        <FirstAired>2001-06-29</FirstAired>\n
+  \       <GuestStars>|Ian Bliss|Johanna Kerrigan|Danny Adcock|StrappaTux Akindoyeni|</GuestStars>\n
+  \       <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n        <Overview>The
+  crew of Moya start blacking out and missing portions of time. Pilot becomes inhabited
+  by another entity who needs to 'taste' each crew member to determine if they too
+  are being inhabited.</Overview>\n        <ProductionCode>#10309</ProductionCode>\n
+  \       <Rating>8.3</Rating>\n        <SeasonNumber>3</SeasonNumber>\n        <Writer>|Justin
+  Monjo|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11410.jpg</filename>\n
+  \       <lastupdated>1234415376</lastupdated>\n        <seasonid>451</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11411</id>\n
+  \       <Combined_episodenumber>10.0</Combined_episodenumber>\n        <Combined_season>3</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>10.0</DVD_episodenumber>\n
+  \       <DVD_season>3</DVD_season>\n        <Director>|Peter Andrikidis|</Director>\n
+  \       <EpImgFlag>1</EpImgFlag>\n        <EpisodeName>Relativity</EpisodeName>\n
+  \       <EpisodeNumber>10</EpisodeNumber>\n        <FirstAired>2001-07-06</FirstAired>\n
+  \       <GuestStars>|Linda Cropper|Thomas Holesgrove|Dominique Sweeney|</GuestStars>\n
+  \       <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n        <Overview>Talyn
+  lands on a planet covered mostly with vegetation that will help him to heal. Crichton,
+  Aeryn and Crais leave the ship in search of Xhalax.</Overview>\n        <ProductionCode>#10310</ProductionCode>\n
+  \       <Rating>9.0</Rating>\n        <SeasonNumber>3</SeasonNumber>\n        <Writer>|Rockne
+  S. O'Bannon|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11411.jpg</filename>\n
+  \       <lastupdated>1234415391</lastupdated>\n        <seasonid>451</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11412</id>\n
+  \       <Combined_episodenumber>11.0</Combined_episodenumber>\n        <Combined_season>3</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>11.0</DVD_episodenumber>\n
+  \       <DVD_season>3</DVD_season>\n        <Director>|Ian Watson|</Director>\n
+  \       <EpImgFlag>1</EpImgFlag>\n        <EpisodeName>Incubator</EpisodeName>\n
+  \       <EpisodeNumber>11</EpisodeNumber>\n        <FirstAired>2001-07-13</FirstAired>\n
+  \       <GuestStars>|Evan Sheaves|Johanna Kerrigan|Danny Adcock|Amy Salas|Stephanie
+  Jacobson|Paul Shedlowich|Thomas Holesgrove|Sam Healy|Nicholas Bishop|William Zappa|</GuestStars>\n
+  \       <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n        <Overview>Scorpius
+  puts the neural chip into his own brain in an attempt to retrieve vital wormhole
+  equations from Crichton.</Overview>\n        <ProductionCode>10311</ProductionCode>\n
+  \       <Rating>9.0</Rating>\n        <SeasonNumber>3</SeasonNumber>\n        <Writer>|Richard
+  Manning|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11412.jpg</filename>\n
+  \       <lastupdated>1234415407</lastupdated>\n        <seasonid>451</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11413</id>\n
+  \       <Combined_episodenumber>12.0</Combined_episodenumber>\n        <Combined_season>3</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>12.0</DVD_episodenumber>\n
+  \       <DVD_season>3</DVD_season>\n        <Director>|Ian Barry|</Director>\n        <EpImgFlag>1</EpImgFlag>\n
+  \       <EpisodeName>Meltdown</EpisodeName>\n        <EpisodeNumber>12</EpisodeNumber>\n
+  \       <FirstAired>2001-07-14</FirstAired>\n        <GuestStars>|Linda Cropper|Susan
+  Lyons|Mark Mitchell|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n
+  \       <Overview>Talyn gets the urge to fly into a sun. While in its vicinity Stark
+  is contacted by an alien women who is being held against her will.</Overview>\n
+  \       <ProductionCode>#10312</ProductionCode>\n        <Rating>9.0</Rating>\n
+  \       <SeasonNumber>3</SeasonNumber>\n        <Writer>|Matt Ford|</Writer>\n        <absolute_number></absolute_number>\n
+  \       <filename>episodes/70522/11413.jpg</filename>\n        <lastupdated>1234415415</lastupdated>\n
+  \       <seasonid>451</seasonid>\n        <seriesid>70522</seriesid>\n    </Episode>\n
+  \   <Episode>\n        <id>11414</id>\n        <Combined_episodenumber>13.0</Combined_episodenumber>\n
+  \       <Combined_season>3</Combined_season>\n        <DVD_chapter></DVD_chapter>\n
+  \       <DVD_discid></DVD_discid>\n        <DVD_episodenumber>13.0</DVD_episodenumber>\n
+  \       <DVD_season>3</DVD_season>\n        <Director>|Tony Tilse|</Director>\n
+  \       <EpImgFlag>1</EpImgFlag>\n        <EpisodeName>Scratch 'n Sniff</EpisodeName>\n
+  \       <EpisodeNumber>13</EpisodeNumber>\n        <FirstAired>2001-07-01</FirstAired>\n
+  \       <GuestStars>|Francesca Buller|Tamblyn Lord|Laura Keneally|Anthony Martin|Richard
+  Carter|Milan Keyser|Jaye Paul|Julia Trappe|Rachel Sheriff|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n
+  \       <Language>en</Language>\n        <Overview>Crichton, D'Argo, Jool and Chiana
+  are forced to take a holiday by Pilot as he is fed up with their constant bickering.</Overview>\n
+  \       <ProductionCode>#10313</ProductionCode>\n        <Rating>5.5</Rating>\n
+  \       <SeasonNumber>3</SeasonNumber>\n        <Writer></Writer>\n        <absolute_number></absolute_number>\n
+  \       <filename>episodes/70522/11414.jpg</filename>\n        <lastupdated>1234415460</lastupdated>\n
+  \       <seasonid>451</seasonid>\n        <seriesid>70522</seriesid>\n    </Episode>\n
+  \   <Episode>\n        <id>11415</id>\n        <Combined_episodenumber>14.0</Combined_episodenumber>\n
+  \       <Combined_season>3</Combined_season>\n        <DVD_chapter></DVD_chapter>\n
+  \       <DVD_discid></DVD_discid>\n        <DVD_episodenumber>14.0</DVD_episodenumber>\n
+  \       <DVD_season>3</DVD_season>\n        <Director>|Peter Andrikidis|</Director>\n
+  \       <EpImgFlag>1</EpImgFlag>\n        <EpisodeName>Infinite Possibilities (1):
+  Daedalus Demands</EpisodeName>\n        <EpisodeNumber>14</EpisodeNumber>\n        <FirstAired>2001-07-27</FirstAired>\n
+  \       <GuestStars>|Kent McCord|Magda Szubanski|Patrick Ward|Ray Anthony|</GuestStars>\n
+  \       <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n        <Overview>Crichton
+  must seek out an old friend who has gained too much knowledge about wormholes.</Overview>\n
+  \       <ProductionCode>#10314</ProductionCode>\n        <Rating>10.0</Rating>\n
+  \       <SeasonNumber>3</SeasonNumber>\n        <Writer>|Carleton Eastlake|</Writer>\n
+  \       <absolute_number></absolute_number>\n        <filename>episodes/70522/11415.jpg</filename>\n
+  \       <lastupdated>1234415488</lastupdated>\n        <seasonid>451</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11416</id>\n
+  \       <Combined_episodenumber>15.0</Combined_episodenumber>\n        <Combined_season>3</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>15.0</DVD_episodenumber>\n
+  \       <DVD_season>3</DVD_season>\n        <Director>|Ian Watson|</Director>\n
+  \       <EpImgFlag>1</EpImgFlag>\n        <EpisodeName>Infinite Possibilities (2):
+  Icarus Abides</EpisodeName>\n        <EpisodeNumber>15</EpisodeNumber>\n        <FirstAired>2001-08-03</FirstAired>\n
+  \       <GuestStars>|Kent McCord|Magda Szubanski|Thomas Holesgrove|Noel Hodda|</GuestStars>\n
+  \       <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n        <Overview>Jack
+  (The Ancient) unlocks the wormhole knowledge in Crichton's mind so together they
+  can build a device to destroy the Scarran dreadnought.</Overview>\n        <ProductionCode>#10315</ProductionCode>\n
+  \       <Rating>10.0</Rating>\n        <SeasonNumber>3</SeasonNumber>\n        <Writer>|Carleton
+  Eastlake|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11416.jpg</filename>\n
+  \       <lastupdated>1234415498</lastupdated>\n        <seasonid>451</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11417</id>\n
+  \       <Combined_episodenumber>16.0</Combined_episodenumber>\n        <Combined_season>3</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>16.0</DVD_episodenumber>\n
+  \       <DVD_season>3</DVD_season>\n        <Director></Director>\n        <EpImgFlag>1</EpImgFlag>\n
+  \       <EpisodeName>Revenging Angel</EpisodeName>\n        <EpisodeNumber>16</EpisodeNumber>\n
+  \       <FirstAired>2001-08-10</FirstAired>\n        <GuestStars></GuestStars>\n
+  \       <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n        <Overview>There
+  is an accident while D'Argo is demonstrating what his ship can do. He blames Crichton
+  and knocks him out. In his unconscious state Crichton has some animated dreams.</Overview>\n
+  \       <ProductionCode>#10316</ProductionCode>\n        <Rating>5.0</Rating>\n
+  \       <SeasonNumber>3</SeasonNumber>\n        <Writer>|David Kemper|</Writer>\n
+  \       <absolute_number></absolute_number>\n        <filename>episodes/70522/11417.jpg</filename>\n
+  \       <lastupdated>1234415514</lastupdated>\n        <seasonid>451</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11418</id>\n
+  \       <Combined_episodenumber>17.0</Combined_episodenumber>\n        <Combined_season>3</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>17.0</DVD_episodenumber>\n
+  \       <DVD_season>3</DVD_season>\n        <Director>|Rowan Woods|</Director>\n
+  \       <EpImgFlag>1</EpImgFlag>\n        <EpisodeName>The Choice</EpisodeName>\n
+  \       <EpisodeNumber>17</EpisodeNumber>\n        <FirstAired>2001-08-17</FirstAired>\n
+  \       <GuestStars>|Linda Cropper|John Gregg|Raj Ryan|Mario Halouvas|Steve Bowers|</GuestStars>\n
+  \       <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n        <Overview>Aeryn
+  goes to a planet in search of someone who can contact her father.</Overview>\n        <ProductionCode>#10317</ProductionCode>\n
+  \       <Rating>6.0</Rating>\n        <SeasonNumber>3</SeasonNumber>\n        <Writer>|Justin
+  Monjo|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11418.jpg</filename>\n
+  \       <lastupdated>1234415540</lastupdated>\n        <seasonid>451</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11419</id>\n
+  \       <Combined_episodenumber>18.0</Combined_episodenumber>\n        <Combined_season>3</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>18.0</DVD_episodenumber>\n
+  \       <DVD_season>3</DVD_season>\n        <Director>|Tony Tilse|</Director>\n
+  \       <EpImgFlag>1</EpImgFlag>\n        <EpisodeName>Fractures</EpisodeName>\n
+  \       <EpisodeNumber>18</EpisodeNumber>\n        <FirstAired>2001-08-24</FirstAired>\n
+  \       <GuestStars>|Kate Beahan|Matt Doran|Nicholas McKay|Alexandra Fowler|Thomas
+  Holesgrove|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n
+  \       <Overview>A group of escaped prisoners come aboard Moya followed shortly
+  by Aeryn, Stark, Crais and Rygel who have finally returned from Talyn.</Overview>\n
+  \       <ProductionCode>#10318</ProductionCode>\n        <Rating>6.5</Rating>\n
+  \       <SeasonNumber>3</SeasonNumber>\n        <Writer>|Rockne S. O'Bannon|</Writer>\n
+  \       <absolute_number></absolute_number>\n        <filename>episodes/70522/11419.jpg</filename>\n
+  \       <lastupdated>1234415554</lastupdated>\n        <seasonid>451</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11420</id>\n
+  \       <Combined_episodenumber>19.0</Combined_episodenumber>\n        <Combined_season>3</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>19.0</DVD_episodenumber>\n
+  \       <DVD_season>3</DVD_season>\n        <Director>|Peter Andrikidis|</Director>\n
+  \       <EpImgFlag>1</EpImgFlag>\n        <EpisodeName>I-Yensch, You-Yensch</EpisodeName>\n
+  \       <EpisodeNumber>19</EpisodeNumber>\n        <FirstAired>2002-04-05</FirstAired>\n
+  \       <GuestStars>|Ben Mendelsohn|Anthony Hayes|Inge Hornstra|Salvatore Coco|Thomas
+  Holesgrove|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n
+  \       <Overview>D'Argo and Rygel meet Braca and Scorpius in a cafe to conduct
+  negotiations when it is unexpectedly attacked.</Overview>\n        <ProductionCode>#10319</ProductionCode>\n
+  \       <Rating>7.5</Rating>\n        <SeasonNumber>3</SeasonNumber>\n        <Writer>|Matt
+  Ford|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11420.jpg</filename>\n
+  \       <lastupdated>1234415565</lastupdated>\n        <seasonid>451</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11421</id>\n
+  \       <Combined_episodenumber>20.0</Combined_episodenumber>\n        <Combined_season>3</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>20.0</DVD_episodenumber>\n
+  \       <DVD_season>3</DVD_season>\n        <Director>|Ian Watson|</Director>\n
+  \       <EpImgFlag></EpImgFlag>\n        <EpisodeName>Into the Lion's Den (1): Lambs
+  to the Slaughter</EpisodeName>\n        <EpisodeNumber>20</EpisodeNumber>\n        <FirstAired>2002-04-12</FirstAired>\n
+  \       <GuestStars>|Sean Taylor|Marta Dusseldorp|Lenore Smith|Lewis Fitzgerald|Danny
+  Adcock|Mark Mercedes|Paul Shedlowich|Royston Innes|Nick Frisina|</GuestStars>\n
+  \       <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n        <Overview>Crichton
+  goes to the command carrier to sabotage Scorpius' wormhole research.</Overview>\n
+  \       <ProductionCode>#10320</ProductionCode>\n        <Rating>8.5</Rating>\n
+  \       <SeasonNumber>3</SeasonNumber>\n        <Writer>|Richard Manning|</Writer>\n
+  \       <absolute_number></absolute_number>\n        <filename>episodes/70522/11421.jpg</filename>\n
+  \       <lastupdated>1234415578</lastupdated>\n        <seasonid>451</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11422</id>\n
+  \       <Combined_episodenumber>21.0</Combined_episodenumber>\n        <Combined_season>3</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>21.0</DVD_episodenumber>\n
+  \       <DVD_season>3</DVD_season>\n        <Director>|Rowan Woods|</Director>\n
+  \       <EpImgFlag>1</EpImgFlag>\n        <EpisodeName>Into the Lion's Den (2):
+  Wolf in Sheep's Clothing</EpisodeName>\n        <EpisodeNumber>21</EpisodeNumber>\n
+  \       <FirstAired>2002-04-19</FirstAired>\n        <GuestStars>|Marta Dusseldorp|Danny
+  Adcock|Lenore Smith|Sheridan Rynne|Ross Sharp|Terrence Hepburn|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n
+  \       <Language>en</Language>\n        <Overview>Crais gets Talyn to starburst
+  inside the command carrier, causing it to collapse in on itself.</Overview>\n        <ProductionCode>#10321</ProductionCode>\n
+  \       <Rating>10.0</Rating>\n        <SeasonNumber>3</SeasonNumber>\n        <Writer>|Rockne
+  S. O'Bannon|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11422.jpg</filename>\n
+  \       <lastupdated>1234415592</lastupdated>\n        <seasonid>451</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11423</id>\n
+  \       <Combined_episodenumber>22.0</Combined_episodenumber>\n        <Combined_season>3</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>22.0</DVD_episodenumber>\n
+  \       <DVD_season>3</DVD_season>\n        <Director>|Andrew Prowse|</Director>\n
+  \       <EpImgFlag>1</EpImgFlag>\n        <EpisodeName>Dog with Two Bones</EpisodeName>\n
+  \       <EpisodeNumber>22</EpisodeNumber>\n        <FirstAired>2002-04-26</FirstAired>\n
+  \       <GuestStars>|Melissa Jaffer|Samantha Wellington|Jacob Vanderpuije|Dion Bilios|</GuestStars>\n
+  \       <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n        <Overview>Moya
+  takes Talyn's remains to the sacred burial ground where D'Argo is forced to destroy
+  a rogue Leviathan that is attacking other ships.</Overview>\n        <ProductionCode>#10322</ProductionCode>\n
+  \       <Rating>8.5</Rating>\n        <SeasonNumber>3</SeasonNumber>\n        <Writer>|David
+  Kemper|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11423.jpg</filename>\n
+  \       <lastupdated>1234415614</lastupdated>\n        <seasonid>451</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11424</id>\n
+  \       <Combined_episodenumber>1.0</Combined_episodenumber>\n        <Combined_season>4</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>1.0</DVD_episodenumber>\n
+  \       <DVD_season>4</DVD_season>\n        <Director>|Andrew Prowse|</Director>\n
+  \       <EpImgFlag>2</EpImgFlag>\n        <EpisodeName>Crichton Kicks</EpisodeName>\n
+  \       <EpisodeNumber>1</EpisodeNumber>\n        <FirstAired>2002-06-07</FirstAired>\n
+  \       <GuestStars>|Peter Whittle|Dinah Shearing|Bob Nisevic|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n
+  \       <Language>en</Language>\n        <Overview>Crichton, now aboard a dying
+  leviathan named Elac, encounters an alien named Sikozu who aids him in stopping
+  the Grudeks who are intent on obtaining toubray (Leviathan neural cluster tissue).</Overview>\n
+  \       <ProductionCode>#10401</ProductionCode>\n        <Rating>8.0</Rating>\n
+  \       <SeasonNumber>4</SeasonNumber>\n        <Writer>|David Kemper|</Writer>\n
+  \       <absolute_number></absolute_number>\n        <filename>episodes/70522/11424.jpg</filename>\n
+  \       <lastupdated>1235850732</lastupdated>\n        <seasonid>452</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11425</id>\n
+  \       <Combined_episodenumber>2.0</Combined_episodenumber>\n        <Combined_season>4</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>2.0</DVD_episodenumber>\n
+  \       <DVD_season>4</DVD_season>\n        <Director>|Rowan Woods|</Director>\n
+  \       <EpImgFlag>2</EpImgFlag>\n        <EpisodeName>What Was Lost (1): Sacrifice</EpisodeName>\n
+  \       <EpisodeNumber>2</EpisodeNumber>\n        <FirstAired>2002-06-14</FirstAired>\n
+  \       <GuestStars>|Melissa Jaffer|Steve Le Marquand|Elizabeth Alexander|Kim De
+  Lury|Dinah Shearing|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n
+  \       <Overview>Elac arrives at the planet where D'Argo, Jool and Old Woman are
+  investigating the ruins of an ancient civilization.</Overview>\n        <ProductionCode>#10402</ProductionCode>\n
+  \       <Rating>9.0</Rating>\n        <SeasonNumber>4</SeasonNumber>\n        <Writer>|Justin
+  Monjo|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11425.jpg</filename>\n
+  \       <lastupdated>1235850780</lastupdated>\n        <seasonid>452</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11426</id>\n
+  \       <Combined_episodenumber>3.0</Combined_episodenumber>\n        <Combined_season>4</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>3.0</DVD_episodenumber>\n
+  \       <DVD_season>4</DVD_season>\n        <Director>|Rowan Woods|</Director>\n
+  \       <EpImgFlag>2</EpImgFlag>\n        <EpisodeName>What Was Lost (2): Resurrection</EpisodeName>\n
+  \       <EpisodeNumber>3</EpisodeNumber>\n        <FirstAired>2002-06-21</FirstAired>\n
+  \       <GuestStars>|Steve Le Marquand|Dinah Shearing|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n
+  \       <Language>en</Language>\n        <Overview>Crichton must find the third
+  probe to end the magnetic summer, while avoiding Grayza and Oo-Nii.</Overview>\n
+  \       <ProductionCode>#10403</ProductionCode>\n        <Rating>9.0</Rating>\n
+  \       <SeasonNumber>4</SeasonNumber>\n        <Writer>|Justin Monjo|</Writer>\n
+  \       <absolute_number></absolute_number>\n        <filename>episodes/70522/11426.jpg</filename>\n
+  \       <lastupdated>1249155905</lastupdated>\n        <seasonid>452</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11427</id>\n
+  \       <Combined_episodenumber>4.0</Combined_episodenumber>\n        <Combined_season>4</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>4.0</DVD_episodenumber>\n
+  \       <DVD_season>4</DVD_season>\n        <Director>|Michael Pattinson|</Director>\n
+  \       <EpImgFlag>2</EpImgFlag>\n        <EpisodeName>Lava's a Many Splendored
+  Thing</EpisodeName>\n        <EpisodeNumber>4</EpisodeNumber>\n        <FirstAired>2002-06-28</FirstAired>\n
+  \       <GuestStars>|John Adam|Jack Flinsterer|Alan Flower|Ross Newton|Teo Gebert|Mick
+  Roughan|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n
+  \       <Overview>When stopped off on a planet, Rygel leaves the rest of the group
+  and is caught in an unbreakable orange substance while stealing treasures he discovers
+  in a cave. When D'Argo, Crichton and Noranti go looking for him, the cave seals
+  them in. Two huge grunts appear who have protective armor which protects them from
+  weapons fires.</Overview>\n        <ProductionCode>#10404</ProductionCode>\n        <Rating>9.3</Rating>\n
+  \       <SeasonNumber>4</SeasonNumber>\n        <Writer>|Michael Miller|</Writer>\n
+  \       <absolute_number></absolute_number>\n        <filename>episodes/70522/11427.jpg</filename>\n
+  \       <lastupdated>1235850848</lastupdated>\n        <seasonid>452</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11428</id>\n
+  \       <Combined_episodenumber>5.0</Combined_episodenumber>\n        <Combined_season>4</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>5.0</DVD_episodenumber>\n
+  \       <DVD_season>4</DVD_season>\n        <Director>|Geoff Bennett|</Director>\n
+  \       <EpImgFlag>2</EpImgFlag>\n        <EpisodeName>Promises</EpisodeName>\n
+  \       <EpisodeNumber>5</EpisodeNumber>\n        <FirstAired>2002-07-12</FirstAired>\n
+  \       <GuestStars>|Richard Carter|Anja Coleby|Damian Hunter|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n
+  \       <Language>en</Language>\n        <Overview>D'Argo, Rygel, Crichton, Chiana
+  and Sikozu get back to Moya only to find that Scorpius is there waiting for them
+  along with Aeryn, now suffering from heat delirium. Aeryn has granted Scorpius asylum
+  and claims that Scorpius saved her life.</Overview>\n        <ProductionCode>#10405</ProductionCode>\n
+  \       <Rating>9.8</Rating>\n        <SeasonNumber>4</SeasonNumber>\n        <Writer>|Richard
+  Manning|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11428.jpg</filename>\n
+  \       <lastupdated>1235850867</lastupdated>\n        <seasonid>452</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11429</id>\n
+  \       <Combined_episodenumber>6.0</Combined_episodenumber>\n        <Combined_season>4</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>6.0</DVD_episodenumber>\n
+  \       <DVD_season>4</DVD_season>\n        <Director></Director>\n        <EpImgFlag>2</EpImgFlag>\n
+  \       <EpisodeName>Natural Election</EpisodeName>\n        <EpisodeNumber>6</EpisodeNumber>\n
+  \       <FirstAired>2002-07-19</FirstAired>\n        <GuestStars></GuestStars>\n
+  \       <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n        <Overview>While
+  in close proximity to a wormhole, Moya is preoccupied and doesn't notice a slowly
+  moving object heading towards her. Moya collides with the object which then covers
+  her entire hull, causing great discomfort to her as well as the crew.</Overview>\n
+  \       <ProductionCode>#10406</ProductionCode>\n        <Rating>9.0</Rating>\n
+  \       <SeasonNumber>4</SeasonNumber>\n        <Writer>|Sophie C. Hopkins|</Writer>\n
+  \       <absolute_number></absolute_number>\n        <filename>episodes/70522/11429.jpg</filename>\n
+  \       <lastupdated>1249155934</lastupdated>\n        <seasonid>452</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11430</id>\n
+  \       <Combined_episodenumber>7.0</Combined_episodenumber>\n        <Combined_season>4</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>7.0</DVD_episodenumber>\n
+  \       <DVD_season>4</DVD_season>\n        <Director>|Tony Tilse|</Director>\n
+  \       <EpImgFlag>2</EpImgFlag>\n        <EpisodeName>John Quixote</EpisodeName>\n
+  \       <EpisodeNumber>7</EpisodeNumber>\n        <FirstAired>2002-07-26</FirstAired>\n
+  \       <GuestStars>|Lani Tupu|Rowan Woods|Alyssa Jane Cook|Virginia Hey|</GuestStars>\n
+  \       <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n        <Overview>While
+  on a transport pod, Chiana nags Crichton to try out a virtual reality game. A transmission
+  comes through from D'Argo concerning a problem with Scorpius. Despite this, Chiana
+  pulls Crichton into one of the games, where they become trapped., and the only way
+  out is to complete the game.</Overview>\n        <ProductionCode>#10407</ProductionCode>\n
+  \       <Rating>10.0</Rating>\n        <SeasonNumber>4</SeasonNumber>\n        <Writer>|Ben
+  Browder|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11430.jpg</filename>\n
+  \       <lastupdated>1235857754</lastupdated>\n        <seasonid>452</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11431</id>\n
+  \       <Combined_episodenumber>8.0</Combined_episodenumber>\n        <Combined_season>4</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>8.0</DVD_episodenumber>\n
+  \       <DVD_season>4</DVD_season>\n        <Director>|Rowan Woods|</Director>\n
+  \       <EpImgFlag>2</EpImgFlag>\n        <EpisodeName>I Shrink Therefore I Am</EpisodeName>\n
+  \       <EpisodeNumber>8</EpisodeNumber>\n        <FirstAired>2002-08-02</FirstAired>\n
+  \       <GuestStars>|Duncan Young|John Schwarz|Lee Jay Klump|Ashley Fairfield|</GuestStars>\n
+  \       <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n        <Overview>A
+  group of bounty hunters come aboard Moya and take everyone hostage. When Crichton
+  arrives back with the Old Woman he destroys the bounty hunter's ship and goes aboard
+  Moya to rescue everyone while the Old Woman puts herself into a coma where she can
+  survive outside the ship.</Overview>\n        <ProductionCode>#10408</ProductionCode>\n
+  \       <Rating>10.0</Rating>\n        <SeasonNumber>4</SeasonNumber>\n        <Writer>|Christopher
+  Wheeler|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11431.jpg</filename>\n
+  \       <lastupdated>1235850918</lastupdated>\n        <seasonid>452</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11432</id>\n
+  \       <Combined_episodenumber>9.0</Combined_episodenumber>\n        <Combined_season>4</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>9.0</DVD_episodenumber>\n
+  \       <DVD_season>4</DVD_season>\n        <Director>|Geoff Bennett|</Director>\n
+  \       <EpImgFlag>2</EpImgFlag>\n        <EpisodeName>A Prefect Murder</EpisodeName>\n
+  \       <EpisodeNumber>9</EpisodeNumber>\n        <FirstAired>2002-08-09</FirstAired>\n
+  \       <GuestStars>|Bruce Spence|Ivar Kants|Peter Whitford|Brett Stiller|Jason
+  Chong|Shardyn Faheyleigh|Gitanjaii Seymour|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n
+  \       <Language>en</Language>\n        <Overview>Moya arrives at a planet where
+  Aeryn gets accused of murder.</Overview>\n        <ProductionCode>#10409</ProductionCode>\n
+  \       <Rating></Rating>\n        <SeasonNumber>4</SeasonNumber>\n        <Writer>|Christopher
+  Wheeler|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11432.jpg</filename>\n
+  \       <lastupdated>1235850934</lastupdated>\n        <seasonid>452</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11433</id>\n
+  \       <Combined_episodenumber>10.0</Combined_episodenumber>\n        <Combined_season>4</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>10.0</DVD_episodenumber>\n
+  \       <DVD_season>4</DVD_season>\n        <Director>|Ian Watson|</Director>\n
+  \       <EpImgFlag>2</EpImgFlag>\n        <EpisodeName>Coup by Clam</EpisodeName>\n
+  \       <EpisodeNumber>10</EpisodeNumber>\n        <FirstAired>2002-08-16</FirstAired>\n
+  \       <GuestStars>|Barry Otto|David Field|Sara Groen|Kelly Butler|Chris Mayer|Susan
+  Prior|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n
+  \       <Overview>The crew consume food, sharing amongst themselves. Although if
+  not ingested by the same person, it becomes toxic. They must quickly find a cure
+  or they'll die.</Overview>\n        <ProductionCode>#10410</ProductionCode>\n        <Rating>10.0</Rating>\n
+  \       <SeasonNumber>4</SeasonNumber>\n        <Writer>|Emily Skopov|</Writer>\n
+  \       <absolute_number></absolute_number>\n        <filename>episodes/70522/11433.jpg</filename>\n
+  \       <lastupdated>1235850950</lastupdated>\n        <seasonid>452</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11434</id>\n
+  \       <Combined_episodenumber>11.0</Combined_episodenumber>\n        <Combined_season>4</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>11.0</DVD_episodenumber>\n
+  \       <DVD_season>4</DVD_season>\n        <Director>|Andrew Prowse|</Director>\n
+  \       <EpImgFlag>2</EpImgFlag>\n        <EpisodeName>Unrealized Reality</EpisodeName>\n
+  \       <EpisodeNumber>11</EpisodeNumber>\n        <FirstAired>2002-08-23</FirstAired>\n
+  \       <GuestStars>|John Bach|Virginia Hey|Murray Bartlett|Erica Heynatz|Katherine
+  Thomas|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n
+  \       <Overview>Crichton falls into a wormhole and meets up with a strange man
+  who shows Crichton the consequences of wormhole travel.</Overview>\n        <ProductionCode>#10411</ProductionCode>\n
+  \       <Rating>9.0</Rating>\n        <SeasonNumber>4</SeasonNumber>\n        <Writer>|David
+  Kemper|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11434.jpg</filename>\n
+  \       <lastupdated>1235858140</lastupdated>\n        <seasonid>452</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11435</id>\n
+  \       <Combined_episodenumber>12.0</Combined_episodenumber>\n        <Combined_season>4</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>12.0</DVD_episodenumber>\n
+  \       <DVD_season>4</DVD_season>\n        <Director>|Rowan Woods|</Director>\n
+  \       <EpImgFlag>2</EpImgFlag>\n        <EpisodeName>Kansas</EpisodeName>\n        <EpisodeNumber>12</EpisodeNumber>\n
+  \       <FirstAired>2003-01-10</FirstAired>\n        <GuestStars>|Carmen Duncan|Jamie
+  Croft|Tyler Coppin|Nadia Townsend|Casey Burgess|Louise Fox|Kosta Doukas|Amy Salas|</GuestStars>\n
+  \       <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n        <Overview>After
+  accidentally returning to Earth, Crichton discovers it he is in 1985 and he has
+  altered the time line, causing his father to be scheduled to fly on the doomed shuttle
+  'Challenger'.</Overview>\n        <ProductionCode>#10412</ProductionCode>\n        <Rating>9.0</Rating>\n
+  \       <SeasonNumber>4</SeasonNumber>\n        <Writer>|Justin Monjo|</Writer>\n
+  \       <absolute_number></absolute_number>\n        <filename>episodes/70522/11435.jpg</filename>\n
+  \       <lastupdated>1235850973</lastupdated>\n        <seasonid>452</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11436</id>\n
+  \       <Combined_episodenumber>13.0</Combined_episodenumber>\n        <Combined_season>4</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>13.0</DVD_episodenumber>\n
+  \       <DVD_season>4</DVD_season>\n        <Director>|Peter Andrikidis|</Director>\n
+  \       <EpImgFlag>2</EpImgFlag>\n        <EpisodeName>Terra Firma</EpisodeName>\n
+  \       <EpisodeNumber>13</EpisodeNumber>\n        <FirstAired>2003-01-17</FirstAired>\n
+  \       <GuestStars>|Murray Bartlett|Geoff Morrell|Sarah Enright|Katherine Thomas|Erica
+  Heynatz|Amy Salas|Nicholas Hammond|Joshua Anderson|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n
+  \       <Language>en</Language>\n        <Overview>Moya arrives at Earth in present
+  day, Christmas. The crew show their ships and technology to Earth's scientists.
+  Crichton starts writing a journal. The creature left on board Moya by Grayza manages
+  to get to Earth where it starts killing and hunting down Crichton.</Overview>\n
+  \       <ProductionCode>#10413</ProductionCode>\n        <Rating>9.0</Rating>\n
+  \       <SeasonNumber>4</SeasonNumber>\n        <Writer>|Richard Manning|</Writer>\n
+  \       <absolute_number></absolute_number>\n        <filename>episodes/70522/11436.jpg</filename>\n
+  \       <lastupdated>1235851007</lastupdated>\n        <seasonid>452</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11437</id>\n
+  \       <Combined_episodenumber>14.0</Combined_episodenumber>\n        <Combined_season>4</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>14.0</DVD_episodenumber>\n
+  \       <DVD_season>4</DVD_season>\n        <Director>|Kate Woods|</Director>\n
+  \       <EpImgFlag>2</EpImgFlag>\n        <EpisodeName>Twice Shy</EpisodeName>\n
+  \       <EpisodeNumber>14</EpisodeNumber>\n        <FirstAired>2003-01-24</FirstAired>\n
+  \       <GuestStars>|Paula Arundell|Chris Pitman|Duncan Young|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n
+  \       <Language>en</Language>\n        <Overview>Moya takes on a new passenger,
+  Talikaa, when Chiana insists upon it. However Talikaa turns out to be an alien creature
+  in disguise and is intent on harvesting the crew's neural energy.</Overview>\n        <ProductionCode>#10414</ProductionCode>\n
+  \       <Rating>8.0</Rating>\n        <SeasonNumber>4</SeasonNumber>\n        <Writer>|David
+  E. Peckinpah|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11437.jpg</filename>\n
+  \       <lastupdated>1235851027</lastupdated>\n        <seasonid>452</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11438</id>\n
+  \       <Combined_episodenumber>15.0</Combined_episodenumber>\n        <Combined_season>4</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>15.0</DVD_episodenumber>\n
+  \       <DVD_season>4</DVD_season>\n        <Director>|Geoff Bennett|</Director>\n
+  \       <EpImgFlag>2</EpImgFlag>\n        <EpisodeName>Mental as Anything</EpisodeName>\n
+  \       <EpisodeNumber>15</EpisodeNumber>\n        <FirstAired>2003-01-31</FirstAired>\n
+  \       <GuestStars>|Blair Venn|John Brumpton|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n
+  \       <Language>en</Language>\n        <Overview>Scorpius signs D'Argo, Crichton
+  and Rygel up for a training camp where the students learn mental discipline by battling
+  in an artificial environment.</Overview>\n        <ProductionCode>#10415</ProductionCode>\n
+  \       <Rating>9.0</Rating>\n        <SeasonNumber>4</SeasonNumber>\n        <Writer>|Mark
+  Saraceni|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11438.jpg</filename>\n
+  \       <lastupdated>1235851079</lastupdated>\n        <seasonid>452</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11439</id>\n
+  \       <Combined_episodenumber>16.0</Combined_episodenumber>\n        <Combined_season>4</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>16.0</DVD_episodenumber>\n
+  \       <DVD_season>4</DVD_season>\n        <Director>|Rowan Woods|</Director>\n
+  \       <EpImgFlag>2</EpImgFlag>\n        <EpisodeName>Bringing Home the Beacon</EpisodeName>\n
+  \       <EpisodeNumber>16</EpisodeNumber>\n        <FirstAired>2003-02-07</FirstAired>\n
+  \       <GuestStars>|Jonathan Pasvolsky|Peter Lamb|Peter Fenton|Olivia Pigeot|Paula
+  Iland|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n
+  \       <Overview>The women of Moya travel to a dead Leviathan to buy a sensor beacon
+  for Moya which will allow her to appear to be a different ship. While there Aeryn
+  and Sikozu spy on a secret meeting between the Peacekeepers and the Scarrans.</Overview>\n
+  \       <ProductionCode>#10416</ProductionCode>\n        <Rating>9.0</Rating>\n
+  \       <SeasonNumber>4</SeasonNumber>\n        <Writer>|Carleton Eastlake|</Writer>\n
+  \       <absolute_number></absolute_number>\n        <filename>episodes/70522/11439.jpg</filename>\n
+  \       <lastupdated>1235851102</lastupdated>\n        <seasonid>452</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11440</id>\n
+  \       <Combined_episodenumber>17.0</Combined_episodenumber>\n        <Combined_season>4</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>17.0</DVD_episodenumber>\n
+  \       <DVD_season>4</DVD_season>\n        <Director>|Andrew Prowse|</Director>\n
+  \       <EpImgFlag>2</EpImgFlag>\n        <EpisodeName>A Constellation of Doubt</EpisodeName>\n
+  \       <EpisodeNumber>17</EpisodeNumber>\n        <FirstAired>2003-02-14</FirstAired>\n
+  \       <GuestStars>|Nick Tate|Tyler Coppin|Joshua Anderson|Sarah Enright|Nicholas
+  Hammond|Michael Barnacoat|Leo Christopher|Dee Donovan|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n
+  \       <Language>en</Language>\n        <Overview>Crichton watches a documentary
+  that Moya receives from Earth about their recent visit showing interviews with Crichton's
+  relatives and other people who interacted with the crew.</Overview>\n        <ProductionCode>#10417</ProductionCode>\n
+  \       <Rating>10.0</Rating>\n        <SeasonNumber>4</SeasonNumber>\n        <Writer>|David
+  Kemper|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11440.jpg</filename>\n
+  \       <lastupdated>1235851149</lastupdated>\n        <seasonid>452</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11441</id>\n
+  \       <Combined_episodenumber>18.0</Combined_episodenumber>\n        <Combined_season>4</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>18.0</DVD_episodenumber>\n
+  \       <DVD_season>4</DVD_season>\n        <Director>|Peter Andrikidis|</Director>\n
+  \       <EpImgFlag>2</EpImgFlag>\n        <EpisodeName>Prayer</EpisodeName>\n        <EpisodeNumber>18</EpisodeNumber>\n
+  \       <FirstAired>2003-02-21</FirstAired>\n        <GuestStars>|Sandy Gore|Sacha
+  Horler|Jason Clarke|Louise Crawford|Michael Clarke Duncan|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n
+  \       <Language>en</Language>\n        <Overview>Crichton and Scorpius travel
+  to one of the 'unrealized realities' where Crichton believes he heard Stark say
+  \"Katratzi.\" Meanwhile on a Scarran ship, Aeryn resists torture.</Overview>\n        <ProductionCode>#10418</ProductionCode>\n
+  \       <Rating>10.0</Rating>\n        <SeasonNumber>4</SeasonNumber>\n        <Writer>|Justin
+  Monjo|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11441.jpg</filename>\n
+  \       <lastupdated>1235851169</lastupdated>\n        <seasonid>452</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11442</id>\n
+  \       <Combined_episodenumber>19.0</Combined_episodenumber>\n        <Combined_season>4</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>19.0</DVD_episodenumber>\n
+  \       <DVD_season>4</DVD_season>\n        <Director>|Geoff Bennett|</Director>\n
+  \       <EpImgFlag>2</EpImgFlag>\n        <EpisodeName>We're So Screwed (1): Fetal
+  Attraction</EpisodeName>\n        <EpisodeNumber>19</EpisodeNumber>\n        <FirstAired>2003-02-28</FirstAired>\n
+  \       <GuestStars>|Sandy Gore|Shane Briant|Jason Clarke|Rel Hunt|Ben Dalton|Patrick
+  Ward|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n
+  \       <Overview>Moya arrives at a station where the Scarran vessel transporting
+  Aeryn is docked.</Overview>\n        <ProductionCode>#10419</ProductionCode>\n        <Rating>10.0</Rating>\n
+  \       <SeasonNumber>4</SeasonNumber>\n        <Writer>|David E. Peckinpah|</Writer>\n
+  \       <absolute_number></absolute_number>\n        <filename>episodes/70522/11442.jpg</filename>\n
+  \       <lastupdated>1235851194</lastupdated>\n        <seasonid>452</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11443</id>\n
+  \       <Combined_episodenumber>20.0</Combined_episodenumber>\n        <Combined_season>4</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>20.0</DVD_episodenumber>\n
+  \       <DVD_season>4</DVD_season>\n        <Director>|Karl Zwicky|</Director>\n
+  \       <EpImgFlag>2</EpImgFlag>\n        <EpisodeName>We're So Screwed (2): Hot
+  to Katratzi</EpisodeName>\n        <EpisodeNumber>20</EpisodeNumber>\n        <FirstAired>2003-03-07</FirstAired>\n
+  \       <GuestStars>|Jason Clarke|Jason Chong|Jonathan Pasvolsky|David Downer|Dean
+  O'Gorman|John Schwarz|Sam Bettison|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n
+  \       <Language>en</Language>\n        <Overview>Moya arrives at Katratzi. Crichton
+  attends the peace talks between the Scarrans and the Peacekeepers ...with a nuclear
+  bomb.</Overview>\n        <ProductionCode>#10420</ProductionCode>\n        <Rating>10.0</Rating>\n
+  \       <SeasonNumber>4</SeasonNumber>\n        <Writer>|Carleton Eastlake|</Writer>\n
+  \       <absolute_number></absolute_number>\n        <filename>episodes/70522/11443.jpg</filename>\n
+  \       <lastupdated>1235851206</lastupdated>\n        <seasonid>452</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11444</id>\n
+  \       <Combined_episodenumber>21.0</Combined_episodenumber>\n        <Combined_season>4</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>21.0</DVD_episodenumber>\n
+  \       <DVD_season>4</DVD_season>\n        <Director>|Rowan Woods|</Director>\n
+  \       <EpImgFlag>2</EpImgFlag>\n        <EpisodeName>We're So Screwed (3): La
+  Bomba</EpisodeName>\n        <EpisodeNumber>21</EpisodeNumber>\n        <FirstAired>2003-03-14</FirstAired>\n
+  \       <GuestStars>|Jason Clarke|Jason Chong|Jonathan Pasvolsky|David Downer|Dean
+  O'Gorman|John Schwarz|Sam Bettison|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n
+  \       <Language>en</Language>\n        <Overview>With the option to leave on the
+  Peacekeeper Command Carrier no longer available and his nuclear bomb disarmed, Crichton
+  must follow Scorpius' plan and destroy the Crystherium Utilia.</Overview>\n        <ProductionCode>#10421</ProductionCode>\n
+  \       <Rating>9.7</Rating>\n        <SeasonNumber>4</SeasonNumber>\n        <Writer>|Mark
+  Saraceni|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11444.jpg</filename>\n
+  \       <lastupdated>1235851221</lastupdated>\n        <seasonid>452</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11445</id>\n
+  \       <Combined_episodenumber>22.0</Combined_episodenumber>\n        <Combined_season>4</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>22.0</DVD_episodenumber>\n
+  \       <DVD_season>4</DVD_season>\n        <Director>|Andrew Prowse|</Director>\n
+  \       <EpImgFlag>2</EpImgFlag>\n        <EpisodeName>Bad Timing</EpisodeName>\n
+  \       <EpisodeNumber>22</EpisodeNumber>\n        <FirstAired>2003-03-21</FirstAired>\n
+  \       <GuestStars>|John Adam|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n
+  \       <Overview>With their Crystherium stores low, the Scarrans must travel to
+  Earth through a wormhole as those flowers grow there. With Pilots help, Crichton
+  tries to collapse the wormhole leading back to Earth.</Overview>\n        <ProductionCode>#10422</ProductionCode>\n
+  \       <Rating>10.0</Rating>\n        <SeasonNumber>4</SeasonNumber>\n        <Writer>|David
+  Kemper|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11445.jpg</filename>\n
+  \       <lastupdated>1235851250</lastupdated>\n        <seasonid>452</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11446</id>\n
+  \       <Combined_episodenumber>1.1</Combined_episodenumber>\n        <Combined_season>5</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>1.1</DVD_episodenumber>\n
+  \       <DVD_season>5</DVD_season>\n        <Director>|Brian Henson|</Director>\n
+  \       <EpImgFlag>2</EpImgFlag>\n        <EpisodeName>The Peacekeeper Wars (1)</EpisodeName>\n
+  \       <EpisodeNumber>1</EpisodeNumber>\n        <FirstAired>2004-10-17</FirstAired>\n
+  \       <GuestStars>|Hugh Keays-Byrne|Sandy Gore|Ron Haddrick|Linal Haft|Nathaniel
+  Dean|John Bach|Stephen James King|Tim McCunn|John Adam|Kim De Lury|Judi Farr|Fiona
+  Gentle|Lee Perry|Amanda Wenban|</GuestStars>\n        <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n
+  \       <Overview>60 days on and Rygel is retrieving pieces of John and Aeryn from
+  the sea bed. The diagnosan (Season of Death) re-crystalises them and they start
+  getting to know the species that live on that world. Meanwhile, Scorpius and Sikozu
+  are aboard a Peacekeeper Command Carrier on a recon mission. They attack a Scarren
+  ship which provokes the Scarrens into declaring war on The Peacekeepers.</Overview>\n
+  \       <ProductionCode>MPK01</ProductionCode>\n        <Rating>10.0</Rating>\n
+  \       <SeasonNumber>5</SeasonNumber>\n        <Writer>|David Kemper|Rockne S.
+  O'Bannon|</Writer>\n        <absolute_number></absolute_number>\n        <filename>episodes/70522/11446.jpg</filename>\n
+  \       <lastupdated>1245012085</lastupdated>\n        <seasonid>453</seasonid>\n
+  \       <seriesid>70522</seriesid>\n    </Episode>\n    <Episode>\n        <id>11447</id>\n
+  \       <Combined_episodenumber>1.2</Combined_episodenumber>\n        <Combined_season>5</Combined_season>\n
+  \       <DVD_chapter></DVD_chapter>\n        <DVD_discid></DVD_discid>\n        <DVD_episodenumber>1.2</DVD_episodenumber>\n
+  \       <DVD_season>5</DVD_season>\n        <Director>|Brian Henson|</Director>\n
+  \       <EpImgFlag>2</EpImgFlag>\n        <EpisodeName>The Peacekeeper Wars (2)</EpisodeName>\n
+  \       <EpisodeNumber>2</EpisodeNumber>\n        <FirstAired>2004-10-18</FirstAired>\n
+  \       <GuestStars>|Hugh Keays-Byrne|Sandy Gore|Nathaniel Dean|John Bach|John Adam|Fiona
+  Gentle|Ron Haddrick|Linal Haft|Stephen James King|Tim McCunn|Amanda Wenban|</GuestStars>\n
+  \       <IMDB_ID></IMDB_ID>\n        <Language>en</Language>\n        <Overview>With
+  Sikozu's help, everyone manages to escape from the Scarren prison. Joining up with
+  D'Argo, Jothee, Chiana and other Luxans they cripple and leave the Scarren ship
+  and return to Moya. Crichton returns to the wormhole where he gets Einstein to give
+  him the ability to build a wormhole weapon.</Overview>\n        <ProductionCode>MPK02</ProductionCode>\n
+  \       <Rating>10.0</Rating>\n        <SeasonNumber>5</SeasonNumber>\n        <Writer>|Rockne
+  S. O'Bannon|David Kemper|</Writer>\n        <absolute_number></absolute_number>\n
+  \       <filename>episodes/70522/11447.jpg</filename>\n        <lastupdated>1245012092</lastupdated>\n
+  \       <seasonid>453</seasonid>\n        <seriesid>70522</seriesid>\n    </Episode>\n</Data>"
+file://./spec/fixtures/tvdb/70522/banners.xml: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Banners>\n
+  \   <Banner>\n        <id>37424</id>\n        <BannerPath>fanart/original/70522-1.jpg</BannerPath>\n
+  \       <BannerType>fanart</BannerType>\n        <BannerType2>1920x1080</BannerType2>\n
+  \       <Colors>|169,149,158|7,11,22|90,66,54|</Colors>\n        <Language>en</Language>\n
+  \       <SeriesName>false</SeriesName>\n        <ThumbnailPath>_cache/fanart/original/70522-1.jpg</ThumbnailPath>\n
+  \       <VignettePath>fanart/vignette/70522-1.jpg</VignettePath>\n    </Banner>\n
+  \   <Banner>\n        <id>118301</id>\n        <BannerPath>fanart/original/70522-33.jpg</BannerPath>\n
+  \       <BannerType>fanart</BannerType>\n        <BannerType2>1280x720</BannerType2>\n
+  \       <Colors></Colors>\n        <Language>de</Language>\n        <SeriesName>false</SeriesName>\n
+  \       <ThumbnailPath>_cache/fanart/original/70522-33.jpg</ThumbnailPath>\n        <VignettePath>fanart/vignette/70522-33.jpg</VignettePath>\n
+  \   </Banner>\n    <Banner>\n        <id>58391</id>\n        <BannerPath>fanart/original/70522-31.jpg</BannerPath>\n
+  \       <BannerType>fanart</BannerType>\n        <BannerType2>1280x720</BannerType2>\n
+  \       <Colors></Colors>\n        <Language>en</Language>\n        <SeriesName>false</SeriesName>\n
+  \       <ThumbnailPath>_cache/fanart/original/70522-31.jpg</ThumbnailPath>\n        <VignettePath>fanart/vignette/70522-31.jpg</VignettePath>\n
+  \   </Banner>\n    <Banner>\n        <id>29995</id>\n        <BannerPath>fanart/original/70522-5.jpg</BannerPath>\n
+  \       <BannerType>fanart</BannerType>\n        <BannerType2>1280x720</BannerType2>\n
+  \       <Colors></Colors>\n        <Language>en</Language>\n        <SeriesName>false</SeriesName>\n
+  \       <ThumbnailPath>_cache/fanart/original/70522-5.jpg</ThumbnailPath>\n        <VignettePath>fanart/vignette/70522-5.jpg</VignettePath>\n
+  \   </Banner>\n    <Banner>\n        <id>58341</id>\n        <BannerPath>fanart/original/70522-26.jpg</BannerPath>\n
+  \       <BannerType>fanart</BannerType>\n        <BannerType2>1280x720</BannerType2>\n
+  \       <Colors></Colors>\n        <Language>en</Language>\n        <SeriesName>false</SeriesName>\n
+  \       <ThumbnailPath>_cache/fanart/original/70522-26.jpg</ThumbnailPath>\n        <VignettePath>fanart/vignette/70522-26.jpg</VignettePath>\n
+  \   </Banner>\n    <Banner>\n        <id>58381</id>\n        <BannerPath>fanart/original/70522-30.jpg</BannerPath>\n
+  \       <BannerType>fanart</BannerType>\n        <BannerType2>1280x720</BannerType2>\n
+  \       <Colors></Colors>\n        <Language>en</Language>\n        <SeriesName>false</SeriesName>\n
+  \       <ThumbnailPath>_cache/fanart/original/70522-30.jpg</ThumbnailPath>\n        <VignettePath>fanart/vignette/70522-30.jpg</VignettePath>\n
+  \   </Banner>\n    <Banner>\n        <id>58441</id>\n        <BannerPath>fanart/original/70522-32.jpg</BannerPath>\n
+  \       <BannerType>fanart</BannerType>\n        <BannerType2>1280x720</BannerType2>\n
+  \       <Colors></Colors>\n        <Language>en</Language>\n        <SeriesName>false</SeriesName>\n
+  \       <ThumbnailPath>_cache/fanart/original/70522-32.jpg</ThumbnailPath>\n        <VignettePath>fanart/vignette/70522-32.jpg</VignettePath>\n
+  \   </Banner>\n    <Banner>\n        <id>58351</id>\n        <BannerPath>fanart/original/70522-27.jpg</BannerPath>\n
+  \       <BannerType>fanart</BannerType>\n        <BannerType2>1280x720</BannerType2>\n
+  \       <Colors></Colors>\n        <Language>en</Language>\n        <SeriesName>false</SeriesName>\n
+  \       <ThumbnailPath>_cache/fanart/original/70522-27.jpg</ThumbnailPath>\n        <VignettePath>fanart/vignette/70522-27.jpg</VignettePath>\n
+  \   </Banner>\n    <Banner>\n        <id>229251</id>\n        <BannerPath>fanart/original/70522-28.jpg</BannerPath>\n
+  \       <BannerType>fanart</BannerType>\n        <BannerType2>1280x720</BannerType2>\n
+  \       <Colors></Colors>\n        <Language>de</Language>\n        <SeriesName>false</SeriesName>\n
+  \       <ThumbnailPath>_cache/fanart/original/70522-28.jpg</ThumbnailPath>\n        <VignettePath>fanart/vignette/70522-28.jpg</VignettePath>\n
+  \   </Banner>\n    <Banner>\n        <id>36228</id>\n        <BannerPath>fanart/original/70522-11.jpg</BannerPath>\n
+  \       <BannerType>fanart</BannerType>\n        <BannerType2>1280x720</BannerType2>\n
+  \       <Colors>|196,143,73|97,113,138|212,154,132|</Colors>\n        <Language>en</Language>\n
+  \       <SeriesName>false</SeriesName>\n        <ThumbnailPath>_cache/fanart/original/70522-11.jpg</ThumbnailPath>\n
+  \       <VignettePath>fanart/vignette/70522-11.jpg</VignettePath>\n    </Banner>\n
+  \   <Banner>\n        <id>58371</id>\n        <BannerPath>fanart/original/70522-29.jpg</BannerPath>\n
+  \       <BannerType>fanart</BannerType>\n        <BannerType2>1280x720</BannerType2>\n
+  \       <Colors></Colors>\n        <Language>en</Language>\n        <SeriesName>false</SeriesName>\n
+  \       <ThumbnailPath>_cache/fanart/original/70522-29.jpg</ThumbnailPath>\n        <VignettePath>fanart/vignette/70522-29.jpg</VignettePath>\n
+  \   </Banner>\n    <Banner>\n        <id>36229</id>\n        <BannerPath>fanart/original/70522-15.jpg</BannerPath>\n
+  \       <BannerType>fanart</BannerType>\n        <BannerType2>1280x720</BannerType2>\n
+  \       <Colors></Colors>\n        <Language>en</Language>\n        <SeriesName>false</SeriesName>\n
+  \       <ThumbnailPath>_cache/fanart/original/70522-15.jpg</ThumbnailPath>\n        <VignettePath>fanart/vignette/70522-15.jpg</VignettePath>\n
+  \   </Banner>\n    <Banner>\n        <id>36062</id>\n        <BannerPath>fanart/original/70522-13.jpg</BannerPath>\n
+  \       <BannerType>fanart</BannerType>\n        <BannerType2>1280x720</BannerType2>\n
+  \       <Colors></Colors>\n        <Language>en</Language>\n        <SeriesName>false</SeriesName>\n
+  \       <ThumbnailPath>_cache/fanart/original/70522-13.jpg</ThumbnailPath>\n        <VignettePath>fanart/vignette/70522-13.jpg</VignettePath>\n
+  \   </Banner>\n    <Banner>\n        <id>29994</id>\n        <BannerPath>fanart/original/70522-4.jpg</BannerPath>\n
+  \       <BannerType>fanart</BannerType>\n        <BannerType2>1280x720</BannerType2>\n
+  \       <Colors></Colors>\n        <Language>en</Language>\n        <SeriesName>false</SeriesName>\n
+  \       <ThumbnailPath>_cache/fanart/original/70522-4.jpg</ThumbnailPath>\n        <VignettePath>fanart/vignette/70522-4.jpg</VignettePath>\n
+  \   </Banner>\n    <Banner>\n        <id>41784</id>\n        <BannerPath>fanart/original/70522-22.jpg</BannerPath>\n
+  \       <BannerType>fanart</BannerType>\n        <BannerType2>1280x720</BannerType2>\n
+  \       <Colors></Colors>\n        <Language>en</Language>\n        <SeriesName>false</SeriesName>\n
+  \       <ThumbnailPath>_cache/fanart/original/70522-22.jpg</ThumbnailPath>\n        <VignettePath>fanart/vignette/70522-22.jpg</VignettePath>\n
+  \   </Banner>\n    <Banner>\n        <id>25307</id>\n        <BannerPath>fanart/original/70522-2.jpg</BannerPath>\n
+  \       <BannerType>fanart</BannerType>\n        <BannerType2>1280x720</BannerType2>\n
+  \       <Colors></Colors>\n        <Language>en</Language>\n        <SeriesName>false</SeriesName>\n
+  \       <ThumbnailPath>_cache/fanart/original/70522-2.jpg</ThumbnailPath>\n        <VignettePath>fanart/vignette/70522-2.jpg</VignettePath>\n
+  \   </Banner>\n    <Banner>\n        <id>26217</id>\n        <BannerPath>fanart/original/70522-3.jpg</BannerPath>\n
+  \       <BannerType>fanart</BannerType>\n        <BannerType2>1280x720</BannerType2>\n
+  \       <Colors>|255,255,255|4,2,15|79,64,69|</Colors>\n        <Language>en</Language>\n
+  \       <SeriesName>false</SeriesName>\n        <ThumbnailPath>_cache/fanart/original/70522-3.jpg</ThumbnailPath>\n
+  \       <VignettePath>fanart/vignette/70522-3.jpg</VignettePath>\n    </Banner>\n
+  \   <Banner>\n        <id>41782</id>\n        <BannerPath>fanart/original/70522-20.jpg</BannerPath>\n
+  \       <BannerType>fanart</BannerType>\n        <BannerType2>1280x720</BannerType2>\n
+  \       <Colors></Colors>\n        <Language>en</Language>\n        <SeriesName>false</SeriesName>\n
+  \       <ThumbnailPath>_cache/fanart/original/70522-20.jpg</ThumbnailPath>\n        <VignettePath>fanart/vignette/70522-20.jpg</VignettePath>\n
+  \   </Banner>\n    <Banner>\n        <id>47751</id>\n        <BannerPath>fanart/original/70522-23.jpg</BannerPath>\n
+  \       <BannerType>fanart</BannerType>\n        <BannerType2>1280x720</BannerType2>\n
+  \       <Colors></Colors>\n        <Language>en</Language>\n        <SeriesName>false</SeriesName>\n
+  \       <ThumbnailPath>_cache/fanart/original/70522-23.jpg</ThumbnailPath>\n        <VignettePath>fanart/vignette/70522-23.jpg</VignettePath>\n
+  \   </Banner>\n    <Banner>\n        <id>41781</id>\n        <BannerPath>fanart/original/70522-19.jpg</BannerPath>\n
+  \       <BannerType>fanart</BannerType>\n        <BannerType2>1280x720</BannerType2>\n
+  \       <Colors></Colors>\n        <Language>en</Language>\n        <SeriesName>false</SeriesName>\n
+  \       <ThumbnailPath>_cache/fanart/original/70522-19.jpg</ThumbnailPath>\n        <VignettePath>fanart/vignette/70522-19.jpg</VignettePath>\n
+  \   </Banner>\n    <Banner>\n        <id>56631</id>\n        <BannerPath>fanart/original/70522-24.jpg</BannerPath>\n
+  \       <BannerType>fanart</BannerType>\n        <BannerType2>1280x720</BannerType2>\n
+  \       <Colors></Colors>\n        <Language>en</Language>\n        <SeriesName>false</SeriesName>\n
+  \       <ThumbnailPath>_cache/fanart/original/70522-24.jpg</ThumbnailPath>\n        <VignettePath>fanart/vignette/70522-24.jpg</VignettePath>\n
+  \   </Banner>\n    <Banner>\n        <id>36250</id>\n        <BannerPath>fanart/original/70522-16.jpg</BannerPath>\n
+  \       <BannerType>fanart</BannerType>\n        <BannerType2>1280x720</BannerType2>\n
+  \       <Colors></Colors>\n        <Language>en</Language>\n        <SeriesName>false</SeriesName>\n
+  \       <ThumbnailPath>_cache/fanart/original/70522-16.jpg</ThumbnailPath>\n        <VignettePath>fanart/vignette/70522-16.jpg</VignettePath>\n
+  \   </Banner>\n    <Banner>\n        <id>36056</id>\n        <BannerPath>fanart/original/70522-7.jpg</BannerPath>\n
+  \       <BannerType>fanart</BannerType>\n        <BannerType2>1280x720</BannerType2>\n
+  \       <Colors></Colors>\n        <Language>en</Language>\n        <SeriesName>false</SeriesName>\n
+  \       <ThumbnailPath>_cache/fanart/original/70522-7.jpg</ThumbnailPath>\n        <VignettePath>fanart/vignette/70522-7.jpg</VignettePath>\n
+  \   </Banner>\n    <Banner>\n        <id>36232</id>\n        <BannerPath>fanart/original/70522-17.jpg</BannerPath>\n
+  \       <BannerType>fanart</BannerType>\n        <BannerType2>1280x720</BannerType2>\n
+  \       <Colors></Colors>\n        <Language>en</Language>\n        <SeriesName>false</SeriesName>\n
+  \       <ThumbnailPath>_cache/fanart/original/70522-17.jpg</ThumbnailPath>\n        <VignettePath>fanart/vignette/70522-17.jpg</VignettePath>\n
+  \   </Banner>\n    <Banner>\n        <id>36058</id>\n        <BannerPath>fanart/original/70522-9.jpg</BannerPath>\n
+  \       <BannerType>fanart</BannerType>\n        <BannerType2>1280x720</BannerType2>\n
+  \       <Colors></Colors>\n        <Language>en</Language>\n        <SeriesName>false</SeriesName>\n
+  \       <ThumbnailPath>_cache/fanart/original/70522-9.jpg</ThumbnailPath>\n        <VignettePath>fanart/vignette/70522-9.jpg</VignettePath>\n
+  \   </Banner>\n    <Banner>\n        <id>36061</id>\n        <BannerPath>fanart/original/70522-12.jpg</BannerPath>\n
+  \       <BannerType>fanart</BannerType>\n        <BannerType2>1280x720</BannerType2>\n
+  \       <Colors></Colors>\n        <Language>en</Language>\n        <SeriesName>false</SeriesName>\n
+  \       <ThumbnailPath>_cache/fanart/original/70522-12.jpg</ThumbnailPath>\n        <VignettePath>fanart/vignette/70522-12.jpg</VignettePath>\n
+  \   </Banner>\n    <Banner>\n        <id>36233</id>\n        <BannerPath>fanart/original/70522-18.jpg</BannerPath>\n
+  \       <BannerType>fanart</BannerType>\n        <BannerType2>1280x720</BannerType2>\n
+  \       <Colors></Colors>\n        <Language>en</Language>\n        <SeriesName>false</SeriesName>\n
+  \       <ThumbnailPath>_cache/fanart/original/70522-18.jpg</ThumbnailPath>\n        <VignettePath>fanart/vignette/70522-18.jpg</VignettePath>\n
+  \   </Banner>\n    <Banner>\n        <id>56641</id>\n        <BannerPath>fanart/original/70522-25.jpg</BannerPath>\n
+  \       <BannerType>fanart</BannerType>\n        <BannerType2>1280x720</BannerType2>\n
+  \       <Colors></Colors>\n        <Language>en</Language>\n        <SeriesName>false</SeriesName>\n
+  \       <ThumbnailPath>_cache/fanart/original/70522-25.jpg</ThumbnailPath>\n        <VignettePath>fanart/vignette/70522-25.jpg</VignettePath>\n
+  \   </Banner>\n    <Banner>\n        <id>36063</id>\n        <BannerPath>fanart/original/70522-14.jpg</BannerPath>\n
+  \       <BannerType>fanart</BannerType>\n        <BannerType2>1280x720</BannerType2>\n
+  \       <Colors></Colors>\n        <Language>en</Language>\n        <SeriesName>false</SeriesName>\n
+  \       <ThumbnailPath>_cache/fanart/original/70522-14.jpg</ThumbnailPath>\n        <VignettePath>fanart/vignette/70522-14.jpg</VignettePath>\n
+  \   </Banner>\n    <Banner>\n        <id>36055</id>\n        <BannerPath>fanart/original/70522-6.jpg</BannerPath>\n
+  \       <BannerType>fanart</BannerType>\n        <BannerType2>1280x720</BannerType2>\n
+  \       <Colors></Colors>\n        <Language>en</Language>\n        <SeriesName>false</SeriesName>\n
+  \       <ThumbnailPath>_cache/fanart/original/70522-6.jpg</ThumbnailPath>\n        <VignettePath>fanart/vignette/70522-6.jpg</VignettePath>\n
+  \   </Banner>\n    <Banner>\n        <id>224811</id>\n        <BannerPath>fanart/original/70522-36.jpg</BannerPath>\n
+  \       <BannerType>fanart</BannerType>\n        <BannerType2>1280x720</BannerType2>\n
+  \       <Colors></Colors>\n        <Language>en</Language>\n        <SeriesName>true</SeriesName>\n
+  \       <ThumbnailPath>_cache/fanart/original/70522-36.jpg</ThumbnailPath>\n        <VignettePath>fanart/vignette/70522-36.jpg</VignettePath>\n
+  \   </Banner>\n    <Banner>\n        <id>41783</id>\n        <BannerPath>fanart/original/70522-21.jpg</BannerPath>\n
+  \       <BannerType>fanart</BannerType>\n        <BannerType2>1280x720</BannerType2>\n
+  \       <Colors></Colors>\n        <Language>en</Language>\n        <SeriesName>false</SeriesName>\n
+  \       <ThumbnailPath>_cache/fanart/original/70522-21.jpg</ThumbnailPath>\n        <VignettePath>fanart/vignette/70522-21.jpg</VignettePath>\n
+  \   </Banner>\n    <Banner>\n        <id>36059</id>\n        <BannerPath>fanart/original/70522-10.jpg</BannerPath>\n
+  \       <BannerType>fanart</BannerType>\n        <BannerType2>1280x720</BannerType2>\n
+  \       <Colors></Colors>\n        <Language>en</Language>\n        <SeriesName>false</SeriesName>\n
+  \       <ThumbnailPath>_cache/fanart/original/70522-10.jpg</ThumbnailPath>\n        <VignettePath>fanart/vignette/70522-10.jpg</VignettePath>\n
+  \   </Banner>\n    <Banner>\n        <id>36057</id>\n        <BannerPath>fanart/original/70522-8.jpg</BannerPath>\n
+  \       <BannerType>fanart</BannerType>\n        <BannerType2>1280x720</BannerType2>\n
+  \       <Colors></Colors>\n        <Language>en</Language>\n        <SeriesName>false</SeriesName>\n
+  \       <ThumbnailPath>_cache/fanart/original/70522-8.jpg</ThumbnailPath>\n        <VignettePath>fanart/vignette/70522-8.jpg</VignettePath>\n
+  \   </Banner>\n    <Banner>\n        <id>178471</id>\n        <BannerPath>fanart/original/70522-34.jpg</BannerPath>\n
+  \       <BannerType>fanart</BannerType>\n        <BannerType2>1280x720</BannerType2>\n
+  \       <Colors></Colors>\n        <Language>en</Language>\n        <SeriesName>true</SeriesName>\n
+  \       <ThumbnailPath>_cache/fanart/original/70522-34.jpg</ThumbnailPath>\n        <VignettePath>fanart/vignette/70522-34.jpg</VignettePath>\n
+  \   </Banner>\n    <Banner>\n        <id>210801</id>\n        <BannerPath>fanart/original/70522-35.jpg</BannerPath>\n
+  \       <BannerType>fanart</BannerType>\n        <BannerType2>1280x720</BannerType2>\n
+  \       <Colors></Colors>\n        <Language>de</Language>\n        <SeriesName>false</SeriesName>\n
+  \       <ThumbnailPath>_cache/fanart/original/70522-35.jpg</ThumbnailPath>\n        <VignettePath>fanart/vignette/70522-35.jpg</VignettePath>\n
+  \   </Banner>\n    <Banner>\n        <id>27938</id>\n        <BannerPath>posters/70522-1.jpg</BannerPath>\n
+  \       <BannerType>poster</BannerType>\n        <BannerType2>680x1000</BannerType2>\n
+  \       <Language>en</Language>\n    </Banner>\n    <Banner>\n        <id>41747</id>\n
+  \       <BannerPath>posters/70522-4.jpg</BannerPath>\n        <BannerType>poster</BannerType>\n
+  \       <BannerType2>680x1000</BannerType2>\n        <Language>en</Language>\n    </Banner>\n
+  \   <Banner>\n        <id>36231</id>\n        <BannerPath>posters/70522-3.jpg</BannerPath>\n
+  \       <BannerType>poster</BannerType>\n        <BannerType2>680x1000</BannerType2>\n
+  \       <Language>en</Language>\n    </Banner>\n    <Banner>\n        <id>27939</id>\n
+  \       <BannerPath>posters/70522-2.jpg</BannerPath>\n        <BannerType>poster</BannerType>\n
+  \       <BannerType2>680x1000</BannerType2>\n        <Language>en</Language>\n    </Banner>\n
+  \   <Banner>\n        <id>110241</id>\n        <BannerPath>posters/70522-5.jpg</BannerPath>\n
+  \       <BannerType>poster</BannerType>\n        <BannerType2>680x1000</BannerType2>\n
+  \       <Language>en</Language>\n    </Banner>\n    <Banner>\n        <id>41934</id>\n
+  \       <BannerPath>seasons/70522-1-3.jpg</BannerPath>\n        <BannerType>season</BannerType>\n
+  \       <BannerType2>season</BannerType2>\n        <Language>en</Language>\n        <Season>1</Season>\n
+  \   </Banner>\n    <Banner>\n        <id>41937</id>\n        <BannerPath>seasons/70522-4-2.jpg</BannerPath>\n
+  \       <BannerType>season</BannerType>\n        <BannerType2>season</BannerType2>\n
+  \       <Language>en</Language>\n        <Season>4</Season>\n    </Banner>\n    <Banner>\n
+  \       <id>41936</id>\n        <BannerPath>seasons/70522-3-2.jpg</BannerPath>\n
+  \       <BannerType>season</BannerType>\n        <BannerType2>season</BannerType2>\n
+  \       <Language>en</Language>\n        <Season>3</Season>\n    </Banner>\n    <Banner>\n
+  \       <id>41935</id>\n        <BannerPath>seasons/70522-2-2.jpg</BannerPath>\n
+  \       <BannerType>season</BannerType>\n        <BannerType2>season</BannerType2>\n
+  \       <Language>en</Language>\n        <Season>2</Season>\n    </Banner>\n    <Banner>\n
+  \       <id>42508</id>\n        <BannerPath>seasons/70522-5-3.jpg</BannerPath>\n
+  \       <BannerType>season</BannerType>\n        <BannerType2>season</BannerType2>\n
+  \       <Language>en</Language>\n        <Season>5</Season>\n    </Banner>\n    <Banner>\n
+  \       <id>42479</id>\n        <BannerPath>seasons/70522-4-3.jpg</BannerPath>\n
+  \       <BannerType>season</BannerType>\n        <BannerType2>season</BannerType2>\n
+  \       <Language>en</Language>\n        <Season>4</Season>\n    </Banner>\n    <Banner>\n
+  \       <id>41742</id>\n        <BannerPath>seasons/70522-4.jpg</BannerPath>\n        <BannerType>season</BannerType>\n
+  \       <BannerType2>season</BannerType2>\n        <Language>de</Language>\n        <Season>4</Season>\n
+  \   </Banner>\n    <Banner>\n        <id>41740</id>\n        <BannerPath>seasons/70522-3.jpg</BannerPath>\n
+  \       <BannerType>season</BannerType>\n        <BannerType2>season</BannerType2>\n
+  \       <Language>de</Language>\n        <Season>3</Season>\n    </Banner>\n    <Banner>\n
+  \       <id>41739</id>\n        <BannerPath>seasons/70522-2.jpg</BannerPath>\n        <BannerType>season</BannerType>\n
+  \       <BannerType2>season</BannerType2>\n        <Language>de</Language>\n        <Season>2</Season>\n
+  \   </Banner>\n    <Banner>\n        <id>42476</id>\n        <BannerPath>seasons/70522-1-4.jpg</BannerPath>\n
+  \       <BannerType>season</BannerType>\n        <BannerType2>season</BannerType2>\n
+  \       <Language>en</Language>\n        <Season>1</Season>\n    </Banner>\n    <Banner>\n
+  \       <id>42477</id>\n        <BannerPath>seasons/70522-2-3.jpg</BannerPath>\n
+  \       <BannerType>season</BannerType>\n        <BannerType2>season</BannerType2>\n
+  \       <Language>en</Language>\n        <Season>2</Season>\n    </Banner>\n    <Banner>\n
+  \       <id>42478</id>\n        <BannerPath>seasons/70522-3-3.jpg</BannerPath>\n
+  \       <BannerType>season</BannerType>\n        <BannerType2>season</BannerType2>\n
+  \       <Language>en</Language>\n        <Season>3</Season>\n    </Banner>\n    <Banner>\n
+  \       <id>41738</id>\n        <BannerPath>seasons/70522-1-2.jpg</BannerPath>\n
+  \       <BannerType>season</BannerType>\n        <BannerType2>season</BannerType2>\n
+  \       <Language>de</Language>\n        <Season>1</Season>\n    </Banner>\n    <Banner>\n
+  \       <id>41938</id>\n        <BannerPath>seasons/70522-5-2.jpg</BannerPath>\n
+  \       <BannerType>season</BannerType>\n        <BannerType2>season</BannerType2>\n
+  \       <Language>en</Language>\n        <Season>5</Season>\n    </Banner>\n    <Banner>\n
+  \       <id>8016</id>\n        <BannerPath>seasons/1029-5-2.jpg</BannerPath>\n        <BannerType>season</BannerType>\n
+  \       <BannerType2>season</BannerType2>\n        <Language>en</Language>\n        <Season>5</Season>\n
+  \   </Banner>\n    <Banner>\n        <id>10787</id>\n        <BannerPath>seasons/70522-5.jpg</BannerPath>\n
+  \       <BannerType>season</BannerType>\n        <BannerType2>season</BannerType2>\n
+  \       <Language>en</Language>\n        <Season>5</Season>\n    </Banner>\n    <Banner>\n
+  \       <id>8014</id>\n        <BannerPath>seasons/1029-3-2.jpg</BannerPath>\n        <BannerType>season</BannerType>\n
+  \       <BannerType2>season</BannerType2>\n        <Language>en</Language>\n        <Season>3</Season>\n
+  \   </Banner>\n    <Banner>\n        <id>6823</id>\n        <BannerPath>seasons/1029-2.jpg</BannerPath>\n
+  \       <BannerType>season</BannerType>\n        <BannerType2>season</BannerType2>\n
+  \       <Language>en</Language>\n        <Season>2</Season>\n    </Banner>\n    <Banner>\n
+  \       <id>8013</id>\n        <BannerPath>seasons/1029-2-2.jpg</BannerPath>\n        <BannerType>season</BannerType>\n
+  \       <BannerType2>season</BannerType2>\n        <Language>en</Language>\n        <Season>2</Season>\n
+  \   </Banner>\n    <Banner>\n        <id>8012</id>\n        <BannerPath>seasons/1029-1-2.jpg</BannerPath>\n
+  \       <BannerType>season</BannerType>\n        <BannerType2>season</BannerType2>\n
+  \       <Language>en</Language>\n        <Season>1</Season>\n    </Banner>\n    <Banner>\n
+  \       <id>6822</id>\n        <BannerPath>seasons/1029-1.jpg</BannerPath>\n        <BannerType>season</BannerType>\n
+  \       <BannerType2>season</BannerType2>\n        <Language>en</Language>\n        <Season>1</Season>\n
+  \   </Banner>\n    <Banner>\n        <id>6825</id>\n        <BannerPath>seasons/1029-4.jpg</BannerPath>\n
+  \       <BannerType>season</BannerType>\n        <BannerType2>season</BannerType2>\n
+  \       <Language>en</Language>\n        <Season>4</Season>\n    </Banner>\n    <Banner>\n
+  \       <id>19292</id>\n        <BannerPath>seasons/70522-1.jpg</BannerPath>\n        <BannerType>season</BannerType>\n
+  \       <BannerType2>season</BannerType2>\n        <Language>es</Language>\n        <Season>1</Season>\n
+  \   </Banner>\n    <Banner>\n        <id>6824</id>\n        <BannerPath>seasons/1029-3.jpg</BannerPath>\n
+  \       <BannerType>season</BannerType>\n        <BannerType2>season</BannerType2>\n
+  \       <Language>en</Language>\n        <Season>3</Season>\n    </Banner>\n    <Banner>\n
+  \       <id>6826</id>\n        <BannerPath>seasons/1029-5.jpg</BannerPath>\n        <BannerType>season</BannerType>\n
+  \       <BannerType2>season</BannerType2>\n        <Language>en</Language>\n        <Season>5</Season>\n
+  \   </Banner>\n    <Banner>\n        <id>8015</id>\n        <BannerPath>seasons/1029-4-2.jpg</BannerPath>\n
+  \       <BannerType>season</BannerType>\n        <BannerType2>season</BannerType2>\n
+  \       <Language>en</Language>\n        <Season>4</Season>\n    </Banner>\n    <Banner>\n
+  \       <id>115651</id>\n        <BannerPath>seasons/70522-0.jpg</BannerPath>\n
+  \       <BannerType>season</BannerType>\n        <BannerType2>season</BannerType2>\n
+  \       <Language>en</Language>\n        <Season>0</Season>\n    </Banner>\n    <Banner>\n
+  \       <id>15844</id>\n        <BannerPath>seasonswide/70522-1.jpg</BannerPath>\n
+  \       <BannerType>season</BannerType>\n        <BannerType2>seasonwide</BannerType2>\n
+  \       <Language>es</Language>\n        <Season>1</Season>\n    </Banner>\n    <Banner>\n
+  \       <id>15846</id>\n        <BannerPath>seasonswide/70522-2.jpg</BannerPath>\n
+  \       <BannerType>season</BannerType>\n        <BannerType2>seasonwide</BannerType2>\n
+  \       <Language>es</Language>\n        <Season>2</Season>\n    </Banner>\n    <Banner>\n
+  \       <id>15850</id>\n        <BannerPath>seasonswide/70522-5.jpg</BannerPath>\n
+  \       <BannerType>season</BannerType>\n        <BannerType2>seasonwide</BannerType2>\n
+  \       <Language>es</Language>\n        <Season>5</Season>\n    </Banner>\n    <Banner>\n
+  \       <id>119291</id>\n        <BannerPath>graphical/70522-g4.jpg</BannerPath>\n
+  \       <BannerType>series</BannerType>\n        <BannerType2>graphical</BannerType2>\n
+  \       <Language>en</Language>\n    </Banner>\n    <Banner>\n        <id>5560</id>\n
+  \       <BannerPath>graphical/1029-g.jpg</BannerPath>\n        <BannerType>series</BannerType>\n
+  \       <BannerType2>graphical</BannerType2>\n        <Language>en</Language>\n
+  \   </Banner>\n    <Banner>\n        <id>10788</id>\n        <BannerPath>graphical/70522-g.jpg</BannerPath>\n
+  \       <BannerType>series</BannerType>\n        <BannerType2>graphical</BannerType2>\n
+  \       <Language>en</Language>\n    </Banner>\n    <Banner>\n        <id>13011</id>\n
+  \       <BannerPath>blank/70522.jpg</BannerPath>\n        <BannerType>series</BannerType>\n
+  \       <BannerType2>blank</BannerType2>\n        <Language>en</Language>\n    </Banner>\n
+  \   <Banner>\n        <id>15843</id>\n        <BannerPath>graphical/70522-g2.jpg</BannerPath>\n
+  \       <BannerType>series</BannerType>\n        <BannerType2>graphical</BannerType2>\n
+  \       <Language>en</Language>\n    </Banner>\n    <Banner>\n        <id>15845</id>\n
+  \       <BannerPath>graphical/70522-g3.jpg</BannerPath>\n        <BannerType>series</BannerType>\n
+  \       <BannerType2>graphical</BannerType2>\n        <Language>en</Language>\n
+  \   </Banner>\n    <Banner>\n        <id>9459</id>\n        <BannerPath>text/1029.jpg</BannerPath>\n
+  \       <BannerType>series</BannerType>\n        <BannerType2>text</BannerType2>\n
+  \       <Language>en</Language>\n    </Banner>\n</Banners>"
